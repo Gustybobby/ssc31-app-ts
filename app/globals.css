@@ -25,3 +25,9 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+.bgCover {
+  background-image: url(../public/static/commonbg.png);
+  background-size: cover;
+  background-position: center;
+}

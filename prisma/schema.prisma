@@ -1,0 +1,302 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+
+model User {
+  id               String           @id @default(uuid())
+  email            String           @unique
+  role             Role             @default(USER)
+  created_at       DateTime?        @default(now())
+  updated_at       DateTime?        @updatedAt
+  event_members    EventMember[]
+  archived_members ArchivedMember[]
+  baan_member      BaanMember?
+  files            EventFile[]
+}
+
+model Event {
+  id             String             @id @default(cuid())
+  online         Boolean            @default(false)
+  title          String
+  poster         String?
+  description    String
+  column_fetches Json?
+  created_at     DateTime?          @default(now())
+  updated_at     DateTime?          @updatedAt
+  positions      EventPosition[]
+  roles          EventRole[]
+  forms          EventForm[]
+  members        EventMember[]
+  appointments   EventAppointment[]
+  files          EventFile[]
+}
+
+model EventMember {
+  id               String             @id @default(cuid())
+  status           MemberStatus       @default(PENDING)
+  data_rows        EventFormRow[]
+  appointments     EventAppointment[]
+  attendances      Attendance[]
+  act_hrs          Int                @default(0)
+  act_records      Json?
+  transfer_records Json?
+  position         EventPosition?     @relation(name: "position", fields: [position_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  position_id      String?
+  role             EventRole?         @relation(fields: [role_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  role_id          String?
+  event            Event              @relation(fields: [event_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  event_id         String
+  user             User               @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  user_id          String
+}
+
+model EventPosition {
+  id                   String             @id @default(cuid())
+  order                Int                @default(0)
+  position             String
+  open                 Boolean            @default(false)
+  can_regist           Boolean            @default(false)
+  created_at           DateTime?          @default(now())
+  updated_at           DateTime?          @updatedAt
+  form_access          EventForm[]        @relation(name: "form_position_restricts")
+  form_data_access     EventForm[]
+  created_appointments EventAppointment[] @relation(name: "appointment_created_by")
+  members              EventMember[]      @relation(name: "position")
+  event                Event              @relation(fields: [event_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  event_id             String
+}
+
+model EventRole {
+  id               String        @id @default(cuid())
+  order            Int           @default(0)
+  role             String
+  open             Boolean       @default(false)
+  can_appoint      Boolean       @default(false)
+  created_at       DateTime?     @default(now())
+  updated_at       DateTime?     @updatedAt
+  form_access      EventForm[]   @relation(name: "form_role_restricts")
+  form_data_access EventForm[]
+  members          EventMember[]
+  event            Event         @relation(fields: [event_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  event_id         String
+}
+
+model EventForm {
+  id                     String          @id @default(cuid())
+  title                  String
+  description            String?
+  submitted_area         String?
+  type                   FormType        @default(OTHER)
+  response_type          ResponseType    @default(SINGLE)
+  open                   Boolean         @default(false)
+  public                 Boolean         @default(false)
+  email_restricts        String[]
+  position_restricts     EventPosition[] @relation(name: "form_position_restricts")
+  role_restricts         EventRole[]     @relation(name: "form_role_restricts")
+  created_at             DateTime?       @default(now())
+  updated_at             DateTime?       @updatedAt
+  global_position_access EventPosition[]
+  global_role_access     EventRole[]
+  row_list               EventFormRow[]
+  field_order            String[]
+  form_fields            Json?
+  event                  Event           @relation(fields: [event_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  event_id               String
+}
+
+model EventFormRow {
+  id         String       @id @default(cuid())
+  response   Json?
+  snapshot   Json?
+  created_at DateTime?    @default(now())
+  updated_at DateTime?    @updatedAt
+  form       EventForm    @relation(fields: [form_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  form_id    String
+  member     EventMember? @relation(fields: [member_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  member_id  String?
+}
+
+model EventFormTemplate {
+  id            Int         @id @default(autoincrement())
+  label         String[]
+  placeholder   String[]
+  success       String[]
+  error         String[]
+  default_value String[]
+  min_length    Int[]
+  max_length    Int[]
+  options       String[]
+  required      Boolean[]
+  data_type     DataType[]
+  field_type    FieldType[]
+}
+
+model EventAppointment {
+  id                  String          @id @default(cuid())
+  title               String          @default("")
+  location            String          @default("")
+  description         String          @default("")
+  icon                IconType
+  type                AppointmentType
+  start_at            DateTime
+  end_at              DateTime
+  attendance_required Boolean
+  attendances         Attendance[]
+  party_members       EventMember[]
+  created_by          EventPosition?  @relation(name: "appointment_created_by", fields: [created_by_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  created_by_id       String?
+  event               Event           @relation(fields: [event_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  event_id            String
+}
+
+model EventFile {
+  id         String   @id
+  url        String   @unique
+  label      String?
+  public     Boolean  @default(false)
+  mime_type  MimeType
+  created_at DateTime @default(now())
+  event      Event    @relation(fields: [event_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  event_id   String
+  created_by User?    @relation(fields: [user_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  user_id    String?
+}
+
+model Attendance {
+  id             String           @id @default(cuid())
+  check_in       DateTime?
+  check_out      DateTime?
+  appointment    EventAppointment @relation(fields: [appointment_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  appointment_id String
+  member         EventMember      @relation(fields: [member_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  member_id      String
+}
+
+model ArchivedEvent {
+  id               String           @id
+  title            String
+  created_at       DateTime?
+  ended_at         DateTime?
+  archived_members ArchivedMember[]
+}
+
+model ArchivedMember {
+  id               String        @id @default(cuid())
+  position         String?
+  role             String?
+  act_hrs          Int
+  act_records      Json?
+  transfer_records Json?
+  archived_event   ArchivedEvent @relation(fields: [archived_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  archived_id      String
+  user             User          @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  user_id          String
+}
+
+model BaanMember {
+  entry        String         @id @default(uuid())
+  student_id   String?        @default("-")
+  full_name    String?        @default("-")
+  nickname     String?        @default("-")
+  sex          String?        @default("-")
+  line_id      String?        @default("-")
+  phone_number String?        @default("-")
+  created_at   DateTime?      @default(now())
+  updated_at   DateTime?      @updatedAt
+  user         User           @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  user_id      String         @unique
+  baan_info    BaanStatistics @relation(fields: [baan], references: [baan], onDelete: Cascade, onUpdate: Restrict)
+  baan         Int
+}
+
+model BaanStatistics {
+  id               Int          @id @default(autoincrement())
+  baan             Int          @unique
+  member_size      Int          @default(0)
+  updated_at       DateTime?    @updatedAt
+  line_group       String?
+  line_qr          String?
+  baan_member_list BaanMember[]
+  baan_staff       BaanStaff[]
+}
+
+model BaanStaff {
+  id          String         @id @default(uuid())
+  student_id  String?        @unique
+  full_name   String?
+  nickname    String?
+  baan_info   BaanStatistics @relation(fields: [baan], references: [baan], onDelete: Cascade, onUpdate: Restrict)
+  baan        Int
+  last_access DateTime?
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum MemberStatus {
+  PENDING
+  SELECTED
+  ACTIVE
+  REJECTED
+}
+
+enum FormType {
+  JOIN
+  EVALUATE
+  OTHER
+}
+
+enum ResponseType {
+  SINGLE
+  MULTIPLE
+}
+
+enum DataType {
+  STRING
+  NUM
+  BOOLEAN
+  POSITION
+  ROLE
+  ACT_HOURS
+  HOURS_SEMS
+}
+
+enum FieldType {
+  SHORTANS
+  PARAGRAPH
+  OPTIONS
+  MULTISELECT
+  PRIVACYPOLICY
+  INFO
+  ACT_HOURS
+  HOURS_SEMS
+}
+
+enum IconType {
+  CONTACT
+  GROUP
+  GEAR
+  BUILDING
+}
+
+enum AppointmentType {
+  INTERVIEW
+  MEETING
+  ACTIVITY
+}
+
+enum MimeType {
+  image_png
+  image_jpeg
+  application_pdf
+}
