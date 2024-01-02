@@ -27,8 +27,11 @@ export function setUnion<T>(setA: Set<T>, setB: Set<T>){
     return union
 }
 
-export function setConnections(newIdList: string[], key: string){
-    return { [key]: newIdList.map((id) => ({ id }))}
+export function setConnections(key: string, newList?: { id: string }[]){
+    if(!newList){
+        return undefined
+    }
+    return { [key]: newList }
 }
 
 export function stringChanges(string: string, prevString: string){
