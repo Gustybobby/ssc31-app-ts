@@ -1,4 +1,4 @@
-import { ColorVariants, backgroundColorClassVariants, hoverColorClassVariants } from "./class-variants"
+import { type ColorVariants, backgroundColorClassVariants, hoverColorClassVariants } from "./class-variants"
 
 export const eventStyles = {
     box: ({ size, round, extensions } : { size: BoxSize, round: boolean, extensions?: string }) => [
