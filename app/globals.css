@@ -31,3 +31,49 @@ body {
   background-size: cover;
   background-position: center;
 }
+
+input[type=checkbox] {
+  transform: scale(1.5);
+}
+
+input[type='radio'] { 
+  transform: scale(1.5); 
+}
+
+/* width */
+::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #dadada;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #b0b0b0;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #939393;
+}
+
+@media (prefers-color-scheme: dark) {
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #424242;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #686868;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #7B7B7B;
+  }
+}
