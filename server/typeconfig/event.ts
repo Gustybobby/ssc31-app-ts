@@ -1,9 +1,11 @@
 export interface EventDataRequest {
+    id?: string
     title: string
     description: string
     poster: string | null
     positions: PositionDataRequest[]
     roles: RoleDataRequest[]
+    updated_at?: Date
 }
 
 export interface PositionDataRequest {
