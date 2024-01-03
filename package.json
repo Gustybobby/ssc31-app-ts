@@ -12,6 +12,7 @@
     "@edgestore/react": "^0.1.6",
     "@edgestore/server": "^0.1.6",
     "@headlessui/react": "^1.7.17",
+    "@paralleldrive/cuid2": "^2.2.2",
     "@prisma/client": "^5.7.1",
     "next": "14.0.4",
     "next-auth": "^4.24.5",
