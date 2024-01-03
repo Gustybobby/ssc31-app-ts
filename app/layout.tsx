@@ -3,7 +3,7 @@ import { sfPro } from './_fonts'
 import NavDropDown from '@/components/globalui/nav-dropdown'
 import NavSession from '@/components/globalui/nav-session'
 import AuthProvider from '@/components/globalui/auth-provider'
-import { getServerAuthSession } from './api/auth/[...nextauth]/route'
+import { getServerAuthSession } from './api/auth/[...nextauth]/_utils'
 
 export const metadata = {
     title: 'SSC31 Ready To Go',

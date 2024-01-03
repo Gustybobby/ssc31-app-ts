@@ -1,4 +1,4 @@
-import { backendClient } from "@/app/api/edgestore/[...edgestore]/route"
+import { backendClient } from "@/app/api/edgestore/[...edgestore]/_utils"
 import prisma from "@/prisma-client"
 import { searchParamsToSelect } from "@/server/utils"
 import { type NextRequest, NextResponse } from "next/server"

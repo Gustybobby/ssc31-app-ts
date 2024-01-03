@@ -8,7 +8,9 @@ import type { EventDataRequest } from "@/server/typeconfig/event";
 export default function NewEvent(){
 
     const [eventDetails, dispatchEventDetails] = useReducer(eventDetailsReducer, defaultEventDetails)
-    
+    if(eventDetails === 'loading' || eventDetails === 'error'){
+        return <></>
+    }
     return(
         <>
             <div><Toaster/></div>

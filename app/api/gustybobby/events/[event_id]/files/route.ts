@@ -1,9 +1,9 @@
 import prisma from "@/prisma-client"
-import { backendClient } from "@/app/api/edgestore/[...edgestore]/route"
 import { searchParamsToSelect } from "@/server/utils"
 import { type NextRequest, NextResponse } from "next/server"
 import { mimeTypeMap } from "@/server/typeconfig/file"
 import { File } from "buffer"
+import { backendClient } from "@/app/api/edgestore/[...edgestore]/_utils"
 
 export async function GET(req: NextRequest, { params }: { params: { event_id: string }}){
     try{

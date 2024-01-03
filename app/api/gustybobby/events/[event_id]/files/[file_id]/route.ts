@@ -1,5 +1,5 @@
+import { backendClient } from "@/app/api/edgestore/[...edgestore]/_utils"
 import prisma from "@/prisma-client"
-import { backendClient } from "@/app/api/edgestore/[...edgestore]/route"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function DELETE(req: NextRequest, { params }: { params: { event_id: string, file_id: string }}){

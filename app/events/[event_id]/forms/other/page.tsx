@@ -1,9 +1,9 @@
 import prisma from "@/prisma-client"
-import { getServerAuthSession } from "@/app/api/auth/[...nextauth]/route"
-import { getEventMember } from "@/server/module"
 import { redirect } from "next/navigation"
 import FormConfig from "@/server/classes/forms/formconfig"
 import AvailableForms from "@/components/events/event/forms/available-forms"
+import { getServerAuthSession } from "@/app/api/auth/[...nextauth]/_utils"
+import { getEventMember } from "@/server/modules/get-event-member"
 
 export default async function AllOtherFormPage({ params }: { params: { event_id: string }}){
     const session = await getServerAuthSession()

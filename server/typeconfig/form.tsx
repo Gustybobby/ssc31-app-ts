@@ -1,4 +1,4 @@
-import type { EventPosition, EventRole } from "@prisma/client";
+import type { EventPosition, EventRole, Prisma } from "@prisma/client";
 import type { EventConfigProperty } from "../classes/eventconfig";
 import Link from "next/link";
 
@@ -213,4 +213,29 @@ export type PrismaFieldConfig = {
 
 export type FormResponse = {
     [key: string]: string
+}
+
+export function getPrismaFields(form_fields: Prisma.JsonValue){
+    const safeFormFields: { [key: string ]: PrismaFieldConfig } = {}
+    for(const [id, config] of Object.entries(form_fields?? {})){
+        const prismaFieldConfig: PrismaFieldConfig = {
+            id: config.id,
+            label: config.label,
+            options: config.options,
+            required: config.required,
+            data_type: config.data_type,
+            field_type: config.field_type,
+            success: config.success,
+            error: config.error,
+            placeholder: config.placeholder,
+            default_value: config.default_value,
+            max_length: config.max_length,
+            min_length: config.min_length,
+            position_access: config.position_access,
+            role_access: config.role_access,
+            visible_conds: config.visible_conds,
+        }
+        safeFormFields[id] = prismaFieldConfig
+    }
+    return safeFormFields
 }
