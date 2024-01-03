@@ -63,7 +63,6 @@ export async function POST(req: NextRequest){
 
 function checkDuplicates(labelList: string[], fields_name: string){
     if(new Set(labelList).size != labelList.length){
-        console.log("Duplicate",fields_name)
-        throw "DUPLICATE"
+        throw `Duplicate ${fields_name}`
     }
 }
