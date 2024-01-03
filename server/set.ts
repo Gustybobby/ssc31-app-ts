@@ -27,6 +27,12 @@ export function setUnion<T>(setA: Set<T>, setB: Set<T>){
     return union
 }
 
+export function setToArray<T>(set: Set<T>): T[]{
+    const array: T[] = []
+    set.forEach((e) => array.push(e))
+    return array
+}
+
 export function setConnections(key: string, newList?: { id: string }[]){
     if(!newList){
         return undefined
