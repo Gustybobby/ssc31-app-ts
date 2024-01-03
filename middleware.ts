@@ -5,8 +5,8 @@ const PATTERNS: URLPattern[] = [
     new URLPattern({ pathname: '/events/:event_id/:path*' }),
     new URLPattern({ pathname: '/api/gustybobby/events/:event_id/:path*' }),
     new URLPattern({ pathname: '/api/user/events/:event_id/:path*' }),
-    new URLPattern({ pathname: '/gustybobby/event/:event_id/:path*' }),
-    new URLPattern({ pathname: '/profile/event/:event_id/:path*' }),
+    new URLPattern({ pathname: '/gustybobby/events/:event_id/:path*' }),
+    new URLPattern({ pathname: '/profile/events/:event_id/:path*' }),
 ]
 
 const getParams = (url: string) => {
@@ -37,19 +37,19 @@ export default withAuth(
             return NextResponse.redirect(`${req.nextUrl.origin}/api/middleware/unauthorized`)
         }
         if(params.event_id){
-            const res = await fetch(`${req.nextUrl.origin}/api/middleware/event/${params.event_id}`)
+            const res = await fetch(`${req.nextUrl.origin}/api/middleware/events/${params.event_id}`)
             const { data } = await res.json()
             if(!data){
                 if(pathname.startsWith(`/api/`)){
-                    return NextResponse.redirect(`${req.nextUrl.origin}/api/middleware/${params.event_id}/not-found`)
+                    return NextResponse.redirect(`${req.nextUrl.origin}/api/middleware/events/${params.event_id}/not-found`)
                 }
                 if(pathname.startsWith(`/events/`)){
                     return NextResponse.redirect(`${req.nextUrl.origin}/events`)
                 }
-                if(pathname.startsWith('/gustybobby/event/') && pathname !== '/gustybobby/event/new'){
+                if(pathname.startsWith('/gustybobby/events/') && pathname !== '/gustybobby/events/new'){
                     return NextResponse.redirect(`${req.nextUrl.origin}/gustybobby`)
                 }
-                if(pathname.startsWith('/profile/event/')){
+                if(pathname.startsWith('/profile/events/')){
                     return NextResponse.redirect(`${req.nextUrl.origin}/profile`)
                 }
             }
