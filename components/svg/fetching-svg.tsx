@@ -1,4 +1,4 @@
-export function FetchingSVG(){
+export default function FetchingSVG(){
     return(
         <svg className="fill-black dark:fill-white" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
         width="120px" height="150px" viewBox="0 0 120 150">
