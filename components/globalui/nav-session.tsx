@@ -22,7 +22,7 @@ export default function NavSession() {
             </div>
         )
     }
-    if(session?.user?.id){
+    if(session?.user.id){
         return(
             <div>
                 <Menu as="div" className="relative inline-block text-left">
