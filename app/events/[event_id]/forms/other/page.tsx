@@ -5,7 +5,7 @@ import { redirect } from "next/navigation"
 import FormConfig from "@/server/classes/forms/formconfig"
 import AvailableForms from "@/components/events/event/forms/available-forms"
 
-export default async function AllOtherFormPage({ params }: { params: { [key: string]: string }}){
+export default async function AllOtherFormPage({ params }: { params: { event_id: string }}){
     const session = await getServerAuthSession()
     const otherForms = await prisma.eventForm.findMany({
         where:{

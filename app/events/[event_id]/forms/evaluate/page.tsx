@@ -5,7 +5,7 @@ import FormConfig from "@/server/classes/forms/formconfig"
 import { redirect } from "next/navigation"
 import AvailableForms from "@/components/events/event/forms/available-forms"
 
-export default async function AllEvaluateFormPage({ params }: { params: { [key: string]: string }}){
+export default async function AllEvaluateFormPage({ params }: { params: { event_id: string }}){
     const session = await getServerAuthSession()
     const evalForms = await prisma.eventForm.findMany({
         where:{

@@ -1,7 +1,7 @@
 import prisma from "@/prisma-client"
 import { NextRequest, NextResponse } from "next/server"
 
-export async function GET(req: NextRequest, { params }: { params: { [key: string]: string }}){
+export async function GET(req: NextRequest, { params }: { params: { event_id: string }}){
     try{
         const { id } = await prisma.event.findUnique({
             where: {
