@@ -1,7 +1,7 @@
 import prisma from "@/prisma-client"
 import { EventDataRequest } from "@/server/typeconfig/event"
 import { searchParamsToSelect } from "@/server/utils"
-import { NextRequest, NextResponse } from "next/server"
+import { type NextRequest, NextResponse } from "next/server"
 
 export const dynamic = 'force-dynamic'
 
