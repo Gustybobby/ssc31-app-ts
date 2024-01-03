@@ -15,3 +15,12 @@ export default function NotFound404(){
         </MainWrapper>
     )
 }
+
+export function ErrorComponent(){
+    return(
+        <div className="flex flex-col items-center justify-center p-4">
+            <h1 className="text-2xl font-bold text-center">Error</h1>
+            <Image src="/static/mixxycrying.gif" width={160} height={160} alt="Error"/>
+        </div>
+    )
+}
