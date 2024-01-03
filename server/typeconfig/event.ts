@@ -19,6 +19,10 @@ export interface RoleDataRequest {
     can_appoint: boolean
 }
 
+export interface EventDefaultResponse {
+    message: "SUCCESS" | "ERROR"
+}
+
 interface CreateEventSuccess {
     message: "SUCCESS"
     data: { id: string }
