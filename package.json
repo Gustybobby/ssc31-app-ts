@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@edgestore/react": "^0.1.6",
+    "@edgestore/server": "^0.1.6",
     "@headlessui/react": "^1.7.17",
     "@prisma/client": "^5.7.1",
     "next": "14.0.4",
@@ -16,7 +18,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
-    "react-icons": "^4.12.0"
+    "react-icons": "^4.12.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20",
