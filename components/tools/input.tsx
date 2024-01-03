@@ -1,4 +1,4 @@
-import { stringifyGustybobbySelection } from "@/server/classes/inputfunction"
+import { stringifyGustybobbySelection } from "@/server/inputfunction"
 import { GustybobbyOption } from "@/server/typeconfig/form"
 import { type ChangeEvent, useEffect, useState } from "react"
 import { textColorClassVariants } from "../styles/class-variants"
