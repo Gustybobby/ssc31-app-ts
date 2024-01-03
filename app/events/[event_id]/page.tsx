@@ -3,7 +3,7 @@ import MainWrapper from "@/components/globalui/main-wrapper"
 import prisma from "@/prisma-client"
 
 export default async function EventPage({ params } : { params: { event_id: string }}){
-    const event = await prisma.event.findUnique({
+    const event = await prisma.event.findUniqueOrThrow({
         where: {
             id : params.event_id
         },
@@ -14,9 +14,6 @@ export default async function EventPage({ params } : { params: { event_id: strin
             description: true,
         },
     })
-    if(!event){
-        return <></>
-    }
     return(
         <MainWrapper>
             <EventDetailedPost
