@@ -22,7 +22,7 @@ type EventDetailsReducerAction = (
 
 interface ActionTypeSet {
     type: 'set'
-    state: EventDataRequest
+    state: EventDataRequest | 'loading' | 'error'
 }
 
 interface ActionTypeEditSingle {
@@ -70,10 +70,14 @@ interface ActionTypeNewField {
     fields_name: 'positions' | 'roles'
 }    
 
-export default function eventDetailsReducer(state: EventDataRequest, action: EventDetailsReducerAction){
+export default function eventDetailsReducer(state: EventDataRequest | 'loading' | 'error', action: EventDetailsReducerAction){
+    if(action.type === 'set'){
+        return action.state
+    }
+    if(state === 'loading' || state === 'error'){
+        return state
+    }
     switch(action.type){
-        case 'set':
-            return { ...action.state }
         case 'edit_single':
             return {
                 ...state,
