@@ -1,7 +1,7 @@
 "use client";
 import { Fragment, useState } from 'react';
 import { useRouter } from 'next/navigation'
-import { LoadingSVG } from '../svg/loading-svg';
+import LoadingSVG from '../svg/loading-svg';
 import { eventStyles } from '../styles/events';
 import { ZoomIn } from '../tools/transition';
 import PosterSection from './sections/poster-section';
