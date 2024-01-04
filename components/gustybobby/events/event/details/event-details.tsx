@@ -21,15 +21,22 @@ export default function EventDetails({ event_id, event_title }: { event_id: stri
             .then(data => data.message === 'SUCCESS'? data.data : 'error')
             .then(data => dispatchEventDetails({ type: 'set', state: data }))
     }, [event_id, refetch])
+
     if(eventDetails === 'loading'){
         return(
-            <div className="p-4 flex flex-col items-center justify-center space-y-4">
-                <FetchingSVG/>
-            </div>
+            <DashboardWrapper eventId={event_id} eventTitle={event_title}>
+                <div className="p-4 flex flex-col items-center justify-center space-y-4">
+                    <FetchingSVG/>
+                </div>
+            </DashboardWrapper>
         )
     }
     if(eventDetails === 'error'){
-        return <ErrorComponent/>
+        return (
+            <DashboardWrapper eventId={event_id} eventTitle={event_title}>
+                <div className="h-[75vh] flex justify-center items-center"><ErrorComponent/></div>
+            </DashboardWrapper>
+        )
     }
     return(
         <DashboardWrapper eventId={event_id} eventTitle={event_title}>

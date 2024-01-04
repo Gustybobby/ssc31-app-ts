@@ -1,16 +1,15 @@
 "use client"
 
 import type { EventDetailsHookProps } from "../hooks/event-details-reducer"
-import type { Dispatch, MutableRefObject, SetStateAction } from "react"
-import { EventDataRequest } from "@/server/typeconfig/event"
+import type { Dispatch, SetStateAction } from "react"
 import SaveBar from "../sections/save-bar"
 import { sectionStyles } from "@/components/styles/sections"
 import TitleInputField from "../sections/title-input-field"
 import { ImageURLSelector } from "@/components/tools/file"
 import DescriptionPreview from "../sections/description-preview"
 import DescriptionEditor from "../sections/description-editor"
-import PositionFields from "../sections/positionrolefields/position-fields"
-import RoleFields from "../sections/positionrolefields/role-fields"
+import PositionFields from "../sections/position-role-fields/position-fields"
+import RoleFields from "../sections/position-role-fields/role-fields"
 
 interface EditEventComponentProps extends EventDetailsHookProps {
     setRefetch: Dispatch<SetStateAction<boolean>>

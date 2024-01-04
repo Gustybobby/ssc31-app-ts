@@ -6,8 +6,8 @@ import type { EventDetailsHookProps } from "../hooks/event-details-reducer"
 import TitleInputField from "../sections/title-input-field"
 import DescriptionPreview from "../sections/description-preview"
 import DescriptionEditor from "../sections/description-editor"
-import PositionFields from "../sections/positionrolefields/position-fields"
-import RoleFields from "../sections/positionrolefields/role-fields"
+import PositionFields from "../sections/position-role-fields/position-fields"
+import RoleFields from "../sections/position-role-fields/role-fields"
 
 export default function NewEventComponent({ eventDetails, dispatchEventDetails }: EventDetailsHookProps){
     return(
