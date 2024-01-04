@@ -24,39 +24,44 @@ export default function EventForms({ event_id, event_title }: { event_id: string
     }, [event_id, refetch])
 
     if(eventForms === 'error'){
-        return <ErrorComponent/>
+        return (
+            <DashboardWrapper eventId={event_id} eventTitle={event_title}>
+                <div className="h-[75vh] flex justify-center items-center"><ErrorComponent/></div>
+            </DashboardWrapper>
+        )
+    }
+    if(eventForms === 'loading'){
+        return(
+            <DashboardWrapper eventId={event_id} eventTitle={event_title}>
+                <div className="p-4 flex flex-col items-center justify-center space-y-4">
+                    <FetchingSVG/>
+                </div>
+            </DashboardWrapper>
+        )
     }
     return(
         <DashboardWrapper eventId={event_id} eventTitle={event_title}>
             <div className={sectionStyles.container()}>
-                {eventForms === 'loading'?
-                <div className="p-4 flex flex-col items-center justify-center space-y-4">
-                    <FetchingSVG/>
+                <div className={sectionStyles.box.gray({ round: true, shadow: true })}>
+                    <div className={sectionStyles.title({ color: 'purple', extensions: 'mb-2' })}>
+                        Forms
+                    </div>
+                    <FormCardsSection
+                        eventId={event_id}
+                        eventForms={eventForms}
+                        setRefetch={setRefetch}
+                    />
                 </div>
-                :
-                <>
-                    <div className={sectionStyles.box.gray({ round: true, shadow: true })}>
-                        <div className={sectionStyles.title({ color: 'purple', extensions: 'mb-2' })}>
-                            Forms
-                        </div>
-                        <FormCardsSection
-                            eventId={event_id}
-                            eventForms={eventForms}
-                            setRefetch={setRefetch}
-                        />
+                <div className={sectionStyles.box.gray({ round: true, shadow: true })}>
+                    <div className={sectionStyles.title({ color: 'red' })}>
+                        Delete
                     </div>
-                    <div className={sectionStyles.box.gray({ round: true, shadow: true })}>
-                        <div className={sectionStyles.title({ color: 'red' })}>
-                            Delete
-                        </div>
-                        <DeleteFormsSection
-                            eventId={event_id}
-                            eventForms={eventForms}
-                            setRefetch={setRefetch}
-                        />
-                    </div>
-                </>
-                }
+                    <DeleteFormsSection
+                        eventId={event_id}
+                        eventForms={eventForms}
+                        setRefetch={setRefetch}
+                    />
+                </div>
             </div>
         </DashboardWrapper>
     )
