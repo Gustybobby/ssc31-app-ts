@@ -6,7 +6,7 @@ import Image from "next/image"
 import { sendFileToAPI } from "./api"
 import toast from "react-hot-toast"
 import { FaRegFile, FaRegFilePdf } from "react-icons/fa"
-import { ListBoxSingleSelect } from "./listbox"
+import { ListBoxSingleSelect } from "./list-box"
 import { sectionStyles } from "../styles/sections"
 import type { EventDefaultResponse } from "@/server/typeconfig/event"
 

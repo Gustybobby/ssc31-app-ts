@@ -93,7 +93,7 @@ export function ListBoxMultiSelect({ list, setList, placeholder, width, maxHeigh
                     </div>
                 </Listbox.Button>
                 <Transition
-                    show={!disabled || open}
+                    show={disabled? false : open}
                     as={Fragment}
                     leave="transition ease-in duration-100"
                     leaveFrom="opacity-100"
