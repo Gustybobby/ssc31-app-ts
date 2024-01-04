@@ -5,7 +5,7 @@ import { textColorClassVariants } from "../styles/class-variants"
 
 interface InputFieldConfig {
     id: string
-    label?: string
+    label?: string | JSX.Element
     type: 'text' | 'textarea'
     placeholder?: string
     defaultValue?: string
@@ -31,25 +31,27 @@ export function InputField({ id, label, type, placeholder, defaultValue = '', pa
 
     useEffect(() => {
         setInput(defaultValue)
-        if(defaultValue === '' && required){
-            setValid(false)
-        } else{
-            setValid(!!defaultValue.match(pattern))
-        }
-    },[defaultValue, required, pattern])
+    },[defaultValue])
 
     useEffect(() => {
         setInteracted(defaultInteract)
     },[defaultInteract])
 
-    function checkValidity(e: ChangeEvent<HTMLInputElement|HTMLTextAreaElement>){
+    useEffect(() => {
+        const value = (type === 'textarea')? input.replace('\n',' ') : input
+        if(value === '' && required){
+            setValid(false)
+        } else{
+            setValid(!!value.match(pattern))
+        }
+    },[input, required, pattern])
+
+    function onChangeInput(e: ChangeEvent<HTMLInputElement|HTMLTextAreaElement>){
+        setInteracted(true)
+        setInput(e.target.value)
         if(onChange){
             onChange(e)
         }
-        setInteracted(true)
-        const value = (type === 'textarea')? e.target.value.replace('\n',' ') : e.target.value
-        setValid(!!value.match(new RegExp(pattern)))
-        setInput(e.target.value)
     }
 
     function InputType(type: InputFieldConfig['type']){
@@ -59,7 +61,7 @@ export function InputField({ id, label, type, placeholder, defaultValue = '', pa
                     <input 
                         type="text" 
                         id={id}
-                        onChange={checkValidity}
+                        onChange={onChangeInput}
                         value={input}
                         className={styles.inputBox(color, size)}
                         placeholder={placeholder}
@@ -70,7 +72,7 @@ export function InputField({ id, label, type, placeholder, defaultValue = '', pa
                 return(
                     <textarea 
                         id={id}
-                        onChange={checkValidity}
+                        onChange={onChangeInput}
                         value={input}
                         className={[styles.inputBox(color, size), 'h-32'].join(' ')}
                         placeholder={placeholder}
@@ -80,13 +82,13 @@ export function InputField({ id, label, type, placeholder, defaultValue = '', pa
     }
 
     const validationMessage = (validation: boolean, customValidMessage: string) => {
+        if(input === '' && required){
+            return 'This field is required.'
+        }
         if(validation){
             return success
         }
-        else if(input === '' && required){
-            return 'This field is required.'
-        }
-        else if(customValid && valid){
+        if(customValid && valid){
             return customValidMessage
         }
         return error
@@ -113,10 +115,10 @@ export function InputField({ id, label, type, placeholder, defaultValue = '', pa
     )
 }
 
-interface SelectOptionConfig {
+interface SelectOptionsConfig {
     id: string,
     options: GustybobbyOption[],
-    label?: string,
+    label?: string | JSX.Element,
     multiple: boolean,
     required: boolean
     size: FieldSize
@@ -125,9 +127,9 @@ interface SelectOptionConfig {
     onChange?: (e: ChangeEvent<HTMLInputElement>, optionState: { [key: string]: boolean }) => void
 }
 
-export function SelectOption({ id, options, label, multiple, required, size,
+export function SelectOptions({ id, options, label, multiple, required, size,
     defaultChecked = '', defaultInteract, onChange,
-}: SelectOptionConfig){
+}: SelectOptionsConfig){
 
     const [optionState, setOptionState] = useState<{ [key: string]: boolean }>({})
     const [interacted, setInteracted] = useState(defaultInteract)
