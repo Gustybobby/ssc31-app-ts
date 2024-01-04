@@ -1,29 +1,21 @@
 "use client"
 
 import { Card } from "@/components/tools/card"
-import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 export default function NewFormCard({ eventId }: { eventId: string }){
-
-    const router = useRouter()
-
     return(
-        <Card
-            variant="green"
-            extraClass="max-w-sm h-64 mb-2 flex justify-center items-center"
-        >
-            <button className={styles.newButtonCard}
-                onClick={()=>{
-                    router.push(`/gustybobby/event/${eventId}/forms/editor/template`)
-                }}>
+        <Card variant="green" extraClass="max-w-sm h-64">
+            <Link className={styles.newButtonCard} href={`/gustybobby/form-templates?event_id=${eventId}`}>
                 +
-            </button>
+            </Link>
         </Card>
     )
 }
 
 const styles = {
     newButtonCard: [
+        'flex justify-center items-center',
         'w-full h-full pb-2 rounded-lg',
         'text-5xl transition-colors',
         'hover:bg-green-500',

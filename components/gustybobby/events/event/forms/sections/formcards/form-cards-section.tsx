@@ -20,8 +20,8 @@ export default function FormCardsSection({ eventId, eventForms, setRefetch }: {
     eventId: string, eventForms: FormCardConfig[], setRefetch: Dispatch<SetStateAction<boolean>>
 }){
     return(
-        <div className="md:grid md:grid-cols-3 md:gap-2 xl:grid-cols-4">
-            {eventForms.map((form, index) => (
+        <div className="md:grid md:grid-cols-3 md:gap-2 xl:grid-cols-4 mb-2">
+            {eventForms.map((form) => (
                 <FormCard
                     key={form.id}
                     eventId={eventId}
@@ -31,9 +31,7 @@ export default function FormCardsSection({ eventId, eventForms, setRefetch }: {
                     setRefetch={setRefetch}
                 />
             ))}
-            <NewFormCard
-                eventId={eventId}
-            />
+            <NewFormCard eventId={eventId}/>
         </div>
     )
 }
