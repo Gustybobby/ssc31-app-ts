@@ -8,7 +8,7 @@ export function Card({ children, variant, extraClass }: { children: React.ReactN
 
 const styles = {
     card: ({ variant, extraClass }: { variant: CardVariants, extraClass?: string}) => [
-        'border rounded-lg shadow-lg',
+        'border rounded-lg shadow-lg transition-colors',
         cardVariants[variant],
         extraClass,
     ].join(' ')
