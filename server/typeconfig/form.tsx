@@ -1,4 +1,4 @@
-import type { EventPosition, EventRole, Prisma } from "@prisma/client";
+import type { EventPosition, EventRole, Prisma, ResponseType } from "@prisma/client";
 import type { EventConfigProperty } from "../classes/eventconfig";
 import Link from "next/link";
 
@@ -15,6 +15,29 @@ export type GustybobbyOption = {
     label: string
     index: number
     active: boolean
+}
+
+export const formTypes = {
+    JOIN: { 
+        id:'JOIN',
+        label:'Join',
+        force: {
+            public: true,
+            response_type: 'SINGLE' as ResponseType,
+            position_restricts: [] as { id: string }[],
+            role_restricts: [] as { id: string }[],
+        }
+    },
+    EVALUATE: {
+        id:'EVALUATE',
+        label:'Evaluate',
+        force: null
+    },
+    OTHER: {
+        id:'OTHER',
+        label:'Others',
+        force: null,
+    },
 }
 
 export type DataType = keyof typeof dataTypes
@@ -55,7 +78,7 @@ export const dataTypes = {
         label: 'Position',
         pattern: '',
         error: '',
-        force: 'OPTIONS',
+        force: 'OPTIONS' as FieldType,
         options: (config: EventConfigProperty) => config.positions.map((position) => ({
             id: position.id, label: position.label, open: position.open
         })),
@@ -66,7 +89,7 @@ export const dataTypes = {
         label: 'Role',
         pattern: '',
         error: '',
-        force: 'OPTIONS',
+        force: 'OPTIONS' as FieldType,
         options: (config: EventConfigProperty) => config.roles.map((role) => ({
             id: role.id, label: role.label, open: true
         })),
@@ -78,11 +101,20 @@ export const dataTypes = {
         pattern: '',
         error: '',
         options: null,
-        force: 'ACT_HOURS',
+        force: 'ACT_HOURS' as FieldType,
         specialValid: (string: string) => {
             const [hours, date] = string.split('><')
             return hours !== null && !isNaN(Number(hours)) && new Date(date).toString() !== 'Invalid Date'
         }
+    },
+    HOURS_SEMS: {
+        id: 'HOURS_SEMS',
+        label: 'Scholarship Hrs',
+        pattern: '',
+        error: '',
+        options: null,
+        force: 'HOURS_SEMS' as FieldType,
+        specialValid: null,
     }
 }
 
@@ -100,6 +132,7 @@ export const fieldTypes = {
         input_field: 'input',
         user_field_tail: 'INPUTFIELD',
         fixed_label: null,
+        short_label: undefined
     },
     PARAGRAPH: {
         id: 'PARAGRAPH',
@@ -111,6 +144,7 @@ export const fieldTypes = {
         input_field: 'textarea',
         user_field_tail: 'INPUTFIELD',
         fixed_label: null,
+        short_label: undefined
     },
     OPTIONS: {
         id: 'OPTIONS',
@@ -126,6 +160,7 @@ export const fieldTypes = {
         input_field: 'singleselect',
         user_field_tail: 'SELECTOPTIONS',
         fixed_label: null,
+        short_label: undefined
     },
     MULTISELECT: {
         id: 'MULTISELECT',
@@ -138,6 +173,7 @@ export const fieldTypes = {
         input_field: 'multiselect',
         user_field_tail: 'SELECTOPTIONS',
         fixed_label: null,
+        short_label: undefined
     },
     PRIVACYPOLICY: {
         id: 'PRIVACYPOLICY',
@@ -167,6 +203,7 @@ export const fieldTypes = {
         ],
         user_field_tail: '',
         fixed_label: null,
+        short_label: undefined
     },
     ACT_HOURS: {
         id: 'ACT_HOURS',
@@ -176,27 +213,38 @@ export const fieldTypes = {
         ],
         user_field_tail: 'ACTHOURS',
         fixed_label: null,
+        short_label: undefined
+    },
+    HOURS_SEMS: {
+        id: 'HOURS_SEMS',
+        label: 'Scholarship Hrs',
+        allowed: [
+            'HOURS_SEMS'
+        ],
+        user_field_tail: 'HOURSSEMS',
+        fixed_label: null,
+        short_label: undefined
     }
 }
 
 export const typePermission = {
     dataType: {
-        allowCustomLength: new Set(['STRING','NUM']),
-        allowCustomOptions: new Set(['STRING','NUM']),
+        allowCustomLength: new Set<DataType>(['STRING','NUM']),
+        allowCustomOptions: new Set<DataType>(['STRING','NUM']),
     },
     fieldType: {
-        allowCustomLength: new Set(['SHORTANS','PARAGRAPH']),
-        allowCustomHelper: new Set(['SHORTANS','PARAGRAPH']),
-        optionsLikeField: new Set(['OPTIONS','MULTISELECT','PRIVACYPOLICY']),
-        disableAccessModification: new Set(['INFO']),
-        disableRequired: new Set(['INFO']),
+        allowCustomLength: new Set<FieldType>(['SHORTANS','PARAGRAPH']),
+        allowCustomHelper: new Set<FieldType>(['SHORTANS','PARAGRAPH']),
+        optionsLikeField: new Set<FieldType>(['OPTIONS','MULTISELECT','PRIVACYPOLICY']),
+        disableAccessMod: new Set<FieldType>(['INFO']),
+        disableRequired: new Set<FieldType>(['INFO']),
     }
 }
 
 export type PrismaFieldConfig = {
     id: string
     label: string
-    options: string[]
+    options: GustybobbyOption[]
     required: boolean
     data_type: DataType
     field_type: FieldType
