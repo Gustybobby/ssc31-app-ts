@@ -1,4 +1,5 @@
 import prisma from "@/prisma-client";
+import FormConfig from "@/server/classes/forms/formconfig";
 import { searchParamsToSelect } from "@/server/utils";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -38,4 +39,30 @@ function countResponse(select: { [key: string]: boolean } | undefined){
         other_selects = otherSelects
     }
     return { count_res: count_response, other_selects }
+}
+
+export async function POST(req: NextRequest, { params }: { params: { event_id: string }}){
+    try{
+        const newFormRequest = await req.json()
+        const formConfig: FormConfig = new FormConfig(newFormRequest.data)
+        formConfig.validateFormFields()
+        const newForm = await prisma.eventForm.create({
+            data: {
+                ...formConfig,
+                title: formConfig.title ?? 'Untitled Form',
+                field_order: formConfig.field_order ?? [],
+                form_fields: formConfig.form_fields as any,
+                position_restricts: { connect: formConfig.position_restricts },
+                role_restricts: { connect: formConfig.role_restricts },
+                global_position_access: { connect: formConfig.global_position_access },
+                global_role_access: { connect: formConfig.global_role_access },
+                event_id: params.event_id
+            }
+        })
+        console.log('Created New Form', newForm)
+        return NextResponse.json({ message: "SUCCESS", data: { form_id: newForm.id } }, { status: 401 })
+    } catch(e){
+        console.log(e)
+        return NextResponse.json({ message: "ERROR" }, { status: 400 })
+    }
 }
