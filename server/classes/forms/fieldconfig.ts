@@ -1,62 +1,24 @@
-import { dataTypes, type DataType, type FieldType, type PrismaFieldConfig, fieldTypes, typePermission, type GustybobbyOption } from "@/server/typeconfig/form"
-import type { FieldVisibilityProperty } from "./fieldvisibility"
+import { dataTypes, type PrismaFieldConfig, fieldTypes, typePermission, type GustybobbyOption } from "@/server/typeconfig/form"
 import FieldVisibility from "./fieldvisibility"
 import EventConfig from "../eventconfig"
 import { getOptionStateFromSelection } from "../../inputfunction"
+import ContentConfig, { type ContentConfigProperty } from "./contentconfig"
 
-export type FieldConfigProperty = {
-    id: string
-    label: string
-    field_type: FieldType
-    data_type: DataType
-    min_length: number
-    max_length: number
-    options: GustybobbyOption[]
-    placeholder: string
-    success: string
-    error: string
-    default_value: string
-    required: boolean
+export interface FieldConfigProperty extends ContentConfigProperty {
     position_access: string[]
     role_access: string[]
-    field_visibility?: FieldVisibilityProperty
     visible_conds: string
 }
 
-export default class FieldConfig{
-    id: string
-    label: string
-    field_type: FieldType
-    data_type: DataType
-    min_length: number
-    max_length: number
-    options: GustybobbyOption[]
-    placeholder: string
-    success: string
-    error: string
-    default_value: string
-    required: boolean
+export default class FieldConfig extends ContentConfig{
     position_access: string[]
     role_access: string[]
-    field_visibility?: FieldVisibilityProperty
     visible_conds: string
 
     constructor(fieldConfig: FieldConfigProperty){
-        this.id = fieldConfig.id
-        this.label = fieldConfig.label
-        this.data_type = fieldConfig.data_type
-        this.field_type = fieldConfig.field_type
-        this.min_length = fieldConfig.min_length
-        this.max_length = fieldConfig.max_length
-        this.options = fieldConfig.options
-        this.placeholder = fieldConfig.placeholder
-        this.success = fieldConfig.success
-        this.error = fieldConfig.error
-        this.default_value = fieldConfig.default_value
-        this.required = fieldConfig.required
+        super(fieldConfig)
         this.position_access = fieldConfig.position_access
         this.role_access = fieldConfig.role_access
-        this.field_visibility = fieldConfig.field_visibility
         this.visible_conds = fieldConfig.visible_conds
     }
 
@@ -76,20 +38,12 @@ export default class FieldConfig{
             required: false,
             position_access: [],
             role_access: [],
-            visible_conds: ''
+            visible_conds: 'NONE'
         })
     }
 
     static fromDatabase(prismaField: PrismaFieldConfig){
-        return new FieldConfig({
-            ...prismaField,
-            options: prismaField.options.map((label, index) => ({
-                id: `${prismaField.id}_OPTION_${index}`,
-                label,
-                index,
-                active: false,
-            })),
-        })
+        return new FieldConfig({ ...prismaField })
     }
 
     static clone(fieldConfig: FieldConfig){
@@ -98,33 +52,12 @@ export default class FieldConfig{
             options: fieldConfig.options.map((option) => ({ ...option })),
             position_access: [...fieldConfig.position_access],
             role_access: [...fieldConfig.role_access],
-            field_visibility: {...FieldVisibility.clone(new FieldVisibility(fieldConfig.field_visibility))}
         })
     }
 
-    static getCompatibleFieldType(dataType: DataType, currentFieldType: FieldType){
-        if(dataTypes[dataType].force !== null){
-            return dataTypes[dataType].force
-        }
-        else if(!fieldTypes[currentFieldType].allowed.includes(dataType)){
-            for(const typeInfo of Object.values(fieldTypes)){
-                if(typeInfo.allowed.includes(dataType)){
-                    return typeInfo.id
-                }
-            }
-        }
-        return currentFieldType
-    }
-
     validate(){
-        if(!fieldTypes[this.field_type].allowed.includes(this.data_type)){
-            throw `field type ${this.field_type} does not allow data type ${this.data_type}`
-        }
-        if(this.min_length > this.max_length){
-            throw `min length cannot be more than max length`
-        }
+        super.validate()
         FieldVisibility.validateString(this.visible_conds)
-        return true
     }
 
     dataIsValid(dataString: string, eventConfig: EventConfig){
@@ -149,75 +82,23 @@ export default class FieldConfig{
         return !!dataString.match(new RegExp(this.getPattern()))
     }
 
-    getOptionsByDataType(eventConfig: EventConfig, filterOpen: boolean): GustybobbyOption[]{
-        if(dataTypes[this.data_type].options){
-            return dataTypes[this.data_type].options?.({...eventConfig})
-                .filter((option) => !filterOpen || option.open)
-                .map((option,index) => {
-                    return {
-                        id: option.id ?? '',
-                        label: option.label ?? '',
-                        index,
-                        active: false,
-                    }
-                }) ?? []
-        }
-        return this.options
-    }
-
-    getFieldId(){
-        return [this.id, fieldTypes[this.field_type].user_field_tail].join('_')
-    }
-
-    getPattern(){
-        if(typePermission.fieldType.optionsLikeField.has(this.field_type)){
-            return ''
-        }
-        return `^${dataTypes[this.data_type].pattern}{${this.min_length},${Math.max(this.min_length,this.max_length)}}$`
-    }
-
-    getError(){
-        if(typePermission.fieldType.optionsLikeField.has(this.field_type)){
-            return ''
-        }
-        return [dataTypes[this.data_type].error,`${this.min_length} - ${this.max_length} chars.`].join(', ')
-    }
-
-    getLabel(edit: boolean){
-        return fieldTypes[this.field_type].fixed_label || (edit? '' : (this.label || 'Untitled Field'))
-    }
-
-    getValidDataTypeOptions(){
-        return Object.values(dataTypes).map((config) => ({
-            ...config,
+    getValidDataTypeOptions(): GustybobbyOption[]{
+        return Object.values(dataTypes).map((config,index) => ({
+            id: config.id,
+            label: config.label,
+            index,
             active: config.id === this.data_type
         }))
     }
 
-    getValidFieldTypeOptions(){
-        return Object.values(fieldTypes).map((config) => ({
-            ...config,
-            active: config.id === this.field_type
-        })).filter((config)=>config.allowed.includes(this.data_type))
-    }
-
-    getPackedRequest(){
-        return {
-            id: this.id,
-            data_type: this.data_type,
-            field_type: this.field_type,
-            required: this.required,
-            label: this.label,
-            placeholder: this.placeholder,
-            min_length: this.min_length,
-            max_length: this.max_length,
-            success: this.success,
-            error: this.error,
-            default_value: this.default_value,
-            options: this.options.map((option) => option.label),
-            position_access: this.position_access,
-            role_access: this.role_access,
-            visible_conds: this.visible_conds,
-        }
+    getValidFieldTypeOptions(): GustybobbyOption[]{
+        return Object.values(fieldTypes)
+            .filter((config)=>config.allowed.includes(this.data_type))
+            .map((config, index) => ({
+                id: config.id,
+                label: config.label,
+                index,
+                active: config.id === this.field_type
+        }))
     }
 }

@@ -85,6 +85,6 @@ export default class FormTemplate{
                 visible_conds: '',
             }
         }
-        return { form_fields, field_order }
+        return { field_order, form_fields }
     }
 }

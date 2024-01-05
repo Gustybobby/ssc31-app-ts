@@ -1,7 +1,7 @@
-import type { FormResponse } from "@/server/typeconfig/form"
+import type { FormResponse, GustybobbyOption } from "@/server/typeconfig/form"
 
 export type FieldVisibilityProperty = {
-    boolCode: ('AND' | 'OR' | 'NONE')
+    boolCode: 'AND' | 'OR' | 'NONE'
     triggerFieldOptions?: TriggerFieldOptions
 }
 
@@ -9,8 +9,10 @@ export type TriggerFieldOptions = {
     [key: string]: number[]
 }
 
+export const visibilityBoolCodes = ['AND', 'OR', 'NONE']
+
 export default class FieldVisibility {
-    boolCode: ('AND' | 'OR' | 'NONE')
+    boolCode: FieldVisibilityProperty['boolCode']
     triggerFieldOptions?: TriggerFieldOptions
 
     constructor(fieldVisibility?: FieldVisibilityProperty) {
@@ -36,9 +38,13 @@ export default class FieldVisibility {
     }
 
     static validateString(visible_conds: string) {
-        if(visible_conds === ''){
+        if(visible_conds === '' || visibilityBoolCodes.includes(visible_conds)){
             return
         }
+        FieldVisibility.hardValidateString(visible_conds)
+    }
+
+    static hardValidateString(visible_conds: string){
         if (visible_conds.split("|").length !== 2) {
             throw `${visible_conds} is not a valid FieldVisibility Format`
         }
@@ -83,8 +89,8 @@ export default class FieldVisibility {
     }
 
     stringify(){
-        if(this.boolCode === 'NONE' || !this.triggerFieldOptions){
-            return 'NONE'
+        if(!this.triggerFieldOptions || Object.keys(this.triggerFieldOptions).length === 0){
+            return this.boolCode
         }
         const fieldOptionStringList = []
         for(const field_id of Object.keys(this.triggerFieldOptions)){
@@ -106,11 +112,23 @@ export default class FieldVisibility {
         } else{
             this.boolCode = 'NONE'
         }
+        if(!fieldString){
+            return
+        }
         this.triggerFieldOptions = this.triggerFieldOptions ?? {}
         for (const subString of fieldString.split(",")) {
             const [field_id, option_index] = subString.split(":")
             this.triggerFieldOptions[field_id] = this.triggerFieldOptions[field_id] ?? []
             this.triggerFieldOptions[field_id].push(Number(option_index))
+        }
+    }
+
+    setTriggersFromGustybobbies(options: GustybobbyOption[]){
+        this.triggerFieldOptions = {}
+        for (const option of options){
+            const field_id = option.id.split('_')[0]
+            this.triggerFieldOptions[field_id] = this.triggerFieldOptions[field_id] ?? []
+            this.triggerFieldOptions[field_id].push(option.index)
         }
     }
 }

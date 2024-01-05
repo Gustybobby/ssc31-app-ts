@@ -25,26 +25,26 @@ export default class EventConfig{
         return this.getRoleOptionsActiveByList(global_role_access)
     }
 
-    getPositionFormAccessOptions(position_restricts: { id: string }[]){
+    getPositionRestrictOptions(position_restricts: { id: string }[]){
         return this.getPositionOptionsActiveByList(position_restricts)
     }
 
-    getRoleFormAccessOptions(role_restricts: { id: string }[]){
+    getRoleRestrictOptions(role_restricts: { id: string }[]){
         return this.getRoleOptionsActiveByList(role_restricts)
     }
 
-    getPositionColumnAccessOptions(position_access: { id: string }[]){
-        return this.getPositionOptionsActiveByList(position_access)
+    getPositionFieldAccessOptions(position_access: string[]){
+        return this.getPositionOptionsActiveByList(position_access.map((id) => ({ id })))
     }
 
-    getRoleColumnAccessOptions(role_access: { id: string }[]){
-        return this.getRoleOptionsActiveByList(role_access)
+    getRoleFieldAccessOptions(role_access: string[]){
+        return this.getRoleOptionsActiveByList(role_access.map((id) => ({ id })))
     }
 
     getPositionOptionsActiveByList(activeList: { id: string }[]){
         return this.positions.map((position,index)=>({
-            id: position.id,
-            label: position.label,
+            id: position.id ?? 'MISSING_ID',
+            label: position.label ?? 'MISSING_LABEL',
             index,
             active: !!activeList.find(({ id }) => (id === position.id ?? '')),
         })) ?? []
@@ -52,8 +52,8 @@ export default class EventConfig{
 
     getRoleOptionsActiveByList(activeList: { id: string }[]){
         return this.roles.map((role,index)=>({
-            id: role.id,
-            label: role.label,
+            id: role.id ?? 'MISSING_ID',
+            label: role.label ?? 'MISSING_LABEL',
             index,
             active: !!activeList.find(({ id }) => (id === role.id ?? '')),
         })) ?? []
