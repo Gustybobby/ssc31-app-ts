@@ -5,7 +5,7 @@ import Link from "next/link"
 
 export default function NewFormCard({ eventId }: { eventId: string }){
     return(
-        <Card variant="green" extraClass="max-w-sm h-64">
+        <Card variant="green" extraClass="max-w-sm min-h-72 flex items-center">
             <Link className={styles.newButtonCard} href={`/gustybobby/form-templates?event_id=${eventId}`}>
                 +
             </Link>
@@ -16,7 +16,7 @@ export default function NewFormCard({ eventId }: { eventId: string }){
 const styles = {
     newButtonCard: [
         'flex justify-center items-center',
-        'w-full h-full pb-2 rounded-lg',
+        'w-full min-h-72 pb-2 rounded-lg',
         'text-5xl transition-colors',
         'hover:bg-green-500',
     ].join(' '),
