@@ -18,16 +18,11 @@ export default function DescriptionEditor({ description, dispatchEventDetails }:
                 className={descriptionTextAreaStyle}
                 placeholder="Event Descriptions" 
                 value={description}
-                onChange={(e) => {
-                    if(!e.target.value){
-                        e.target.value = ''
-                    }
-                    dispatchEventDetails({
-                        type: 'edit_single',
-                        key: 'description',
-                        value: formatText(e.target.value, description)
-                    })
-                }}
+                onChange={(e) => dispatchEventDetails({
+                    type: 'edit_single',
+                    key: 'description',
+                    value: formatText(e.target.value, description)
+                })}
             />
             <div className="p-3 space-y-1 my-2 bg-gray-200 dark:bg-black/50 rounded-lg">
                 <ParagraphToolInstruction/>
