@@ -51,7 +51,7 @@ export default function StatusSection({ eventId }: { eventId: string }){
                         await sendDataToAPI({
                             apiUrl: `/api/gustybobby/events/${eventId}`,
                             method: 'PATCH',
-                            body: JSON.stringify({ online: !status })
+                            body: JSON.stringify({ data: { online: !status } })
                         })
                         setRefetch(refetch => !refetch)
                     }}

@@ -32,7 +32,14 @@ export default function InfoSwitch({ eventId, form, responseCount, updatedAt, se
                         offColor="bg-red-600"
                         pinColor="bg-white"
                         size="md"
-                        onChange={async()=>toggleForm(eventId, form.id, form.open)}
+                        onChange={async()=>{
+                            await sendDataToAPI({
+                                apiUrl: `/api/gustybobby/events/${eventId}/forms/${form.id}`,
+                                method: 'PATCH',
+                                body: JSON.stringify({ data: { open: !form.open } }),
+                            })
+                            setRefetch(refetch => !refetch)
+                        }}
                     />
                 </div>
             </div>
@@ -50,14 +57,6 @@ export default function InfoSwitch({ eventId, form, responseCount, updatedAt, se
             </div>
         </div>
     )
-}
-
-async function toggleForm(eventId: string, id: string, open: boolean){
-    await sendDataToAPI({
-        apiUrl: `/api/gustybobby/events/${eventId}/forms/${id}`,
-        method: 'PATCH',
-        body: JSON.stringify({ open: !open }),
-    })
 }
 
 const styles = {
