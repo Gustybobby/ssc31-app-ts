@@ -22,14 +22,16 @@ export async function GET(req: NextRequest, { params } : { params: { event_id: s
 
 export async function PATCH(req: NextRequest, { params }: { params: { event_id: string }}){
     try{
-        const data = await req.json()
-        await prisma.event.update({
+        const eventRequest = await req.json()
+        console.log("Recieved request", eventRequest)
+        const data = eventRequest.data
+        const patchedEvent = await prisma.event.update({
             where:{
                 id: params.event_id
             },
             data,
         })
-        console.log("Updated event", params.event_id, data)
+        console.log("Updated event", patchedEvent)
         return NextResponse.json({ message: "SUCCESS" }, { status: 200 })
     } catch(e){
         console.log(e)

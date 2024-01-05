@@ -35,9 +35,29 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
     }
 }
 
+export async function PATCH(req: NextRequest, { params }: { params: { form_id: string }}){
+    try{
+        const updateRequest = await req.json()
+        console.log("Recieved request", updateRequest)
+        const data = updateRequest.data
+        const patchedForm = await prisma.eventForm.update({
+            where: {
+                id: params.form_id
+            },
+            data
+        })
+        console.log("Patched Form", patchedForm)
+        return NextResponse.json({ message: "SUCCESS" }, { status: 200 })
+    } catch(e){
+        console.log(e)
+        return NextResponse.json({ message: "ERROR" }, { status: 500 })
+    }
+}
+
 export async function PUT(req: NextRequest, { params }: { params: { form_id: string }}){
     try{
         const formRequest = await req.json()
+        console.log("Recieved request", formRequest)
         const formData = formRequest.data as FormConfigProperty
         const { id, ...data } = formData
         const editedForm = await prisma.eventForm.update({

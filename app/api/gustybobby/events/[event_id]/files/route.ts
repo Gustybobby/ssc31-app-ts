@@ -29,7 +29,7 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
 export async function POST(req: NextRequest, { params }: { params: { event_id: string }}){
     try{
         const data = await req.formData()
-        console.log('Recieved new data', data)
+        console.log('Recieved request data', data)
         const file = data.get('file')
         const label = data.get('label')
         if(!file || !(file instanceof File)){
