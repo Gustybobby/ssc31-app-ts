@@ -36,7 +36,7 @@ export default async function FormTemplatesPage({ searchParams }: { searchParams
                             prefetch={false}
                             href={{
                                 pathname: `/gustybobby/events/${searchParams.event_id}/forms/new`,
-                                query: { template: template.id }
+                                query: { template_id: template.id }
                             }}>
                                 Use
                             </Link>

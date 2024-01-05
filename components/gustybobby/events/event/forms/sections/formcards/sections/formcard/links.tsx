@@ -7,13 +7,13 @@ export default function LinkButtons({ eventId, formId }: { eventId: string, form
     return(
         <div className="mt-6 flex justify-between items-center">
             <Link
-                href={`/gustybobby/event/${eventId}/forms/responses?form=${formId}&tab=table`}
+                href={`/gustybobby/events/${eventId}/forms/${formId}/responses`}
                 className={sectionStyles.button({ color: 'blue', large: true, border: true, hover: true })}
             >
                 Responses
             </Link>
             <Link 
-                href={`/gustybobby/event/${eventId}/forms/editor?form=${formId}`}
+                href={`/gustybobby/events/${eventId}/forms/${formId}/editor`}
                 className={sectionStyles.button({ color: 'yellow', large: true, border: true, hover: true })}
             >
                 Edit
