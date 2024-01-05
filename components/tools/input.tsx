@@ -44,7 +44,7 @@ export function InputField({ id, label, type, placeholder, defaultValue = '', pa
         } else{
             setValid(!!value.match(pattern))
         }
-    },[input, required, pattern])
+    },[input, type, required, pattern])
 
     function onChangeInput(e: ChangeEvent<HTMLInputElement|HTMLTextAreaElement>){
         setInteracted(true)
