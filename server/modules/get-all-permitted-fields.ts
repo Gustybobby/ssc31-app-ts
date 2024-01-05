@@ -122,7 +122,7 @@ function getPermittedFormFields({
                 label: field.label,
                 data_type: field.data_type,
                 field_type: field.field_type,
-                options: field.options,
+                options: field.options.map((option) => option.label),
                 form_id: form.id,
                 active: default_active ?? false,
             }
