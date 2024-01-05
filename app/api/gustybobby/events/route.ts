@@ -24,6 +24,7 @@ export async function GET(req: NextRequest){
 export async function POST(req: NextRequest){
     try{
         const newEvent = await req.json()
+        console.log("Recieved request", newEvent)
         const eventData: EventDataRequest = newEvent.data
         checkDuplicates(eventData.positions.map((position) => position.label), "positions")
         checkDuplicates(eventData.roles.map((role) => role.label), "roles")

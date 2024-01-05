@@ -44,6 +44,7 @@ function countResponse(select: { [key: string]: boolean } | undefined){
 export async function POST(req: NextRequest, { params }: { params: { event_id: string }}){
     try{
         const newFormRequest = await req.json()
+        console.log("Recieved request", newFormRequest)
         const formConfig: FormConfig = new FormConfig(newFormRequest.data)
         formConfig.validateFormFields()
         const newForm = await prisma.eventForm.create({
