@@ -3,7 +3,7 @@ import type { FormWithRowList } from "../classes/forms/eventformrowdata"
 import EventFormRowData from "../classes/forms/eventformrowdata"
 import { getPrismaFields } from "../typeconfig/form"
 
-export async function fetchFormResponsesAsTableDataRows(
+export default async function fetchFormResponsesAsTableDataRows(
     prisma: PrismaClient,
     { api_code, position_id, role_id }: { api_code: string, position_id: string, role_id: string },
     target_form_id: string | null,

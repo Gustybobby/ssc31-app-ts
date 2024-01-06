@@ -1,6 +1,6 @@
 import type { MemberStatus, PrismaClient } from "@prisma/client"
 import type { ActivityRecord, TransferRecord } from "../typeconfig/record"
-import { getEventMember } from "./get-event-member"
+import getEventMember from "./get-event-member"
 
 interface OptionalMemberData {
     status?: MemberStatus
@@ -11,7 +11,7 @@ interface OptionalMemberData {
     role_id?: string | null
 }
 
-export async function createNewEventMember(
+export default async function createNewEventMember(
     prisma: PrismaClient,
     { 
         user_id,

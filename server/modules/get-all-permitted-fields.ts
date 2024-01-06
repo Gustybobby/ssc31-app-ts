@@ -13,7 +13,7 @@ interface PermittableForm {
     global_role_access: { id: string }[]
 }
 
-export async function getAllPermittedFields(
+export default async function getAllPermittedFields(
     prisma: PrismaClient,
     whereParams: { [key: string]: any } | undefined,
     {

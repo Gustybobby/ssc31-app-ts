@@ -1,12 +1,12 @@
 import type { EventFormRow, EventMember, PrismaClient } from "@prisma/client"
 import EventConfig from "../classes/eventconfig"
 import FormConfig from "../classes/forms/formconfig"
-import { getEventMember } from "./get-event-member"
-import { getMemberFormResponses } from "./get-member-form-responses"
+import getEventMember from "./get-event-member"
+import getMemberFormResponses from "./get-member-form-responses"
 import { getPrismaFields } from "../typeconfig/form"
 
 interface BadFormAuthResponse {
-    message: "INVALID" | "UNAUTHORIZED" | "PRIVATE_FORM" | "MEMBER_EXISTED"
+    message: "INVALID" | "UNAUTHORIZED" | "MEMBER_EXISTED"
 }
 
 interface ResponseExistedAuthResponse {
@@ -25,7 +25,7 @@ interface SuccessAuthResponse {
 
 type FormAuthResponse = BadFormAuthResponse | ResponseExistedAuthResponse | SuccessAuthResponse
 
-export async function formAuth(
+export default async function formAuth(
     prisma: PrismaClient,
     isAdmin: boolean,
     {
@@ -97,7 +97,7 @@ export async function formAuth(
         return { message: "UNAUTHORIZED" }
     }
     if(!formConfig.public && !userMemberInfo){
-        return { message: "PRIVATE_FORM" }
+        return { message: "UNAUTHORIZED" }
     }
     if(formConfig.type === 'JOIN' && userMemberInfo){
         return { message: "MEMBER_EXISTED" }
