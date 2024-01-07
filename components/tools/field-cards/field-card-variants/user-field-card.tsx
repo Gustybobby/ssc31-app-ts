@@ -4,6 +4,7 @@ import type { ContentConfigProperty } from "@/server/classes/forms/contentconfig
 import ContentField from "../sections/field-content/user-content-fields-map"
 import type { EventConfigProperty } from "@/server/classes/eventconfig"
 import { Card } from "../../card"
+import { memo } from "react"
 
 interface UserFieldCardProps {
     contentConfig: ContentConfigProperty
@@ -11,7 +12,7 @@ interface UserFieldCardProps {
     defaultInteract: boolean
 }
 
-export default function UserFieldCard({ contentConfig, eventConfig, defaultInteract }: UserFieldCardProps){
+function UserFieldCardComponent({ contentConfig, eventConfig, defaultInteract }: UserFieldCardProps){
     return(
         <Card variant="translucent" extraClass="p-2">
             <div className="flex justify-between">
@@ -28,3 +29,6 @@ export default function UserFieldCard({ contentConfig, eventConfig, defaultInter
         </Card>
     )
 }
+
+const UserFieldCard = memo(UserFieldCardComponent)
+export default UserFieldCard
