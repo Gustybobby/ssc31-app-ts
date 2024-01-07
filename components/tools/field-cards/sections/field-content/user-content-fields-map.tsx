@@ -4,6 +4,7 @@ import type { ContentFieldProps, ContentFieldsType } from "./content-fields-type
 import ParagraphField from "./user-field-content-components/paragraph-field"
 import OptionsField from "./user-field-content-components/options-field"
 import MultiSelectField from "./user-field-content-components/multiselect-field"
+import InfoField from "./user-field-content-components/info-field"
 
 const ContentFieldComponents: ContentFieldsType = {
     SHORTANS: (props) => <ShortAnswerField {...props}/>,
@@ -11,7 +12,7 @@ const ContentFieldComponents: ContentFieldsType = {
     OPTIONS: (props) => <OptionsField {...props}/>,
     MULTISELECT: (props) => <MultiSelectField {...props}/>,
     PRIVACYPOLICY: (props) => <OptionsField {...props}/>,
-    INFO: () => <></>,
+    INFO: (props) => <InfoField {...props}/>,
     ACT_HOURS: () => <></>,
     HOURS_SEMS: () => <></>,
 }

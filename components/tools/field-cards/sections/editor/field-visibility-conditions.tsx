@@ -29,7 +29,7 @@ export default function FieldVisibilityConditions({ fieldId, visibleConds, allPr
     const triggerOptions: GustybobbyOption[] = useMemo(() => {
         return allPreviousOptions.map((option) => ({
             ...option,
-            active: !!fieldVisibility.triggerFieldOptions?.[option.id.split('_')[0]].includes(option.index)
+            active: !!fieldVisibility.triggerFieldOptions?.[option.id.split('_')[0]]?.includes(option.index)
         }))
     }, [fieldVisibility, allPreviousOptions])
     

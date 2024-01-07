@@ -2,7 +2,7 @@ import { type ColorVariants, backgroundColorClassVariants, hoverColorClassVarian
 
 export const eventStyles = {
     box: ({ size, round, extensions } : { size: BoxSize, round: boolean, extensions?: string }) => [
-        'w-full flex flex-col items-center justify-center',
+        'w-full flex flex-col items-center',
         round? 'rounded-2xl' : '',
         'shadow-lg',
         'border-1',
