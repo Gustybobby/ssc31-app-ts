@@ -62,13 +62,16 @@ export default class FieldConfig extends ContentConfig{
 
     dataIsValid(dataString: string, eventConfig: EventConfig){
         if(this.field_type === 'INFO'){
-            return !dataString
+            return dataString === ''
+        }
+        if(dataString === '' && this.required){
+            return this.visible_conds !== ''
         }
         if(dataTypes[this.data_type].specialValid){
             return !!dataTypes[this.data_type].specialValid?.(dataString)
         }
         if(typePermission.fieldType.optionsLikeField.has(this.field_type)){
-            if(dataString === '' && this.required && !this.visible_conds){
+            if(this.field_type === 'PRIVACYPOLICY' && !dataString.startsWith('true')){
                 return false
             }
             const fieldOptions = this.getOptionsByDataType(eventConfig, true)
