@@ -1,4 +1,4 @@
-import { stringifyGustybobbySelection } from "@/server/inputfunction"
+import { getOptionStateFromSelection, stringifyGustybobbySelection } from "@/server/inputfunction"
 import { GustybobbyOption } from "@/server/typeconfig/form"
 import { type ChangeEvent, useEffect, useState } from "react"
 import { textColorClassVariants } from "../styles/class-variants"
@@ -54,7 +54,7 @@ export function InputField({ id, label, type, placeholder, defaultValue = '', pa
         }
     }
 
-    function InputType(type: InputFieldConfig['type']){
+    function InputType({ type }: { type: InputFieldConfig['type'] }){
         switch(type){
             case 'text':
                 return(
@@ -105,7 +105,7 @@ export function InputField({ id, label, type, placeholder, defaultValue = '', pa
                 {label}
             </label>
             }
-            {InputType(type)}
+            {InputType({ type })}
             <p className={[styles.p(color),interacted? '':'invisible'].join(' ')}>
                 {validationMessage(validation, customValidMessage)}
             </p>
@@ -135,20 +135,16 @@ export function SelectOptions({ id, options, label, multiple, required, size,
     const [interacted, setInteracted] = useState(defaultInteract)
 
     useEffect(() => {
-        setOptionState(optionState => {
-            const newOptionState = {...optionState}
+        setOptionState(() => {
+            const newOptionState: { [key: string]: boolean } = {}
             if(defaultChecked !== ''){
-                for(const option of defaultChecked.split('|')){
-                    const optionId = option.split(':')[0]
-                    newOptionState[optionId] = true
-                }
-            } else{
-                options.forEach((option) => { newOptionState[option.id] = optionState[option.id] ?? false })
+                const defaultCheckedState = getOptionStateFromSelection(defaultChecked)
+                return { ...newOptionState, ...defaultCheckedState }
             }
             return newOptionState
         })
         setInteracted(true)
-    },[options, defaultChecked])
+    },[defaultChecked])
 
     useEffect(() => {
         setInteracted(defaultInteract)
@@ -164,17 +160,13 @@ export function SelectOptions({ id, options, label, multiple, required, size,
             })
             return count
         }
-        if(!interacted){
-            return { valid: !required, color: 'default' }
-        }
         if(checkAmountActive() == 0 && required){
-            return { valid: false, color: 'red' }
+            return { valid: false, color: interacted? 'red' : 'default' }
         }
-        return { valid: true, color: 'green' }
+        return { valid: true, color: interacted? 'green' : 'default' }
     }
-
     const { valid, color } = selection()
-    
+
     return(
         <div>
             <h1 className={styles.label(color, size)}>{label}</h1>
