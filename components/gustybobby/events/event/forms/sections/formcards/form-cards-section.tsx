@@ -11,7 +11,7 @@ export interface FormCardConfig {
     type: FormType
     open: boolean
     _count: {
-        row_list: number
+        responses_list: number
     }
     updated_at: Date
 }
@@ -26,7 +26,7 @@ export default function FormCardsSection({ eventId, eventForms, setRefetch }: {
                     key={form.id}
                     eventId={eventId}
                     form={form}
-                    responseCount={form._count.row_list}
+                    responseCount={form._count.responses_list}
                     updatedAt={form.updated_at}
                     setRefetch={setRefetch}
                 />

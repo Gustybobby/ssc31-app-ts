@@ -159,7 +159,7 @@ interface ActionTypeEditFieldTriggers {
     options: GustybobbyOption[]
 }
 
-export type FormConfigReducerActionType = 
+export type FormConfigReducerAction = 
     ActionTypeSetConfig |
     ActionTypeSetTemplate |
     ActionTypeSetEventConfig |
@@ -184,7 +184,7 @@ export type FormConfigReducerActionType =
     ActionTypeEditFieldBoolCode |
     ActionTypeEditFieldTriggers
 
-export default function formConfigReducer(state: EditorFormConfig, action: FormConfigReducerActionType): EditorFormConfig{
+export default function formConfigReducer(state: EditorFormConfig, action: FormConfigReducerAction): EditorFormConfig{
     switch(action.type){
         case 'edit_string':
         case 'edit_boolean':
