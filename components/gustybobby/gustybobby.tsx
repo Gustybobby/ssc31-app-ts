@@ -1,10 +1,9 @@
 "use client";
 import { RadioGroup } from "@headlessui/react";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment } from "react";
 import { ZoomIn } from "../tools/transition";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import FetchingSVG from "../svg/fetching-svg";
 import ProfileSection from "../tools/profile-section";
 import RadioOptionBox from "../tools/radio-option-box";
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
@@ -15,25 +14,11 @@ type EventBanner = {
     online: boolean
 }
 
-export default function Gustybobby(){
+export default function Gustybobby({ events }: { events: EventBanner[] }){
 
     const { data:session } = useSession()
-    const [events, setEvents] = useState<EventBanner[]|null>(null)
     const router = useRouter()
 
-    useEffect(()=>{
-        fetch('/api/gustybobby/events?id=1&title=1&online=1')
-            .then(res => res.json())
-            .then(data => data.message === "SUCCESS"? data.data : null)
-            .then(data => setEvents(data))
-    },[])
-    if(!events){
-        return(
-            <div className={[styles.mainBox,'items-center'].join(' ')}>
-                <FetchingSVG/>
-            </div>
-        )
-    }
     return(
         <div className={styles.mainBox}>
             <div className="p-4 flex flex-col items-center justify-center space-y-4">
