@@ -3,7 +3,7 @@ import FormConfig from "@/server/classes/forms/formconfig"
 import { redirect } from "next/navigation"
 import AvailableForms from "@/components/events/event/forms/available-forms"
 import { getServerAuthSession } from "@/app/api/auth/[...nextauth]/_utils"
-import { getEventMember } from "@/server/modules/get-event-member"
+import getEventMember from "@/server/modules/get-event-member"
 
 export default async function AllEvaluateFormPage({ params }: { params: { event_id: string }}){
     const session = await getServerAuthSession()
