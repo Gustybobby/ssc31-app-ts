@@ -16,7 +16,7 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
                 ...select,
                 _count: count_res? {
                     select: {
-                        row_list: true
+                        responses_list: true
                     }
                 } : false
             } : undefined,

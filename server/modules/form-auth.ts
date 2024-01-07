@@ -1,29 +1,23 @@
-import type { EventFormRow, EventMember, PrismaClient } from "@prisma/client"
+import type { EventFormResponse, EventMember, PrismaClient } from "@prisma/client"
 import EventConfig from "../classes/eventconfig"
 import FormConfig from "../classes/forms/formconfig"
 import getEventMember from "./get-event-member"
-import getMemberFormResponses from "./get-member-form-responses"
 import { getPrismaFields } from "../typeconfig/form"
+import getUserFormResponses from "./get-user-form-responses"
 
 interface BadFormAuthResponse {
-    message: "INVALID" | "UNAUTHORIZED" | "MEMBER_EXISTED"
+    message: "INVALID" | "UNAUTHORIZED"
 }
 
-interface ResponseExistedAuthResponse {
-    message: "RESPONSE_EXISTED"
-    member_info: EventMember
-    member_responses: EventFormRow[] 
-}
-
-interface SuccessAuthResponse {
-    message: "SUCCESS"
+interface GoodFormAuthResponse {
+    message: "SUCCESS" | "MEMBER_EXISTED" | "RESPONSE_EXISTED"
     member_info: EventMember | null
-    member_responses: EventFormRow[]
+    member_responses: EventFormResponse[]
     event_config: EventConfig
     form_config: FormConfig
 }
 
-type FormAuthResponse = BadFormAuthResponse | ResponseExistedAuthResponse | SuccessAuthResponse
+type FormAuthResponse = BadFormAuthResponse | GoodFormAuthResponse
 
 export default async function formAuth(
     prisma: PrismaClient,
@@ -70,6 +64,7 @@ export default async function formAuth(
             id: true,
             title: true,
             description: true,
+            submitted_area: true,
             type: true,
             response_type: true,
             open: true,
@@ -96,25 +91,22 @@ export default async function formAuth(
     if(!formConfig.open && !isAdmin){
         return { message: "UNAUTHORIZED" }
     }
-    if(!formConfig.public && !userMemberInfo){
+    if(!formConfig.public && !userMemberInfo && !isAdmin){
         return { message: "UNAUTHORIZED" }
     }
+    const userResponses = await getUserFormResponses(prisma, { user_id, form_id })
+    let message = "SUCCESS" as GoodFormAuthResponse['message']
     if(formConfig.type === 'JOIN' && userMemberInfo){
-        return { message: "MEMBER_EXISTED" }
+        message = "MEMBER_EXISTED"
     }
-    const memberResponses = userMemberInfo? await getMemberFormResponses(prisma, { member_id: userMemberInfo.id, form_id }) : []
-    if(formConfig.response_type === 'SINGLE' && userMemberInfo && memberResponses.length > 0){
-        return {
-            message: "RESPONSE_EXISTED",
-            member_info: userMemberInfo,
-            member_responses: memberResponses,
-        }
+    else if(formConfig.response_type === 'SINGLE' && userResponses.length > 0){
+        message = "RESPONSE_EXISTED"
     }
     return { 
-        message: "SUCCESS",
+        message,
         event_config: eventConfig,
         form_config: formConfig,
         member_info: userMemberInfo,
-        member_responses: memberResponses
+        member_responses: userMemberInfo? userResponses : []
     }
 }

@@ -11,14 +11,14 @@ datasource db {
 }
 
 model User {
-  id               String           @id @default(uuid())
-  email            String           @unique
-  role             Role             @default(USER)
-  created_at       DateTime?        @default(now())
-  updated_at       DateTime?        @updatedAt
+  id               String              @id @default(uuid())
+  email            String              @unique
+  role             Role                @default(USER)
+  created_at       DateTime?           @default(now())
+  updated_at       DateTime?           @updatedAt
   event_members    EventMember[]
+  form_responses   EventFormResponse[]
   archived_members ArchivedMember[]
-  baan_member      BaanMember?
   files            EventFile[]
 }
 
@@ -40,21 +40,21 @@ model Event {
 }
 
 model EventMember {
-  id               String             @id @default(cuid())
-  status           MemberStatus       @default(PENDING)
-  data_rows        EventFormRow[]
+  id               String              @id @default(cuid())
+  status           MemberStatus        @default(PENDING)
+  form_responses   EventFormResponse[]
   appointments     EventAppointment[]
   attendances      Attendance[]
-  act_hrs          Int                @default(0)
+  act_hrs          Int                 @default(0)
   act_records      Json?
   transfer_records Json?
-  position         EventPosition?     @relation(name: "position", fields: [position_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  position         EventPosition?      @relation(name: "position", fields: [position_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
   position_id      String?
-  role             EventRole?         @relation(fields: [role_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  role             EventRole?          @relation(fields: [role_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
   role_id          String?
-  event            Event              @relation(fields: [event_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  event            Event               @relation(fields: [event_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
   event_id         String
-  user             User               @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  user             User                @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
   user_id          String
 }
 
@@ -89,29 +89,29 @@ model EventRole {
 }
 
 model EventForm {
-  id                     String          @id @default(cuid())
+  id                     String              @id @default(cuid())
   title                  String
   description            String?
   submitted_area         String?
-  type                   FormType        @default(OTHER)
-  response_type          ResponseType    @default(SINGLE)
-  open                   Boolean         @default(false)
-  public                 Boolean         @default(false)
+  type                   FormType            @default(OTHER)
+  response_type          ResponseType        @default(SINGLE)
+  open                   Boolean             @default(false)
+  public                 Boolean             @default(false)
   email_restricts        String[]
-  position_restricts     EventPosition[] @relation(name: "form_position_restricts")
-  role_restricts         EventRole[]     @relation(name: "form_role_restricts")
-  created_at             DateTime?       @default(now())
-  updated_at             DateTime?       @updatedAt
+  position_restricts     EventPosition[]     @relation(name: "form_position_restricts")
+  role_restricts         EventRole[]         @relation(name: "form_role_restricts")
+  created_at             DateTime?           @default(now())
+  updated_at             DateTime?           @updatedAt
   global_position_access EventPosition[]
   global_role_access     EventRole[]
-  row_list               EventFormRow[]
+  responses_list         EventFormResponse[]
   field_order            String[]
   form_fields            Json?
-  event                  Event           @relation(fields: [event_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  event                  Event               @relation(fields: [event_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
   event_id               String
 }
 
-model EventFormRow {
+model EventFormResponse {
   id         String       @id @default(cuid())
   response   Json?
   snapshot   Json?
@@ -121,6 +121,8 @@ model EventFormRow {
   form_id    String
   member     EventMember? @relation(fields: [member_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
   member_id  String?
+  user       User         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  user_id    String
 }
 
 model EventFormTemplate {
@@ -198,43 +200,6 @@ model ArchivedMember {
   archived_id      String
   user             User          @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
   user_id          String
-}
-
-model BaanMember {
-  entry        String         @id @default(uuid())
-  student_id   String?        @default("-")
-  full_name    String?        @default("-")
-  nickname     String?        @default("-")
-  sex          String?        @default("-")
-  line_id      String?        @default("-")
-  phone_number String?        @default("-")
-  created_at   DateTime?      @default(now())
-  updated_at   DateTime?      @updatedAt
-  user         User           @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  user_id      String         @unique
-  baan_info    BaanStatistics @relation(fields: [baan], references: [baan], onDelete: Cascade, onUpdate: Restrict)
-  baan         Int
-}
-
-model BaanStatistics {
-  id               Int          @id @default(autoincrement())
-  baan             Int          @unique
-  member_size      Int          @default(0)
-  updated_at       DateTime?    @updatedAt
-  line_group       String?
-  line_qr          String?
-  baan_member_list BaanMember[]
-  baan_staff       BaanStaff[]
-}
-
-model BaanStaff {
-  id          String         @id @default(uuid())
-  student_id  String?        @unique
-  full_name   String?
-  nickname    String?
-  baan_info   BaanStatistics @relation(fields: [baan], references: [baan], onDelete: Cascade, onUpdate: Restrict)
-  baan        Int
-  last_access DateTime?
 }
 
 enum Role {
