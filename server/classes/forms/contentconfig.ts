@@ -28,18 +28,18 @@ export const contentPatterns = {
 }
 
 export default class ContentConfig{
-    id: string
-    label: string
-    field_type: FieldType
-    data_type: DataType
-    min_length: number
-    max_length: number
-    options: GustybobbyOption[]
-    placeholder: string
-    success: string
-    error: string
-    default_value: string
-    required: boolean
+    id: ContentConfigProperty['id']
+    label: ContentConfigProperty['label']
+    field_type: ContentConfigProperty['field_type']
+    data_type: ContentConfigProperty['data_type']
+    min_length: ContentConfigProperty['min_length']
+    max_length: ContentConfigProperty['max_length']
+    options: ContentConfigProperty['options']
+    placeholder: ContentConfigProperty['placeholder']
+    success: ContentConfigProperty['success']
+    error: ContentConfigProperty['error']
+    default_value: ContentConfigProperty['default_value']
+    required: ContentConfigProperty['required']
 
     constructor(contentConfig: ContentConfigProperty){
         this.id = contentConfig.id

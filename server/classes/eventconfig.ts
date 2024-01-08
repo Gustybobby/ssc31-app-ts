@@ -7,9 +7,9 @@ export type EventConfigProperty = {
 }
 
 export default class EventConfig{
-    id: string
-    positions: EventConfigPosition[]
-    roles: EventConfigRole[]
+    id: EventConfigProperty['id']
+    positions: EventConfigProperty['positions']
+    roles: EventConfigProperty['roles']
 
     constructor(eventConfig?: EventConfigProperty){
         this.id = eventConfig?.id ?? ''

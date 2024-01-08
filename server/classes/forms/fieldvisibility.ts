@@ -13,7 +13,7 @@ export const visibilityBoolCodes = ['AND', 'OR', 'NONE']
 
 export default class FieldVisibility {
     boolCode: FieldVisibilityProperty['boolCode']
-    triggerFieldOptions?: TriggerFieldOptions
+    triggerFieldOptions?: FieldVisibilityProperty['triggerFieldOptions']
 
     constructor(fieldVisibility?: FieldVisibilityProperty) {
         this.boolCode = fieldVisibility?.boolCode ?? 'NONE'

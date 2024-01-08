@@ -11,9 +11,9 @@ export interface FieldConfigProperty extends ContentConfigProperty {
 }
 
 export default class FieldConfig extends ContentConfig{
-    position_access: string[]
-    role_access: string[]
-    visible_conds: string
+    position_access: FieldConfigProperty['position_access']
+    role_access: FieldConfigProperty['role_access']
+    visible_conds: FieldConfigProperty['visible_conds']
 
     constructor(fieldConfig: FieldConfigProperty){
         super(fieldConfig)

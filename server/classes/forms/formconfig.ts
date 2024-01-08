@@ -45,23 +45,21 @@ export type FormConfigProperty = {
 }
 
 export default class FormConfig{
-    id?: string
-    title?: string
-    description?: string | null
-    submitted_area?: string | null
-    type?: FormType
-    response_type?: ResponseType
-    open?: boolean
-    public?: boolean
-    email_restricts?: string[]
-    position_restricts?: { id: string }[]
-    role_restricts?: { id: string }[]
-    global_position_access?: { id: string }[]
-    global_role_access?: { id: string }[]
-    form_fields?: {
-        [key: string]: FieldConfigProperty
-    }
-    field_order?: string[]
+    id?: FormConfigProperty['id']
+    title?: FormConfigProperty['title']
+    description?: FormConfigProperty['description']
+    submitted_area?: FormConfigProperty['submitted_area']
+    type?: FormConfigProperty['type']
+    response_type?: FormConfigProperty['response_type']
+    open?: FormConfigProperty['open']
+    public?: FormConfigProperty['public']
+    email_restricts?: FormConfigProperty['email_restricts']
+    position_restricts?: FormConfigProperty['position_restricts']
+    role_restricts?: FormConfigProperty['role_restricts']
+    global_position_access?: FormConfigProperty['global_position_access']
+    global_role_access?: FormConfigProperty['global_role_access']
+    form_fields?: FormConfigProperty['form_fields']
+    field_order?: FormConfigProperty['field_order']
 
     constructor(formConfig: FormConfigProperty){
         this.id = formConfig.id

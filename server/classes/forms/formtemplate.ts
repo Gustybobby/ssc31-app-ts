@@ -1,19 +1,20 @@
 import { createCUID } from "@/cuid"
 import type { EventFormTemplate } from "@prisma/client"
 import type { FieldConfigProperty } from "./fieldconfig"
+import type { DataType, FieldType } from "@/server/typeconfig/form"
 
 export default class FormTemplate{
-    label
-    placeholder
-    success
-    error
-    default_value
-    min_length
-    max_length
-    required
-    data_type
-    field_type
-    options
+    label: string[]
+    placeholder: string[]
+    success: string[]
+    error: string[]
+    default_value: string[]
+    min_length: number[]
+    max_length: number[]
+    required: boolean[]
+    data_type: DataType[]
+    field_type: FieldType[]
+    options: string[]
     constructor(template?: EventFormTemplate){
         this.label = template?.label ?? []
         this.placeholder = template?.placeholder ?? []
