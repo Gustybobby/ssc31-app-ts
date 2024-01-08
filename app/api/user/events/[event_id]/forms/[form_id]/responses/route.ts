@@ -30,7 +30,8 @@ export async function POST(req: NextRequest, { params }: { params: { event_id: s
             field_order: form.form_config.field_order ?? [],
             form_fields: form.form_config.form_fields ?? {},
             eventConfig: form.event_config,
-        }).getCleanFormResponses(request.data)
+            responses: request.data
+        }).getCleanFormResponses()
         try{
             form.form_config.validateFormResponse(userResponses, form.event_config)
         } catch(e){

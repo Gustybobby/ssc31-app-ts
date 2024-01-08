@@ -11,10 +11,10 @@ export interface FormPaginationProperty {
 }
 
 export default class FormPagination {
-    pagedFields: FieldConfigProperty[][]
-    eventConfig: EventConfigProperty
-    responses: FormResponse
-    page: number
+    pagedFields: FormPaginationProperty['pagedFields']
+    eventConfig: FormPaginationProperty['eventConfig']
+    responses: FormPaginationProperty['responses']
+    page: FormPaginationProperty['page']
 
     constructor(formPagination: FormPaginationProperty){
         this.pagedFields = formPagination.pagedFields
@@ -23,12 +23,12 @@ export default class FormPagination {
         this.page = formPagination.page
     }
 
-    static initialize({ field_order, form_fields, eventConfig, responses = {}, page = 0
+    static initialize({ field_order, form_fields, eventConfig, responses, page = 0
     }: {
         field_order: string[],
         form_fields: { [key: string]: FieldConfigProperty },
         eventConfig: EventConfigProperty,
-        responses?: FormResponse
+        responses: FormResponse
         page?: number
     }){
         return new FormPagination({
@@ -73,12 +73,12 @@ export default class FormPagination {
         return visibleFields
     }
 
-    getCleanFormResponses(formResponses: { [key: string]: string }){
+    getCleanFormResponses(){
         const cleanFormResponses: { [key: string]: string } = {}
         for(var i=0;i<this.pagedFields.length;i++){
             const visibleFields = this.getCurrentPageFields(i)
             for(const field of visibleFields){
-                cleanFormResponses[field.id] = formResponses[field.id]
+                cleanFormResponses[field.id] = this.responses[field.id]
             }
         }
         return cleanFormResponses
