@@ -3,6 +3,7 @@
 import { sendDataToAPI } from "@/components/tools/api"
 import { SliderSwitch } from "@/components/tools/switch"
 import type { FormType } from "@prisma/client"
+import Link from "next/link"
 import type { Dispatch, SetStateAction } from "react"
 
 interface InfoSwitchProps {
@@ -22,9 +23,12 @@ export default function InfoSwitch({ eventId, form, responseCount, updatedAt, se
     return(
         <div>
             <div className="flex justify-between items-start mb-2">
-                <div className="text-xl font-bold underline inline">
+                <Link
+                    className="text-xl font-bold inline hover:underline w-3/4"
+                    href={`/events/${eventId}/forms/${form.id}`}
+                >
                     {form.title}
-                </div>
+                </Link>
                 <div className="mr-1">
                     <SliderSwitch
                         on={form.open}

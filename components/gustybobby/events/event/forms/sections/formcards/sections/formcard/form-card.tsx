@@ -29,7 +29,7 @@ export default function FormCard({
     return(
         <Card
             variant="white-gray"
-            extraClass="max-w-sm min-h-72 p-4 hover:border-black dark:hover:border-white transition-colors"
+            extraClass="max-w-sm min-h-72 p-4"
         >
             <div className="h-full flex flex-col justify-between">
                 <InfoSwitch
