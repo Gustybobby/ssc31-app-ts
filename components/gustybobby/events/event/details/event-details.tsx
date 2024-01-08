@@ -5,7 +5,6 @@ import EditEventComponent from "../../_details/edit/edit-event-component"
 import DashboardWrapper from "../dashboard-wrapper"
 import eventDetailsReducer from "../../_details/hooks/event-details-reducer"
 import FetchingSVG from "@/components/svg/fetching-svg"
-import { ErrorComponent } from "@/app/not-found"
 
 export default function EventDetails({ event_id, event_title }: { event_id: string, event_title: string }){
     
@@ -32,11 +31,7 @@ export default function EventDetails({ event_id, event_title }: { event_id: stri
         )
     }
     if(eventDetails === 'error'){
-        return (
-            <DashboardWrapper eventId={event_id} eventTitle={event_title}>
-                <div className="h-[75vh] flex justify-center items-center"><ErrorComponent/></div>
-            </DashboardWrapper>
-        )
+        throw 'fetch event details error'
     }
     return(
         <DashboardWrapper eventId={event_id} eventTitle={event_title}>

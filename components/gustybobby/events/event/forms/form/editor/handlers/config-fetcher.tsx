@@ -5,7 +5,6 @@ import type { DispatchFormConfig } from "./state-manager"
 import { useEffect, useState } from "react"
 import FormTemplate from "@/server/classes/forms/formtemplate"
 import FetchingSVG from "@/components/svg/fetching-svg"
-import { ErrorComponent } from "@/app/not-found"
 import EditorComponent from "./editor-component"
 import type { EditorFormConfig } from "../hooks/form-config-reducer"
 import FormConfig from "@/server/classes/forms/formconfig"
@@ -85,11 +84,7 @@ export default function ConfigFetcher({ newForm, eventId, formId, templateId, fo
         )
     }
     if(status === 'error'){
-        return (
-            <div className="w-full h-[80vh] flex justify-center items-center">
-                <ErrorComponent/>
-            </div>
-        )
+        throw 'fetch event form error'
     }
     return(
         <EditorComponent

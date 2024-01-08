@@ -1,6 +1,5 @@
 "use client"
 
-import { ErrorComponent } from "@/app/not-found"
 import FetchingSVG from "@/components/svg/fetching-svg"
 import type { EventFile } from "@prisma/client"
 import { useEffect, useState } from "react"
@@ -24,7 +23,7 @@ export default function BucketFiles({ eventId, refetch }: { eventId: string, ref
         return <div className="flex justify-center"><FetchingSVG/></div>
     }
     if(files === 'error'){
-        return <ErrorComponent/>
+        throw 'fetch files error'
     }
     return(
         <div className="mb-2 flex flex-wrap gap-2">

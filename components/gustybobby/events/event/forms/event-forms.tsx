@@ -5,7 +5,6 @@ import DashboardWrapper from "../dashboard-wrapper"
 import FormCardsSection, { FormCardConfig } from "./sections/formcards/form-cards-section"
 import { useEffect, useState } from "react"
 import FetchingSVG from "@/components/svg/fetching-svg"
-import { ErrorComponent } from "@/app/not-found"
 import DeleteFormsSection from "./sections/deleteforms/delete-forms-section"
 
 export default function EventForms({ event_id, event_title }: { event_id: string, event_title: string }){
@@ -24,11 +23,7 @@ export default function EventForms({ event_id, event_title }: { event_id: string
     }, [event_id, refetch])
 
     if(eventForms === 'error'){
-        return (
-            <DashboardWrapper eventId={event_id} eventTitle={event_title}>
-                <div className="h-[75vh] flex justify-center items-center"><ErrorComponent/></div>
-            </DashboardWrapper>
-        )
+        throw 'fetch event forms error'
     }
     if(eventForms === 'loading'){
         return(

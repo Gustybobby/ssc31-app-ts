@@ -1,6 +1,5 @@
 "use client"
 
-import { ErrorComponent } from "@/app/not-found"
 import { sectionStyles } from "@/components/styles/sections"
 import FetchingSVG from "@/components/svg/fetching-svg"
 import { sendDataToAPI } from "@/components/tools/api"
@@ -30,9 +29,7 @@ export default function StatusSection({ eventId }: { eventId: string }){
         )
     }
     if(status === 'error'){
-        return(
-            <ErrorComponent/>
-        )
+        throw 'fetch event status error'
     }
     return (
         <div className={sectionStyles.box.gray({ round: true, shadow: true })}>
