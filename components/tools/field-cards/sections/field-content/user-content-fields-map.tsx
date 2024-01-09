@@ -5,6 +5,7 @@ import ParagraphField from "./user-field-content-components/paragraph-field"
 import OptionsField from "./user-field-content-components/options-field"
 import MultiSelectField from "./user-field-content-components/multiselect-field"
 import InfoField from "./user-field-content-components/info-field"
+import ActHoursField from "./user-field-content-components/act-hours-field"
 
 const ContentFieldComponents: ContentFieldsType = {
     SHORTANS: (props) => <ShortAnswerField {...props}/>,
@@ -13,7 +14,7 @@ const ContentFieldComponents: ContentFieldsType = {
     MULTISELECT: (props) => <MultiSelectField {...props}/>,
     PRIVACYPOLICY: (props) => <OptionsField {...props}/>,
     INFO: (props) => <InfoField {...props}/>,
-    ACT_HOURS: () => <></>,
+    ACT_HOURS: (props) => <ActHoursField {...props}/>,
     HOURS_SEMS: () => <></>,
 }
 
