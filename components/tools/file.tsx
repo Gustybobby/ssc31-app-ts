@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { InputField, styles } from "./input"
+import { InputField } from "./input"
 import Image from "next/image"
 import { sendFileToAPI } from "./api"
 import toast from "react-hot-toast"
@@ -9,6 +9,7 @@ import { FaRegFile, FaRegFilePdf } from "react-icons/fa"
 import { ListBoxSingleSelect } from "./list-box"
 import { sectionStyles } from "../styles/sections"
 import type { EventDefaultResponse } from "@/server/typeconfig/event"
+import { inputStyles } from "../styles/tools"
 
 interface UploadFileConfig {
     id: string
@@ -29,7 +30,7 @@ export default function UploadFile({ id, label, api, preview, previewDim, size, 
     return(
         <div className="flex flex-col space-y-1 p-2 bg-gray-200 dark:bg-gray-800 rounded-lg shadow-lg">
             <div className="flex justify-between items-center">
-                <label className={styles.label('default',size)} htmlFor={id}>{label}</label>
+                <label className={inputStyles.label('default',size)} htmlFor={id}>{label}</label>
                 <button
                     className={sectionStyles.button({ color: file? 'blue' : 'gray', hover: !!file, border: true })}
                     disabled={!file}

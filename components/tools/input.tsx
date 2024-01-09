@@ -1,7 +1,7 @@
 import { getOptionStateFromSelection, stringifyGustybobbySelection } from "@/server/inputfunction"
 import { GustybobbyOption } from "@/server/typeconfig/form"
 import { type ChangeEvent, useEffect, useState } from "react"
-import { textColorClassVariants } from "../styles/class-variants"
+import { type FieldColor, type FieldSize, inputStyles } from "../styles/tools"
 
 interface InputFieldConfig {
     id: string
@@ -63,7 +63,7 @@ export function InputField({ id, label, type, placeholder, defaultValue = '', pa
                         id={id}
                         onChange={onChangeInput}
                         value={input}
-                        className={styles.inputBox(color, size)}
+                        className={inputStyles.inputBox(color, size)}
                         placeholder={placeholder}
                         autoComplete={autoComplete}
                     />
@@ -74,7 +74,7 @@ export function InputField({ id, label, type, placeholder, defaultValue = '', pa
                         id={id}
                         onChange={onChangeInput}
                         value={input}
-                        className={[styles.inputBox(color, size), 'h-32'].join(' ')}
+                        className={[inputStyles.inputBox(color, size), 'h-32'].join(' ')}
                         placeholder={placeholder}
                     />
                 )
@@ -101,12 +101,12 @@ export function InputField({ id, label, type, placeholder, defaultValue = '', pa
     return(
         <div>
             {label &&
-            <label htmlFor={id} className={styles.label(color, size)}>
+            <label htmlFor={id} className={inputStyles.label(color, size)}>
                 {label}
             </label>
             }
             {InputType({ type })}
-            <p className={[styles.p(color),interacted? '':'invisible'].join(' ')}>
+            <p className={[inputStyles.p(color),interacted? '':'invisible'].join(' ')}>
                 {validationMessage(validation, customValidMessage)}
             </p>
             <input id={`${id}_VALIDITY`} type="hidden" value={valid.toString()} readOnly={true}/>
@@ -169,7 +169,7 @@ export function SelectOptions({ id, options, label, multiple, required, size,
 
     return(
         <div>
-            <h1 className={styles.label(color, size)}>{label}</h1>
+            <h1 className={inputStyles.label(color, size)}>{label}</h1>
             {options.map((option)=>(
             <div key={option.id} className="px-2 my-2">
                 <input type={multiple? 'checkbox' : 'radio'}
@@ -196,81 +196,11 @@ export function SelectOptions({ id, options, label, multiple, required, size,
                 <label htmlFor={`${id}_${option.id}`} className="ml-2 cursor-pointer">{option.label}</label>
             </div>
             ))}
-            <p className={[styles.p(color),(!interacted || valid)? 'invisible' : ''].join(' ')}>
+            <p className={[inputStyles.p(color),(!interacted || valid)? 'invisible' : ''].join(' ')}>
                 This field is required
             </p>
             <input id={`${id}`} type="hidden" value={stringifyGustybobbySelection(options, optionState)} readOnly={true}/>
             <input id={`${id}_VALIDITY`} type="hidden" value={valid.toString()} readOnly={true}/>
         </div>
     )
-}
-
-type FieldColor = 'green' | 'red' | 'default'
-type FieldSize = 'sm' | 'md' | 'lg'
-
-export const styles = {
-    label: (color: FieldColor,size: FieldSize) => [
-        'block mb-2',
-        'font-bold',
-        'transition-colors',
-        sizeVariants[size].label,
-        colorVariants[color].text,
-    ].join(' '),
-    inputBox: (color: FieldColor,size: FieldSize) => [
-        'w-full block',
-        sizeVariants[size].padding,
-        'rounded-lg shadow-lg',
-        'transition-colors bg-transparent border-2',
-        'focus:outline-none focus:ring-0',
-        colorVariants[color].inputBox
-    ].join(' '),
-    p: (color: FieldColor) => [
-        'mt-2 text-sm transition-colors',
-        colorVariants[color].text
-    ].join(' ')
-}
-
-const sizeVariants = {
-    'lg': {
-        label: 'text-xl',
-        padding: 'p-2.5'
-    },
-    'md': {
-        label: 'text-lg',
-        padding: 'p-2',
-    },
-    'sm': {
-        label: 'text-sm',
-        padding: 'p-1',
-    }
-}
-
-const colorVariants = {
-    green:{
-        text: textColorClassVariants.green,
-        inputBox: [
-            'border-green-400',
-            textColorClassVariants.green,
-            'placeholder-gray-400',
-            'focus:ring-green-500 focus:border-green-500'
-        ].join(' ')
-    },
-    red:{
-        text: textColorClassVariants.red,
-        inputBox: [
-            'border-red-400',
-            textColorClassVariants.red,
-            'placeholder-gray-400',
-            'focus:ring-red-500 focus:border-red-500'
-        ].join(' ')
-    },
-    default:{
-        text: textColorClassVariants.default,
-        inputBox: [
-            'border-gray-400',
-            textColorClassVariants.default,
-            'placeholder-gray-400',
-            'focus:ring-gray-500 focus:border-gray-500'
-        ].join(' ')
-    }
 }
