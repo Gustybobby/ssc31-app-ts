@@ -34,7 +34,7 @@ export default async function formAuth(
         form_id: string
     }
 ): Promise<FormAuthResponse>{
-    const eventInfo = await prisma.event.findUnique({
+    const eventInfo = await prisma.event.findUniqueOrThrow({
         where: {
             id: event_id
         },
@@ -56,7 +56,7 @@ export default async function formAuth(
         }
     })
     const userMemberInfo = await getEventMember(prisma, { user_id, event_id })
-    const formInfo = await prisma.eventForm.findUnique({
+    const formInfo = await prisma.eventForm.findUniqueOrThrow({
         where:{
             id: form_id
         },
