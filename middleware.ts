@@ -5,8 +5,6 @@ const PATTERNS: URLPattern[] = [
     new URLPattern({ pathname: '/events/:event_id/:path*' }),
     new URLPattern({ pathname: '/api/gustybobby/events/:event_id/:path*' }),
     new URLPattern({ pathname: '/api/user/events/:event_id/:path*' }),
-    new URLPattern({ pathname: '/gustybobby/events/:event_id/:path*' }),
-    new URLPattern({ pathname: '/profile/events/:event_id/:path*' }),
 ]
 
 const getParams = (url: string) => {
@@ -22,6 +20,7 @@ const getParams = (url: string) => {
 
 export default withAuth(
     async function middleware(req){
+        console.log('invoked middleware')
         const pathname = req.nextUrl.pathname
         const params = getParams(req.url)
         if(pathname.startsWith('/gustybobby') && req.nextauth.token?.role !== "ADMIN"){
@@ -46,12 +45,6 @@ export default withAuth(
                 if(pathname.startsWith(`/events/`)){
                     return NextResponse.redirect(`${req.nextUrl.origin}/events`)
                 }
-                if(pathname.startsWith('/gustybobby/events/') && pathname !== '/gustybobby/events/new'){
-                    return NextResponse.redirect(`${req.nextUrl.origin}/gustybobby`)
-                }
-                if(pathname.startsWith('/profile/events/')){
-                    return NextResponse.redirect(`${req.nextUrl.origin}/profile`)
-                }
             }
         }
     }
@@ -59,9 +52,6 @@ export default withAuth(
 
 export const config = {
     matcher: [
-        "/gustybobby/:path*",
-        "/profile/:path*",
-        "/baan",
         "/events/:event_id/:path*",
         "/api/gustybobby/:path*",
         "/api/user/:path*",
