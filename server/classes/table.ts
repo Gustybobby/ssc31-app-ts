@@ -205,16 +205,21 @@ export default class Table {
             if(!Array.isArray(rowValue.data)){
                 throw `cannot map already mapped data ${rowValue.id}`
             }
-            return rowValue.data[level]? {
+            const rowScale = Math.floor(rowValue.max_row_span/rowValue.data.length)
+            if(level % rowScale !== 0){
+                return {}
+            }
+            const scaledLevel = Math.floor(level/rowScale)
+            return rowValue.data[scaledLevel]? {
                 [rowValue.id]: {
                     ...rowValue,
-                    data: rowValue.data[level],
+                    data: rowValue.data[scaledLevel],
                     length: rowValue.data.length,
-                    order: level,
+                    order: scaledLevel,
                     row_span: Table.getRowSpan({
                         ...rowValue,
                         length: rowValue.data.length,
-                        order: level,
+                        order: scaledLevel,
                     })
                 }
             } : {}
@@ -435,42 +440,44 @@ export const exampleColumns: ColumnProperty[] = [
     },
 ]
 
-export const exampleRows: RowProperty[] = [
-    {
-        key: '6522781804',
-        value: {
-            student_id: {
-                type: 'pure_single',
-                id: 'student_id',
-                data: '6522781804'
-            },
-            personal_info: {
-                type: 'group',
-                id: 'personal_info',
-                sub_data: {
-                    name: {
-                        type: 'group',
-                        id: 'name',
-                        sub_data: {
-                            first: {
-                                type: 'pure_multiple',
-                                id: 'first',
-                                data: ['Gustybob','Gustybobby']
-                            },
-                            last: {
-                                type: 'pure_multiple',
-                                id: 'last',
-                                data: ['Squarepants', 'Trianglepants'],
-                            }
+const exampleRow: RowProperty = {
+    key: '6522781804',
+    value: {
+        student_id: {
+            type: 'pure_single',
+            id: 'student_id',
+            data: '6522781804'
+        },
+        personal_info: {
+            type: 'group',
+            id: 'personal_info',
+            sub_data: {
+                name: {
+                    type: 'group',
+                    id: 'name',
+                    sub_data: {
+                        first: {
+                            type: 'pure_multiple',
+                            id: 'first',
+                            data: ['Gustybob','Gustybobby']
+                        },
+                        last: {
+                            type: 'pure_multiple',
+                            id: 'last',
+                            data: ['Squarepants', 'Trianglepants','Hello','Whatsup','hi'],
                         }
-                    },
-                    year: {
-                        type: 'pure_single',
-                        id: 'year',
-                        data: '3',
                     }
+                },
+                year: {
+                    type: 'pure_single',
+                    id: 'year',
+                    data: '3',
                 }
             }
         }
     }
+}
+
+export const exampleRows: RowProperty[] = [
+    exampleRow
 ]

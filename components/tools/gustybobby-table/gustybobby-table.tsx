@@ -5,7 +5,6 @@ import Table, { exampleColumns, exampleRows } from "@/server/classes/table"
 export default function GustybobbyTable(){
 
     const table = Table.initialize({ columns: exampleColumns, rows: exampleRows })
-    console.log(table.getRowsTableRows())
     return (
         <div className="w-full overflow-auto">
             <table className="tabled-fixed w-full">
