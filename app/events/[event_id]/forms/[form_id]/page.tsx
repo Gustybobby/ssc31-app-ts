@@ -40,7 +40,7 @@ export default async function EventFormPage({ params }: { params: { event_id: st
 function FormMessage({ message }: { message: string }){
     return(
         <MainWrapper>
-            <div className={eventStyles.box({ size: 'md', round: true, extensions: 'my-4 p-4' })}>
+            <div className={eventStyles.box({ size: 'sm', round: true, extensions: 'my-4 p-4 text-2xl font-bold text-center' })}>
                 {message}
             </div>
         </MainWrapper>
