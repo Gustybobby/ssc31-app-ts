@@ -1,11 +1,11 @@
 "use client"
 
-import Table, { exampleColumns } from "@/server/classes/table"
+import Table, { exampleColumns, exampleRows } from "@/server/classes/table"
 
 export default function GustybobbyTable(){
 
-    const table = Table.initialize({ columns: exampleColumns, rows: [] })
-    console.log(table.columns)
+    const table = Table.initialize({ columns: exampleColumns, rows: exampleRows })
+    console.log(table.getRowsTableRows())
     return (
         <div className="w-full overflow-auto">
             <table className="tabled-fixed w-full">
@@ -25,6 +25,17 @@ export default function GustybobbyTable(){
                     </tr>
                     ))}
                 </thead>
+                <tbody>
+                    {table.getRowsTableRows().map((row) => (
+                    <tr key={row.key}>
+                        {row.value.map((row) => (
+                            <td key={row.id} rowSpan={row.row_span ?? 1} className="border p-2">
+                                {row.data}
+                            </td>
+                        ))}
+                    </tr>
+                    ))}
+                </tbody>
             </table>
         </div>
     )
