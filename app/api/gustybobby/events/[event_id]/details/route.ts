@@ -6,7 +6,7 @@ import { type NextRequest, NextResponse } from "next/server";
 //get event details
 export async function GET(req: NextRequest, { params }: { params: { event_id: string }}){
     try{
-        const eventDetails = await prisma.event.findUnique({
+        const eventDetails = await prisma.event.findUniqueOrThrow({
             where:{
                 id: params.event_id
             },

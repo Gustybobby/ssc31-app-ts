@@ -44,7 +44,6 @@ export async function POST(req: NextRequest, { params }: { params: { event_id: s
                     user_id: session.user.id,
                     event_id: params.event_id,
                 })
-                console.log('Created new event member', newMember)
                 member_id = newMember.id
                 break
             case 'EVALUATE':

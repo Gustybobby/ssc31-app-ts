@@ -20,26 +20,16 @@ const getParams = (url: string) => {
 export default withAuth(
     async function middleware(req){
         const pathname = req.nextUrl.pathname
-        const params = getParams(req.url)
         if(pathname.startsWith('/gustybobby') && req.nextauth.token?.role !== "ADMIN"){
             return NextResponse.rewrite(new URL(`/not-found`, req.url))
+        }
+        if(pathname.startsWith('/api/gustybobby') && req.nextauth.token?.role !== "ADMIN"){
+            return NextResponse.redirect(`${req.nextUrl.origin}/api/middleware/unauthorized`)
         }
         if(pathname.startsWith('/profile')){
             switch(req.nextauth.token?.role){
                 case "ADMIN":
                     return NextResponse.redirect(`${req.nextUrl.origin}/gustybobby`)
-            }
-        }
-        if(pathname.startsWith('/api/gustybobby') && req.nextauth.token?.role !== "ADMIN"){
-            return NextResponse.redirect(`${req.nextUrl.origin}/api/middleware/unauthorized`)
-        }
-        if(params.event_id){
-            const res = await fetch(`${req.nextUrl.origin}/api/middleware/events/${params.event_id}`)
-            const { data } = await res.json()
-            if(!data){
-                if(pathname.startsWith(`/api/`)){
-                    return NextResponse.redirect(`${req.nextUrl.origin}/api/middleware/events/${params.event_id}/not-found`)
-                }
             }
         }
     }

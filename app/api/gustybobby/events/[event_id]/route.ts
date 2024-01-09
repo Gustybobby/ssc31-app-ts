@@ -7,7 +7,7 @@ export async function GET(req: NextRequest, { params } : { params: { event_id: s
     try{
         const searchParams = req.nextUrl.searchParams
         const select= searchParamsToSelect(searchParams)
-        const data = await prisma.event.findUnique({
+        const data = await prisma.event.findUniqueOrThrow({
             where:{
                 id: params.event_id
             },
