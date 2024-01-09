@@ -19,3 +19,14 @@ export function getOptionStateFromSelection(selectionString: string){
     }
     return optionState
 }
+
+export function extractTextFromResponseData(dataString: string){
+    if(dataString.includes(':') && dataString.includes('//')){
+        const options: string[] = []
+        for(const selection of dataString.split('|')){
+            options.push(selection.split(':')[1].split('//')[0])
+        }
+        return options.join(', ')
+    }
+    return dataString
+}
