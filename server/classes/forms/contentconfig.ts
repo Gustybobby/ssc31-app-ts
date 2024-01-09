@@ -17,7 +17,7 @@ export type ContentConfigProperty = {
 }
 
 export const contentPatterns = {
-    label: /^[\u0E00-\u0E7F\w\s\?\(\)\,]{1,128}$/,
+    label: /^[\u0E00-\u0E7F\w\s\?\(\)\,\.]{1,128}$/,
     placeholder: /^[\u0E00-\u0E7F\w\s\.\,\'\(\)\-]{0,64}$/,
     success: /^[\u0E00-\u0E7F\w\s\.\,\'\(\)\-]{0,64}$/,
     error: /^[\u0E00-\u0E7F\w\s\.\,\'\(\)\-]{0,64}$/,
