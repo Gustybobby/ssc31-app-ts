@@ -1,6 +1,6 @@
 "use client"
 
-import { shortMonthNames, type DispatchDatePicker } from "../date";
+import { shortMonthNames, type DispatchDatePicker } from "../date-picker";
 import type { DateProperty } from "../hooks/date-picker-reducer";
 
 interface MonthYearNavigationProps extends DispatchDatePicker{

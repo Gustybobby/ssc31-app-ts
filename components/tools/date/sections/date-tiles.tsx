@@ -1,7 +1,7 @@
 "use client"
 
 import { memo } from "react"
-import { shortWeekDays, type DispatchDatePicker } from "../date"
+import { shortWeekDays, type DispatchDatePicker } from "../date-picker"
 import type { DateProperty } from "../hooks/date-picker-reducer"
 
 interface DateTilesProps extends DispatchDatePicker {

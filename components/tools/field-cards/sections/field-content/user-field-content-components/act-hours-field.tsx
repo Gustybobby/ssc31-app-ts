@@ -1,6 +1,6 @@
 "use client"
 
-import DatePicker from "@/components/tools/date/date";
+import DatePicker from "@/components/tools/date/date-picker";
 import { ContentFieldComponentProps } from "../content-fields-types";
 
 export default function ActHoursField({ contentConfig, editor }: ContentFieldComponentProps){
