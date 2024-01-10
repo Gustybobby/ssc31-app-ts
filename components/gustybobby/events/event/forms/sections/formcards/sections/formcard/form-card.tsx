@@ -27,10 +27,7 @@ export default function FormCard({
     setRefetch,
 }: FormCardProps){
     return(
-        <Card
-            variant="white-gray"
-            extraClass="max-w-sm min-h-72 p-4"
-        >
+        <Card variant="white-gray" extraClass="max-w-sm min-h-72 p-4">
             <div className="h-full flex flex-col justify-between">
                 <InfoSwitch
                     eventId={eventId}

@@ -1,10 +1,10 @@
 "use client"
 
 import { sectionStyles } from "@/components/styles/sections"
-import FetchingSVG from "@/components/svg/fetching-svg"
 import { sendDataToAPI } from "@/components/tools/api"
 import { SliderSwitch } from "@/components/tools/switch"
 import { useEffect, useState } from "react"
+import StatusLoading from "./status-loading"
 
 export default function StatusSection({ eventId }: { eventId: string }){
 
@@ -22,11 +22,7 @@ export default function StatusSection({ eventId }: { eventId: string }){
     }, [eventId, refetch])
     
     if(status === 'loading'){
-        return(
-            <div className="p-4 flex flex-col items-center justify-center space-y-4">
-                <FetchingSVG/>
-            </div>
-        )
+        return <StatusLoading/>
     }
     if(status === 'error'){
         throw 'fetch event status error'

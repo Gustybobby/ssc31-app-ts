@@ -4,8 +4,8 @@ import { sectionStyles } from "@/components/styles/sections"
 import DashboardWrapper from "../dashboard-wrapper"
 import FormCardsSection, { FormCardConfig } from "./sections/formcards/form-cards-section"
 import { useEffect, useState } from "react"
-import FetchingSVG from "@/components/svg/fetching-svg"
 import DeleteFormsSection from "./sections/deleteforms/delete-forms-section"
+import EventFormsLoading from "./sections/event-forms-loading"
 
 export default function EventForms({ event_id, event_title }: { event_id: string, event_title: string }){
 
@@ -28,9 +28,7 @@ export default function EventForms({ event_id, event_title }: { event_id: string
     if(eventForms === 'loading'){
         return(
             <DashboardWrapper eventId={event_id} eventTitle={event_title}>
-                <div className="p-4 flex flex-col items-center justify-center space-y-4">
-                    <FetchingSVG/>
-                </div>
+                <EventFormsLoading/>
             </DashboardWrapper>
         )
     }

@@ -1,9 +1,9 @@
 "use client"
 
-import FetchingSVG from "@/components/svg/fetching-svg"
 import type { EventFile } from "@prisma/client"
 import { useEffect, useState } from "react"
 import FileCard from "./file-card"
+import FileCardsLoading from "./file-cards-loading"
 
 export default function BucketFiles({ eventId, refetch }: { eventId: string, refetch: boolean }){
 
@@ -20,7 +20,7 @@ export default function BucketFiles({ eventId, refetch }: { eventId: string, ref
     }, [eventId, refetch])
 
     if(files === 'loading'){
-        return <div className="flex justify-center"><FetchingSVG/></div>
+        return <FileCardsLoading/>
     }
     if(files === 'error'){
         throw 'fetch files error'
