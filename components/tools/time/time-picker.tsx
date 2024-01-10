@@ -42,7 +42,6 @@ export default function TimePicker({ id, label, buttonClassName, panelClassName,
             onChange(selectedTime)
             selectedTimeRef.current = selectedTime
         }
-        console.log(selectedTime)
     }, [selectedTime, onChange])
     
 
