@@ -1,4 +1,6 @@
+import { extractTextFromResponseData } from "../inputfunction"
 import type { DataType, FieldType, GustybobbyOption } from "../typeconfig/form"
+import { FormConfigProperty } from "./forms/formconfig"
 
 interface PureColumnProperty {
     type: 'pure'
@@ -125,16 +127,52 @@ export default class Table {
         return table
     }
 
-    static getRowSpan(rowValue: RowValue): number{
-        if(rowValue.type === 'pure_multiple'){
-            if(rowValue.order === undefined || rowValue.length === undefined){
-                throw `${rowValue.id} type is pure_multiple but order or length is undefined`
-            }
-            const flooredRowSpan = Math.floor(rowValue.max_row_span / rowValue.length)
-            return rowValue.order === (rowValue.length - 1)?
-            rowValue.max_row_span - (flooredRowSpan*rowValue.order) : flooredRowSpan
+    static formColumnAdapter({ field_order, form_fields, id, title }: FormConfigProperty, options?: {
+        label_max_length?: number
+    }): ColumnProperty{
+        if(!field_order || !form_fields || !id || !title){
+            throw 'form column adapter property is undefined'
         }
-        return rowValue.max_row_span
+        const sub_columns: ColumnProperty[] = []
+        for(const field_id of field_order){
+            sub_columns.push({
+                type: 'pure',
+                id: field_id,
+                label: form_fields[field_id].label.slice(0, options?.label_max_length),
+                data_type: form_fields[field_id].data_type,
+                field_type: form_fields[field_id].field_type,
+                options: form_fields[field_id].options,
+            })
+        }
+        return { id, sub_columns, type: 'group', label: title }
+    }
+    
+    static formResponseAdapter({
+        form_id,
+        member_id,
+        response,
+    }: {
+        form_id: string,
+        member_id: string,
+        response: { [key: string]: string }
+    },
+    form_config: FormConfigProperty
+    ): RowProperty{
+        if(!form_config.field_order){
+            throw 'field order is undefined'
+        }
+        const rowValueProperty: RowValueProperty = {
+            type: 'group',
+            id: form_id,
+            sub_data: Object.fromEntries(form_config.field_order.map((field_id) => {
+                return [field_id, {
+                    type: 'pure_single',
+                    id: field_id,
+                    data: extractTextFromResponseData(response[field_id] ?? ''),
+                }]
+            }))
+        }
+        return { key: member_id, value: { [form_id]: rowValueProperty } }
     }
 
     getColumnsTableRows(){
@@ -193,6 +231,18 @@ export default class Table {
             return r1Index - r2Index
         })
         return rowTableRow
+    }
+
+    private static getRowSpan(rowValue: RowValue): number{
+        if(rowValue.type === 'pure_multiple'){
+            if(rowValue.order === undefined || rowValue.length === undefined){
+                throw `${rowValue.id} type is pure_multiple but order or length is undefined`
+            }
+            const flooredRowSpan = Math.floor(rowValue.max_row_span / rowValue.length)
+            return rowValue.order === (rowValue.length - 1)?
+            rowValue.max_row_span - (flooredRowSpan*rowValue.order) : flooredRowSpan
+        }
+        return rowValue.max_row_span
     }
 
     private static getRowsAt(rowValue: RowValue, level: number): ExpandedRow['value']{
