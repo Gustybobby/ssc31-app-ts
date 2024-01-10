@@ -16,7 +16,7 @@ function UserFieldCardComponent({ contentConfig, eventConfig, defaultInteract }:
     return(
         <Card variant="translucent" extraClass="p-2">
             <div className="flex justify-between">
-                <div className="md:w-2/3">
+                <div className="w-full md:w-2/3">
                     <ContentField
                         contentConfig={contentConfig}
                         eventConfig={eventConfig}
