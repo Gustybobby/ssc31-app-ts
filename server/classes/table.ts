@@ -135,6 +135,9 @@ export default class Table {
         }
         const sub_columns: ColumnProperty[] = []
         for(const field_id of field_order){
+            if(form_fields[field_id].field_type === 'INFO'){
+                continue
+            }
             sub_columns.push({
                 type: 'pure',
                 id: field_id,
@@ -158,13 +161,15 @@ export default class Table {
     },
     form_config: FormConfigProperty
     ): RowProperty{
-        if(!form_config.field_order){
-            throw 'field order is undefined'
+        if(!form_config.field_order || !form_config.form_fields){
+            throw 'field order or form_fields is undefined'
         }
         const rowValueProperty: RowValueProperty = {
             type: 'group',
             id: form_id,
-            sub_data: Object.fromEntries(form_config.field_order.map((field_id) => {
+            sub_data: Object.fromEntries(form_config.field_order
+                .filter((field_id) => form_config.form_fields?.[field_id].field_type !== 'INFO')
+                .map((field_id) => {
                 return [field_id, {
                     type: 'pure_single',
                     id: field_id,
