@@ -39,6 +39,7 @@ export const config = {
     matcher: [
         "/api/gustybobby/:path*",
         "/api/user/:path*",
+        "/gustybobby/:path*",
         "/events/:event_id/:path*",
         "/profile",
     ]
