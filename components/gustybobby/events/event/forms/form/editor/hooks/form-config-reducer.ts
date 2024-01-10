@@ -191,7 +191,8 @@ export default function formConfigReducer(state: EditorFormConfig, action: FormC
         case 'edit_access':
             return {
                 ...state,
-                [action.key]: action.value
+                [action.key]: action.value,
+                ...formTypes[state.type ?? 'OTHER'].force
             }
         case 'edit_type':
             return {
@@ -202,7 +203,8 @@ export default function formConfigReducer(state: EditorFormConfig, action: FormC
         case 'edit_response_type':
             return {
                 ...state,
-                response_type: action.value
+                response_type: action.value,
+                ...formTypes[state.type ?? 'OTHER'].force
             }
         case 'edit_email_restricts':
             return {
