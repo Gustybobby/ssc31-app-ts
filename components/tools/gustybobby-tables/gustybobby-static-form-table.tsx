@@ -2,17 +2,31 @@
 
 import Table, { type RowProperty } from "@/server/classes/table"
 import { useEffect, useState } from "react"
+import GustybobbyTableLoading from "./gustybobby-table-loading"
 
-export default function GustybobbyTable(){
+const eventApiUrl = (eventId: string, formId: string, role: 'user' | 'gustybobby') => (
+    `/api/${role}/events/${eventId}/forms/${formId}?id=1&title=1&field_order=1&form_fields=1`
+)
+
+const formResponseApiUrl = (eventId: string, formId: string, role: 'user' | 'gustybobby') => (
+    `/api/${role}/events/${eventId}/forms/${formId}/responses`
+)
+
+export default function GustybobbyStaticFormTable({ eventId, formId, role }: {
+    eventId: string,
+    formId: string,
+    role: 'user' | 'gustybobby',
+}){
 
     const [table, setTable] = useState<Table>()
 
     useEffect(() => {
-        fetch(`/api/gustybobby/events/clr6ipi700001130dsv4u78xo/forms/clr6ixmeg000p130d8grtvfsx?id=1&title=1&field_order=1&form_fields=1`)
+        setTable(undefined)
+        fetch(eventApiUrl(eventId, formId, role))
             .then(res => res.json())
             .then(data => data.data)
             .then((form_config: any) => {
-                fetch(`/api/gustybobby/events/clr6ipi700001130dsv4u78xo/forms/clr6ixmeg000p130d8grtvfsx/responses`)
+                fetch(formResponseApiUrl(eventId, formId, role))
                     .then(res => res.json())
                     .then(data => data.data)
                     .then((responses: any) => {
@@ -24,12 +38,11 @@ export default function GustybobbyTable(){
                     })
                     
             })
-    },[])
+    },[eventId, formId, role])
 
-    if(!table){
-        return <></>
+    if(!table || formId === ''){
+        return <GustybobbyTableLoading/>
     }
-
     return (
         <div className="w-full overflow-auto">
             <table className="table-fixed min-w-full">
