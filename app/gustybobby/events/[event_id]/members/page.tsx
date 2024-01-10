@@ -8,12 +8,30 @@ export default async function EventMembersPage({ params }: { params: { event_id:
             id: params.event_id
         },
         select:{
-            title: true
+            title: true,
+            forms: {
+                where: {
+                    NOT: {
+                        OR: [
+                            { type: 'EVALUATE' },
+                            { response_type: 'MULTIPLE' },
+                        ]
+                    }
+                },
+                select: {
+                    id: true,
+                    title: true,
+                }
+            }
         }
     })
     return(
         <MainWrapper>
-            <EventMembers event_id={params.event_id} event_title={event.title}/>
+            <EventMembers
+                event_id={params.event_id}
+                event_title={event.title}
+                forms={event.forms}
+            />
         </MainWrapper>
     )
 }
