@@ -20,6 +20,13 @@ export default function ShortAnswerField({ contentConfig, defaultInteract, edito
             required={contentConfig.required}
             size="lg"
             defaultInteract={defaultInteract}
+            customValid={contentConfig.data_type === 'NUM'? (input) => {
+                const num = Number(input)
+                if(!isNaN(num) && num >= contentConfig.min_length && num <= contentConfig.max_length){
+                    return { valid: true, message: 'good' }
+                }
+                return { valid: false, message: 'error' }
+            }: undefined}
         />
     )
 }
