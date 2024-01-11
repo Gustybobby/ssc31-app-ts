@@ -4,6 +4,7 @@ import type { FieldConfigProperty } from "@/server/classes/forms/fieldconfig"
 import FieldConfig from "@/server/classes/forms/fieldconfig"
 import { type Dispatch, type SetStateAction, useEffect } from "react"
 import { DispatchEventForm } from "../../../handlers/event-form-manager"
+import { usePathname, useRouter } from "next/navigation"
 
 export default function usePageRouter(
     pageParams: number,
@@ -13,9 +14,11 @@ export default function usePageRouter(
     setHighlight: Dispatch<SetStateAction<string>>,
     dispatchEventForm: DispatchEventForm['dispatchEventForm']
 ){
+    const router = useRouter()
+    const pathname = usePathname()
     useEffect(() => {
         if(pageParams < 1 || isNaN(pageParams)){
-            window.history.replaceState({}, "", window.location.pathname + '?page=1')
+            router.replace(pathname + '?page=1')
             return
         }
         const page = pageParams - 1
@@ -32,14 +35,14 @@ export default function usePageRouter(
                 if(inputValidity?.value === 'false' || rejectPdpa){
                     setHighlight(field.id)
                     setInteract(true)
-                    window.history.back()
+                    router.back()
                     setTimeout(() => {
                         document.getElementById(`${field.id}_AUTOSCROLL`)?.scrollIntoView({
                             behavior: 'smooth',
                             block: 'center',
                             inline: 'center'
                         })
-                    },150)
+                    },100)
                     return
                 }
                 responses[field.id] = input?.value ?? ''
@@ -56,5 +59,5 @@ export default function usePageRouter(
         dispatchEventForm({ type: 'edit_responses', responses })
         dispatchEventForm({ type: 'set_page', page })
         document.getElementById('form_top')?.scrollIntoView({ block: 'end' })
-    }, [pageParams, currentPage, currentPageFields, setInteract, setHighlight, dispatchEventForm])
+    }, [router, pathname, pageParams, currentPage, currentPageFields, setInteract, setHighlight, dispatchEventForm])
 }
