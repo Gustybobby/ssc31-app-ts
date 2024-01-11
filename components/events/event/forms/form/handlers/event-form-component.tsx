@@ -19,7 +19,10 @@ interface EventFormComponentProps extends DispatchEventForm{
 export default function EventFormComponent({ eventConfig, formConfig, eventForm, dispatchEventForm }: EventFormComponentProps){
     return(
         <ZoomIn show={true} as={Fragment}>
-            <div className={eventStyles.box({ size: 'md', round: true, extensions: 'my-4 p-2 space-y-2' })}>
+            <div
+                id="form_top"
+                className={eventStyles.box({ size: 'md', round: true, extensions: 'my-4 p-2 space-y-2 -scroll-mb-32' })}
+            >
                 <EventFormInfo submitted={eventForm.submitted} formConfig={formConfig}/>
                 {!eventForm.submitted &&
                 <EventFormInteractable

@@ -14,12 +14,9 @@ interface ActionTypeEditResponses {
     responses: FormPaginationProperty['responses']
 }
 
-interface ActionTypeNextPage {
-    type: 'next_page'
-}
-
-interface ActionTypePrevPage {
-    type: 'prev_page'
+interface ActionTypeSetPage {
+    type: 'set_page'
+    page: number
 }
 
 interface ActionTypeSetSubmitted {
@@ -28,8 +25,7 @@ interface ActionTypeSetSubmitted {
 
 export type EventFormReducerAction =
     ActionTypeEditResponses |
-    ActionTypeNextPage |
-    ActionTypePrevPage |
+    ActionTypeSetPage |
     ActionTypeSetSubmitted
 
 export default function eventFormReducer(state: EventForm, action: EventFormReducerAction): EventForm {
@@ -40,13 +36,11 @@ export default function eventFormReducer(state: EventForm, action: EventFormRedu
                 default_value: action.responses[field.id] ?? field.default_value
             }))))
             return { ...state, pagedFields, responses: { ...state.responses, ...action.responses } }
-        case 'next_page':
-        case 'prev_page':
-            let page = state.page
+        case 'set_page':
+            const page = action.page
             let newPageFields: FieldConfigProperty[] = []
             let finished = false
             while(newPageFields.length === 0){
-                page += (action.type === 'next_page'? 1 : -1)
                 if(page < 0){
                     throw 'page number cannot be negative'
                 }
