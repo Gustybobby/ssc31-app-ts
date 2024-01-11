@@ -1,9 +1,9 @@
 "use client"
 
 import UploadFile from "@/components/tools/file"
-import type { Dispatch, SetStateAction } from "react"
+import type { Refetch } from "./bucket-types"
 
-export default function BucketUpload({ eventId, setRefetch }: { eventId: string, setRefetch: Dispatch<SetStateAction<boolean>>}){
+export default function BucketUpload({ eventId, refetch }: { eventId: string, refetch: Refetch }){
     return (
         <div className="w-full md:w-1/2">
             <UploadFile
@@ -14,7 +14,7 @@ export default function BucketUpload({ eventId, setRefetch }: { eventId: string,
                     method: 'POST',
                 }}
                 preview={true}
-                onSuccess={() => setRefetch(refetch => !refetch)}
+                onSuccess={() => refetch({})}
                 size="lg"
             />
         </div>

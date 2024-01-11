@@ -1,24 +1,13 @@
 "use client"
 
-import type { EventFile } from "@prisma/client"
-import { useEffect, useState } from "react"
 import FileCard from "./file-card"
 import FileCardsLoading from "./file-cards-loading"
+import useBucketFiles from "./hooks/use-bucket-files"
 
-export default function BucketFiles({ eventId, refetch }: { eventId: string, refetch: boolean }){
+export default function BucketFiles({ eventId, shouldRefetch }: { eventId: string, shouldRefetch: {} }){
 
-    const [files, setFiles] = useState<EventFile[] | 'loading' | 'error'>('loading')
+    const { files, setFiles } = useBucketFiles(eventId, shouldRefetch)
     
-    useEffect(() => {
-        if(refetch === null){
-            return
-        }
-        fetch(`/api/gustybobby/events/${eventId}/files`)
-            .then(res => res.ok? res.json() : { message: 'ERROR' })
-            .then(data => data.message === 'SUCCESS'? data.data : 'error')
-            .then(data => setFiles(data))
-    }, [eventId, refetch])
-
     if(files === 'loading'){
         return <FileCardsLoading/>
     }
