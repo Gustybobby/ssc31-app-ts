@@ -3,24 +3,13 @@
 import { sectionStyles } from "@/components/styles/sections"
 import { sendDataToAPI } from "@/components/tools/api"
 import { SliderSwitch } from "@/components/tools/switch"
-import { useEffect, useState } from "react"
 import StatusLoading from "./status-loading"
+import useEventStatus from "./hooks/use-event-status"
 
 export default function StatusSection({ eventId }: { eventId: string }){
-
-    const [status, setStatus] = useState<boolean | 'loading' | 'error'>('loading')
-    const [refetch, setRefetch] = useState(false)
-
-    useEffect(() => {
-        if(refetch === null){
-            return
-        }
-        fetch(`/api/gustybobby/events/${eventId}?online=1`)
-            .then(res => res.ok? res.json() : { message: 'ERROR' } )
-            .then(data => data.message === 'SUCCESS'? data.data.online : 'error')
-            .then(data => setStatus(data))
-    }, [eventId, refetch])
     
+    const { status, refetch } = useEventStatus(eventId)
+
     if(status === 'loading'){
         return <StatusLoading/>
     }
@@ -46,7 +35,7 @@ export default function StatusSection({ eventId }: { eventId: string }){
                             method: 'PATCH',
                             body: JSON.stringify({ data: { online: !status } })
                         })
-                        setRefetch(refetch => !refetch)
+                        refetch({})
                     }}
                 />
             </div>
