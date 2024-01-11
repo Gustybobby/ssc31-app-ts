@@ -15,6 +15,10 @@ export default async function EventMembersPage({ params }: { params: { event_id:
                         OR: [
                             { type: 'EVALUATE' },
                             { response_type: 'MULTIPLE' },
+                            { AND: [
+                                { type: 'OTHER' },
+                                { public: true },
+                            ]}
                         ]
                     }
                 },
