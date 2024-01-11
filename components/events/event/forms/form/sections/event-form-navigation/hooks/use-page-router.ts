@@ -2,7 +2,6 @@
 
 import type { FieldConfigProperty } from "@/server/classes/forms/fieldconfig"
 import FieldConfig from "@/server/classes/forms/fieldconfig"
-import { usePathname, useRouter } from "next/navigation"
 import { type Dispatch, type SetStateAction, useEffect } from "react"
 import { DispatchEventForm } from "../../../handlers/event-form-manager"
 
@@ -14,11 +13,9 @@ export default function usePageRouter(
     setHighlight: Dispatch<SetStateAction<string>>,
     dispatchEventForm: DispatchEventForm['dispatchEventForm']
 ){
-    const router = useRouter()
-    const pathname = usePathname()
     useEffect(() => {
-        if(!pageParams || isNaN(pageParams)){
-            router.replace(pathname+'?page=1')
+        if(pageParams < 1 || isNaN(pageParams)){
+            window.history.replaceState({}, "", window.location.pathname + '?page=1')
             return
         }
         const page = pageParams - 1
@@ -35,7 +32,7 @@ export default function usePageRouter(
                 if(inputValidity?.value === 'false' || rejectPdpa){
                     setHighlight(field.id)
                     setInteract(true)
-                    router.back()
+                    window.history.back()
                     setTimeout(() => {
                         document.getElementById(`${field.id}_AUTOSCROLL`)?.scrollIntoView({
                             behavior: 'smooth',
@@ -59,5 +56,5 @@ export default function usePageRouter(
         dispatchEventForm({ type: 'edit_responses', responses })
         dispatchEventForm({ type: 'set_page', page })
         document.getElementById('form_top')?.scrollIntoView({ block: 'end' })
-    }, [pageParams, currentPage, currentPageFields, setInteract, setHighlight, dispatchEventForm, router, pathname])
+    }, [pageParams, currentPage, currentPageFields, setInteract, setHighlight, dispatchEventForm])
 }
