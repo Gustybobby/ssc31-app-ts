@@ -2,25 +2,14 @@
 
 import { sectionStyles } from "@/components/styles/sections"
 import DashboardWrapper from "../dashboard-wrapper"
-import FormCardsSection, { FormCardConfig } from "./sections/formcards/form-cards-section"
-import { useEffect, useState } from "react"
+import FormCardsSection from "./sections/formcards/form-cards-section"
 import DeleteFormsSection from "./sections/deleteforms/delete-forms-section"
 import EventFormsLoading from "./sections/event-forms-loading"
+import useEventForms from "./hooks/use-event-forms"
 
 export default function EventForms({ event_id, event_title }: { event_id: string, event_title: string }){
 
-    const [eventForms, setEventForms] = useState<FormCardConfig[]|'loading'|'error'>('loading')
-    const [refetch, setRefetch] = useState(false)
-
-    useEffect(() => {
-        if(refetch === null){
-            return
-        }
-        fetch(`/api/gustybobby/events/${event_id}/forms?count_res=1&id=1&title=1&type=1&open=1&updated_at=1`)
-            .then(res => res.ok? res.json() : { message: 'ERROR' })
-            .then(data => data.message === 'SUCCESS'? data.data : 'error')
-            .then(data => setEventForms(data))
-    }, [event_id, refetch])
+    const { eventForms, refetch } = useEventForms(event_id)
 
     if(eventForms === 'error'){
         throw 'fetch event forms error'
@@ -42,7 +31,7 @@ export default function EventForms({ event_id, event_title }: { event_id: string
                     <FormCardsSection
                         eventId={event_id}
                         eventForms={eventForms}
-                        setRefetch={setRefetch}
+                        refetch={refetch}
                     />
                 </div>
                 <div className={sectionStyles.box.gray({ round: true, shadow: true })}>
@@ -52,7 +41,7 @@ export default function EventForms({ event_id, event_title }: { event_id: string
                     <DeleteFormsSection
                         eventId={event_id}
                         eventForms={eventForms}
-                        setRefetch={setRefetch}
+                        refetch={refetch}
                     />
                 </div>
             </div>

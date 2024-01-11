@@ -16,10 +16,10 @@ interface InfoSwitchProps {
     }
     responseCount: number
     updatedAt: Date
-    setRefetch: Dispatch<SetStateAction<boolean>>
+    refetch: Dispatch<SetStateAction<{}>>
 }
 
-export default function InfoSwitch({ eventId, form, responseCount, updatedAt, setRefetch }: InfoSwitchProps){
+export default function InfoSwitch({ eventId, form, responseCount, updatedAt, refetch }: InfoSwitchProps){
     return(
         <div>
             <div className="flex justify-between items-start mb-2">
@@ -42,7 +42,7 @@ export default function InfoSwitch({ eventId, form, responseCount, updatedAt, se
                                 method: 'PATCH',
                                 body: JSON.stringify({ data: { open: !form.open } }),
                             })
-                            setRefetch(refetch => !refetch)
+                            refetch({})
                         }}
                     />
                 </div>

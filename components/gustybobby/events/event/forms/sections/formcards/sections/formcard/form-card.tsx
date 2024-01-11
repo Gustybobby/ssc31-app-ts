@@ -16,7 +16,7 @@ interface FormCardProps {
     }
     responseCount: number
     updatedAt: Date
-    setRefetch: Dispatch<SetStateAction<boolean>>
+    refetch: Dispatch<SetStateAction<{}>>
 }
 
 export default function FormCard({
@@ -24,7 +24,7 @@ export default function FormCard({
     form,
     responseCount,
     updatedAt,
-    setRefetch,
+    refetch,
 }: FormCardProps){
     return(
         <Card variant="white-gray" extraClass="max-w-sm min-h-72 p-4">
@@ -34,7 +34,7 @@ export default function FormCard({
                     form={form}
                     responseCount={responseCount}
                     updatedAt={updatedAt}
-                    setRefetch={setRefetch}
+                    refetch={refetch}
                 />
                 <LinkButtons
                     eventId={eventId}

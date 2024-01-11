@@ -1,12 +1,12 @@
 "use client"
 
 import type { Dispatch, SetStateAction } from "react"
-import { FormCardConfig } from "../formcards/form-cards-section"
 import Warning from "./sections/warning"
 import DeleteCard from "./sections/deletecard/delete-card"
+import { FormCardConfig } from "../form-cards-types"
 
-export default function DeleteFormsSection({ eventId, eventForms, setRefetch }: {
-    eventId: string, eventForms: FormCardConfig[], setRefetch: Dispatch<SetStateAction<boolean>>
+export default function DeleteFormsSection({ eventId, eventForms, refetch }: {
+    eventId: string, eventForms: FormCardConfig[], refetch: Dispatch<SetStateAction<{}>>
 }){
     return(
         <>
@@ -18,7 +18,7 @@ export default function DeleteFormsSection({ eventId, eventForms, setRefetch }: 
                         eventId={eventId}
                         formId={form.id}
                         formTitle={form.title}
-                        setRefetch={setRefetch}
+                        refetch={refetch}
                     />
                 ))}
             </div>

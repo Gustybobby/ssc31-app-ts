@@ -6,8 +6,8 @@ import type { EventDefaultResponse } from "@/server/typeconfig/event"
 import type { Dispatch, SetStateAction } from "react"
 import toast from "react-hot-toast"
 
-export default function DeleteButton({ eventId, formId, canDelete, setRefetch }: {
-    eventId: string, formId: string, canDelete: boolean, setRefetch: Dispatch<SetStateAction<boolean>>
+export default function DeleteButton({ eventId, formId, canDelete, refetch }: {
+    eventId: string, formId: string, canDelete: boolean, refetch: Dispatch<SetStateAction<{}>>
 }){
     return(
         <button 
@@ -22,7 +22,7 @@ export default function DeleteButton({ eventId, formId, canDelete, setRefetch }:
                 switch(res.message){
                     case "SUCCESS":
                         toast.success('Deleted', { id: deleteToast })
-                        setRefetch(refetch => !refetch)
+                        refetch({})
                         break
                     default:
                         toast.error('Error', { id: deleteToast })
