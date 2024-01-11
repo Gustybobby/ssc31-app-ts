@@ -152,14 +152,19 @@ export default class Table {
     
     static formResponseAdapter({
         form_id,
+        id,
         member_id,
         response,
     }: {
         form_id: string,
+        id: string,
         member_id: string,
         response: { [key: string]: string }
     },
-    form_config: FormConfigProperty
+    form_config: FormConfigProperty,
+    options?: {
+        reference_key?: 'id' | 'member_id'
+    }
     ): RowProperty{
         if(!form_config.field_order || !form_config.form_fields){
             throw 'field order or form_fields is undefined'
@@ -177,7 +182,8 @@ export default class Table {
                 }]
             }))
         }
-        return { key: member_id, value: { [form_id]: rowValueProperty } }
+        const rowKey = options?.reference_key === 'member_id'? member_id : id
+        return { key: rowKey, value: { [form_id]: rowValueProperty } }
     }
 
     getColumnsTableRows(){

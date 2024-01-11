@@ -1,11 +1,11 @@
 "use client"
 
-import GustybobbyTable from "@/components/tools/gustybobby-tables/gustybobby-static-form-table"
 import DashboardWrapper from "../dashboard-wrapper"
 import { sectionStyles } from "@/components/styles/sections"
 import { useState } from "react"
 import type { GustybobbyOption } from "@/server/typeconfig/form"
 import { ListBoxSingleSelect } from "@/components/tools/list-box"
+import GustybobbyStaticMembersTable from "@/components/tools/gustybobby-tables/gustybobby-static-members-table"
 
 export default function EventMembers({ event_id, event_title, forms }: {
     event_id: string,
@@ -32,7 +32,7 @@ export default function EventMembers({ event_id, event_title, forms }: {
                             maxHeight="max-h-36"
                         />
                     </div>
-                    <GustybobbyTable
+                    <GustybobbyStaticMembersTable
                         eventId={event_id}
                         formId={formOptions.find((option) => option.active)?.id ?? ''}
                         role="gustybobby"
