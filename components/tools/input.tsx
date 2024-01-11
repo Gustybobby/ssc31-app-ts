@@ -41,7 +41,10 @@ export function InputField({ id, label, type, placeholder, defaultValue = '', pa
         const value = (type === 'textarea')? input.replace('\n',' ') : input
         if(value === '' && required){
             setValid(false)
-        } else{
+        } 
+        else if(customValid){
+            setValid(customValid(value).valid)
+        } else {
             setValid(!!value.match(pattern))
         }
     },[input, type, required, pattern])
@@ -94,7 +97,7 @@ export function InputField({ id, label, type, placeholder, defaultValue = '', pa
         return error
     }
 
-    const { valid: customValidFlag, message: customValidMessage } = customValid? customValid(id) : { valid: true, message:'' }
+    const { valid: customValidFlag, message: customValidMessage } = customValid? customValid(input) : { valid: true, message:'' }
     const validation = valid && customValidFlag
     const color = (!interacted || staticField)? 'default' : (validation? 'green' : 'red')
 
