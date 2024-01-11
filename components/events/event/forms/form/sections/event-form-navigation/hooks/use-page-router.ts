@@ -35,12 +35,14 @@ export default function usePageRouter(
                 if(inputValidity?.value === 'false' || rejectPdpa){
                     setHighlight(field.id)
                     setInteract(true)
-                    document.getElementById(`${field.id}_AUTOSCROLL`)?.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center',
-                        inline: 'center'
-                    })
                     router.back()
+                    setTimeout(() => {
+                        document.getElementById(`${field.id}_AUTOSCROLL`)?.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center',
+                            inline: 'center'
+                        })
+                    },150)
                     return
                 }
                 responses[field.id] = input?.value ?? ''
