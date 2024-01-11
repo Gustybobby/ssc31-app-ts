@@ -68,7 +68,7 @@ export default class FieldConfig extends ContentConfig{
             return this.visible_conds !== ''
         }
         if(dataTypes[this.data_type].specialValid){
-            return !!dataTypes[this.data_type].specialValid?.(dataString)
+            return !!dataTypes[this.data_type].specialValid?.(dataString, this)
         }
         if(typePermission.fieldType.optionsLikeField.has(this.field_type)){
             if(this.field_type === 'PRIVACYPOLICY' && !dataString.startsWith('true')){
