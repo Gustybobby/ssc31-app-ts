@@ -12,9 +12,7 @@ export default async function GustybobbyPage(){
     })
     return(
         <MainWrapper>
-            <div className="w-full flex flex-col items-center">
-                <Gustybobby events={events}/>
-            </div>
+            <Gustybobby events={events}/>
         </MainWrapper>
     )
 }

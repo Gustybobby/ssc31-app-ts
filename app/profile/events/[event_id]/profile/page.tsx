@@ -58,7 +58,6 @@ export default async function MemberProfilePage({ params }: { params: { event_id
         label: formFields[id].label,
         data: extractTextFromResponseData(response[id] ?? '')
     })).filter(({ data }) => data !== '')
-    console.log(joinResponse)
     return(
         <MainWrapper>
             <MemberProfile

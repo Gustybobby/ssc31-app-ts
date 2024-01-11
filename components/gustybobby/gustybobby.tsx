@@ -21,15 +21,15 @@ export default function Gustybobby({ events }: { events: EventBanner[] }){
 
     return(
         <div className={styles.mainBox}>
-            <div className="p-4 flex flex-col items-center justify-center space-y-4">
+            <div className="h-full p-4 grid grid-cols-1 gap-y-4">
                 <ZoomIn show={true} duration={'duration-75'} delay={'delay-75'} as={Fragment}>
-                    <div className={[styles.sectionBox,'h-[20vh]'].join(' ')}>
+                    <div className={styles.sectionBox}>
                         <ProfileSection session={session}/>
                     </div>
                 </ZoomIn>
                 <ZoomIn show={true} duration={'duration-75'} delay={'delay-150'} as={Fragment}>
-                    <div className={[styles.sectionBox,'h-[60vh] overflow-auto'].join(' ')}>
-                        <h1 className="text-center text-2xl font-semibold underline pt-4">
+                    <div className={[styles.sectionBox, 'overflow-y-auto row-span-2'].join(' ')}>
+                        <h1 className="text-center text-2xl font-semibold underline mt-4">
                             All Events
                         </h1>
                         <RadioGroup className="w-full flex flex-col items-center p-4" 
@@ -100,13 +100,12 @@ function redirectToEditor(id: string, router: AppRouterInstance){
 
 const styles = {
     mainBox:[
-        'box-content flex flex-col',
-        'w-full h-[92vh] shadow-lg',
-        'border-1',
+        'flex flex-col',
+        'w-full h-full shadow-lg',
         'bg-white/70 dark:bg-black/70'
     ].join(' '),
     sectionBox:[
-        'box-content p-2',
+        'p-2',
         'w-full shadow-sm rounded-2xl',
         'bg-black/10 dark:bg-white/20',
     ].join(' ')
