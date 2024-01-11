@@ -8,41 +8,37 @@ import { Menu, Transition } from '@headlessui/react'
 
 export default function NavDropDown(){
     return (
-        <div>
-            <Menu as="div" className="relative inline-block text-left">
-                <div>
-                    <Menu.Button className={styles.button}>
-                        <div className="text-3xl"><BsList/></div>
-                    </Menu.Button>
-                </div>
-                <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
-                >
-                    <Menu.Items className={styles.menuItems}>
-                        <div className="p-4">
-                            {NAVIGATION_ITEMS.map((item) => (
-                            <Menu.Item key={item.title} as={Fragment}>
-                                <Link
-                                    className={styles.itemLink}
-                                    href={"/"+item.title.toLowerCase()}
-                                    key = {item.title}
-                                >
-                                    <div><item.icon/></div>
-                                    <div>{item.title}</div>
-                                </Link>
-                            </Menu.Item>
-                            ))}
-                        </div>
-                    </Menu.Items>
-                </Transition>
-            </Menu>
-        </div>
+        <Menu as="div" className="relative inline-block text-left">
+            <Menu.Button className={styles.button}>
+                <div className="text-3xl"><BsList/></div>
+            </Menu.Button>
+            <Transition
+                as={Fragment}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo="transform opacity-100 scale-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
+            >
+                <Menu.Items className={styles.menuItems}>
+                    <div className="p-4">
+                        {NAVIGATION_ITEMS.map((item) => (
+                        <Menu.Item key={item.title} as={Fragment}>
+                            <Link
+                                className={styles.itemLink}
+                                href={"/"+item.title.toLowerCase()}
+                                key = {item.title}
+                            >
+                                <div><item.icon/></div>
+                                <div>{item.title}</div>
+                            </Link>
+                        </Menu.Item>
+                        ))}
+                    </div>
+                </Menu.Items>
+            </Transition>
+        </Menu>
     )
 }
 

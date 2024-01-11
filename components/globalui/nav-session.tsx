@@ -11,51 +11,43 @@ export default function NavSession() {
 
     if(status === 'loading'){
         return(
-            <div>
-                <Menu as="div" className="relative inline-block text-left">
-                    <div>
-                        <Menu.Button className={styles.button} disabled={true}>
-                            <div className="text-2xl px-2 font-bold">?</div>
-                        </Menu.Button>
-                    </div>
-                </Menu>
-            </div>
+            <Menu as="div" className="relative inline-block text-left">
+                <Menu.Button className={styles.button} disabled={true}>
+                    <div className="text-2xl px-2 font-bold">?</div>
+                </Menu.Button>
+            </Menu>
         )
     }
     if(session?.user.id){
         return(
-            <div>
-                <Menu as="div" className="relative inline-block text-left">
-                    <div>
-                        <Menu.Button className={styles.button}>
-                            <div className="text-3xl"><BiUserCircle/></div>
-                        </Menu.Button>
-                    </div>
-                    <Transition
-                        as={Fragment}
-                        enter="transition ease-out duration-100"
-                        enterFrom="transform opacity-0 scale-95"
-                        enterTo="transform opacity-100 scale-100"
-                        leave="transition ease-in duration-75"
-                        leaveFrom="transform opacity-100 scale-100"
-                        leaveTo="transform opacity-0 scale-95"
-                    >
-                        <Menu.Items className={styles.menuItems}>
-                            <div className="p-4 text-sm text-right text-black dark:text-white">
-                                {session.user.email}
-                            </div>
-                            <div className="p-2 text-right">
-                                <button
-                                    className={styles.signOutButton}
-                                    onClick={() => signOut()}
-                                >
-                                    Sign Out
-                                </button>
-                            </div>
-                        </Menu.Items>
-                    </Transition>
-                </Menu>
-            </div>
+            <Menu as="div" className="relative inline-block text-left">
+                    <Menu.Button className={styles.button}>
+                        <div className="text-3xl"><BiUserCircle/></div>
+                    </Menu.Button>
+                <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                >
+                    <Menu.Items className={styles.menuItems}>
+                        <div className="p-4 text-sm text-right text-black dark:text-white">
+                            {session.user.email}
+                        </div>
+                        <div className="p-2 text-right">
+                            <button
+                                className={styles.signOutButton}
+                                onClick={() => signOut()}
+                            >
+                                Sign Out
+                            </button>
+                        </div>
+                    </Menu.Items>
+                </Transition>
+            </Menu>
         )
     } 
     else if(session){
