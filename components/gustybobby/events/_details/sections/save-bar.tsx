@@ -7,10 +7,10 @@ import checkFieldsValidity from "../hooks/check-fields-validity"
 import toast from "react-hot-toast"
 import { sendDataToAPI } from "@/components/tools/api"
 
-export default function SaveBar({eventDetails, setRefetch
+export default function SaveBar({eventDetails, refetch
 }: {
     eventDetails: EventDataRequest,
-    setRefetch: Dispatch<SetStateAction<boolean>>
+    refetch: Dispatch<SetStateAction<{}>>
 }){
     return(
         <div className={saveBarStyle}>
@@ -35,7 +35,7 @@ export default function SaveBar({eventDetails, setRefetch
                     switch(res.message){
                         case 'SUCCESS':
                             toast.success('Saved', { id: saveToast })
-                            setRefetch(refetch => !refetch)
+                            refetch({})
                             break   
                         case 'ERROR':
                             toast.error('Error', { id: saveToast })

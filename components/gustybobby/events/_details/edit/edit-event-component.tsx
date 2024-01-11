@@ -12,15 +12,15 @@ import PositionFields from "../sections/position-role-fields/position-fields"
 import RoleFields from "../sections/position-role-fields/role-fields"
 
 interface EditEventComponentProps extends EventDetailsHookProps {
-    setRefetch: Dispatch<SetStateAction<boolean>>
+    refetch: Dispatch<SetStateAction<{}>>
 }
 
-export default function EditEventComponent({ eventDetails, dispatchEventDetails, setRefetch }: EditEventComponentProps){
+export default function EditEventComponent({ eventDetails, dispatchEventDetails, refetch }: EditEventComponentProps){
     return(
         <div>
             <SaveBar
                 eventDetails={eventDetails}
-                setRefetch={setRefetch}
+                refetch={refetch}
             />
             <div className={sectionStyles.container()}>
                 <TitleInputField
