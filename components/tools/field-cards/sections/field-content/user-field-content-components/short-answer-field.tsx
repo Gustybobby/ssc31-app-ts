@@ -1,9 +1,19 @@
 "use client"
 
+import { dataTypes } from "@/server/typeconfig/form"
 import { InputField } from "../../../../input"
 import { ContentFieldComponentProps } from "../content-fields-types"
+import { useCallback } from "react"
 
 export default function ShortAnswerField({ contentConfig, defaultInteract, editor  }: ContentFieldComponentProps){
+
+    const customValid = useCallback((input: string) => {
+        if(dataTypes[contentConfig.data_type].specialValid?.(input, contentConfig)){
+            return { valid: true, message: 'good' }
+        }
+        return { valid: false, message: 'error' }
+    }, [contentConfig])
+
     if(!editor){
         contentConfig.validate()
     }
@@ -20,13 +30,7 @@ export default function ShortAnswerField({ contentConfig, defaultInteract, edito
             required={contentConfig.required}
             size="lg"
             defaultInteract={defaultInteract}
-            customValid={contentConfig.data_type === 'NUM'? (input) => {
-                const num = Number(input)
-                if(!isNaN(num) && num >= contentConfig.min_length && num <= contentConfig.max_length){
-                    return { valid: true, message: 'good' }
-                }
-                return { valid: false, message: 'error' }
-            }: undefined}
+            customValid={dataTypes[contentConfig.data_type].specialValid? customValid: undefined}
         />
     )
 }

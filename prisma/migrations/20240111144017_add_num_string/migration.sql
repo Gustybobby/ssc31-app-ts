@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "DataType" ADD VALUE 'NUM_STRING';

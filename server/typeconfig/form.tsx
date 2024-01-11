@@ -1,6 +1,7 @@
 import type { EventPosition, EventRole, Prisma, ResponseType } from "@prisma/client";
 import type { EventConfigProperty } from "../classes/eventconfig";
 import Link from "next/link";
+import type ContentConfig from "../classes/forms/contentconfig";
 
 export type EventConfigPosition = {
     [key in keyof EventPosition]?: EventPosition[key]
@@ -55,6 +56,18 @@ export const dataTypes = {
     NUM: {
         id: 'NUM',
         label: 'Number',
+        options: null,
+        pattern: '[0-9]',
+        error: '0-9',
+        force: null,
+        specialValid: (string: string, contentConfig?: ContentConfig) => {
+            const num = Number(string)
+            return !isNaN(num) && (num >= (contentConfig?.min_length ?? 0)) && (num <= (contentConfig?.max_length ?? 0))
+        },
+    },
+    NUM_STRING: {
+        id: 'NUM_STRING',
+        label: 'Number Text',
         options: null,
         pattern: '[0-9]',
         error: '0-9',
@@ -128,6 +141,7 @@ export const fieldTypes = {
         allowed: [
             'STRING',
             'NUM',
+            'NUM_STRING',
         ],
         input_field: 'input',
         user_field_tail: 'INPUTFIELD',
@@ -153,6 +167,7 @@ export const fieldTypes = {
         allowed:[
             'STRING',
             'NUM',
+            'NUM_STRING',
             'BOOLEAN',
             'POSITION',
             'ROLE'
@@ -168,7 +183,8 @@ export const fieldTypes = {
         max_length: '32',
         allowed: [
             'STRING',
-            'NUM'
+            'NUM',
+            'NUM_STRING',
         ],
         input_field: 'multiselect',
         user_field_tail: 'SELECTOPTIONS',
@@ -229,8 +245,8 @@ export const fieldTypes = {
 
 export const typePermission = {
     dataType: {
-        allowCustomLength: new Set<DataType>(['STRING','NUM']),
-        allowCustomOptions: new Set<DataType>(['STRING','NUM']),
+        allowCustomLength: new Set<DataType>(['STRING','NUM','NUM_STRING']),
+        allowCustomOptions: new Set<DataType>(['STRING','NUM','NUM_STRING']),
     },
     fieldType: {
         allowCustomLength: new Set<FieldType>(['SHORTANS','PARAGRAPH']),
