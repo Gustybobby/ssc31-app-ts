@@ -42,7 +42,7 @@ export default function eventFormReducer(state: EventForm, action: EventFormRedu
             let finished = false
             while(newPageFields.length === 0){
                 if(page < 0){
-                    throw 'page number cannot be negative'
+                    return { ...state }
                 }
                 if(page >= state.pagedFields.length){
                     finished = true
