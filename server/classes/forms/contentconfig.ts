@@ -91,6 +91,9 @@ export default class ContentConfig{
     }
 
     getPattern(){
+        if(dataTypes[this.data_type].specialValid){
+            return ''
+        }
         if(typePermission.fieldType.optionsLikeField.has(this.field_type)){
             return ''
         }
