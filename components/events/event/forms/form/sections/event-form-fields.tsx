@@ -17,34 +17,39 @@ interface EventFormFieldsProps {
 
 export default function EventFormFields({ finished, currentPageFields, eventConfig, highlight, setHighlight, interact
 }: EventFormFieldsProps){
-    return(
-        <div>
-            {finished?
-            <div className="p-4 text-xl flex flex-col items-center font-bold">
-                <FaCheckCircle className="text-4xl mb-2 text-green-600 dark:text-green-400"/>
-                <div>You have finished this form!</div>
-                <div>Press {'"Submit"'} to submit the form.</div>
-            </div>
-            :
-            <div className="space-y-2">
-                {currentPageFields.map((field) => (
-                <div
-                    key={field.id}
-                    id={`${field.id}_AUTOSCROLL`}
-                    className={styles.fieldHighlight(highlight === field.id)}
-                    onClick={()=>setHighlight('')}
-                >
-                    <UserFieldCard
-                        contentConfig={field}
-                        eventConfig={eventConfig}
-                        defaultInteract={interact}
-                    />
+    try{
+        return(
+            <div>
+                {finished?
+                <div className="p-4 text-xl flex flex-col items-center font-bold">
+                    <FaCheckCircle className="text-4xl mb-2 text-green-600 dark:text-green-400"/>
+                    <div>You have finished this form!</div>
+                    <div>Press {'"Submit"'} to submit the form.</div>
                 </div>
-                ))}
+                :
+                <div className="space-y-2">
+                    {currentPageFields.map((field) => (
+                    <div
+                        key={field.id}
+                        id={`${field.id}_AUTOSCROLL`}
+                        className={styles.fieldHighlight(highlight === field.id)}
+                        onClick={()=>setHighlight('')}
+                    >
+                        <UserFieldCard
+                            contentConfig={field}
+                            eventConfig={eventConfig}
+                            defaultInteract={interact}
+                        />
+                    </div>
+                    ))}
+                </div>
+                }
             </div>
-            }
-        </div>
-    )
+        )
+    } catch(e){
+        
+        return <div className="w-full h-full bg-white">{JSON.stringify(e)}</div>
+    }
 }
 
 const styles = {
