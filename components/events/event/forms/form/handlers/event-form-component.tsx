@@ -24,7 +24,8 @@ export default function EventFormComponent({ eventConfig, formConfig, eventForm,
                 className={eventStyles.box({ size: 'md', round: true, extensions: 'my-4 p-2 space-y-2 -scroll-mb-32' })}
             >
                 <EventFormInfo submitted={eventForm.submitted} formConfig={formConfig}/>
-                {!eventForm.submitted &&
+                {/*!eventForm.submitted*/}
+                {false&&
                 <EventFormInteractable
                     eventConfig={eventConfig}
                     eventForm={eventForm}
