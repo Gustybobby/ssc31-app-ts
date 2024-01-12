@@ -25,6 +25,7 @@ export default async function EventFormPage({ params }: { params: { event_id: st
         case "MEMBER_EXISTED":
         case "RESPONSE_EXISTED":
         case "SUCCESS":
+            console.log('served', form)
             return(
                 <MainWrapper>
                     <EventForm

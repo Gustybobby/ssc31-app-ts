@@ -25,7 +25,7 @@ export interface NavButtonProps extends DispatchEventForm {
 export default function EventFormNavigation({ eventForm, dispatchEventForm, setInteract, setHighlight }: EventFormNavigationProps){
 
     const searchParams = useSearchParams()
-    const pageParams = Number(searchParams.get('page'))
+    const pageParams = Number(searchParams.get('page') ?? 1)
     usePageRouter(pageParams, eventForm.page, eventForm.currentPageFields, setInteract, setHighlight, dispatchEventForm)
 
     return(

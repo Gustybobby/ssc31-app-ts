@@ -17,7 +17,7 @@ export default function usePageRouter(
     const router = useRouter()
     const pathname = usePathname()
     useEffect(() => {
-        if(pageParams < 1 || isNaN(pageParams)){
+        if(pageParams < 1){
             router.replace(pathname + '?page=1')
             return
         }

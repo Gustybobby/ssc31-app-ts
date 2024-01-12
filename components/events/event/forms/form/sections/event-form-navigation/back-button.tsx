@@ -13,7 +13,7 @@ export default function BackButton(){
         <button
             className={sectionStyles.button({ color: 'blue', hover: true, border: true })}
             onClick={() => {
-                router.replace(pathname+'?page='+String(Number(searchParams.get('page'))-1))
+                router.replace(pathname+'?page='+String(Number(searchParams.get('page') ?? 1)-1))
             }}
         >
             Back

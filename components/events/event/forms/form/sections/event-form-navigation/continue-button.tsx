@@ -13,7 +13,7 @@ export default function ContinueButton(){
         <button
             className={sectionStyles.button({ color: 'blue', hover: true, border: true })}
             onClick={() => {
-                router.push(pathname+'?page='+String(Number(searchParams.get('page'))+1))
+                router.push(pathname+'?page='+String(Number(searchParams.get('page') ?? 1)+1))
             }}
         >
             Continue
