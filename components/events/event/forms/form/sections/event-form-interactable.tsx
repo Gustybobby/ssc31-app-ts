@@ -19,14 +19,14 @@ export default function EventFormInteractable({ eventConfig, eventForm, dispatch
 
     return(
         <div className="flex flex-col w-full space-y-4">
-            {/*<EventFormFields
+            <EventFormFields
                 finished={eventForm.finished}
                 currentPageFields={eventForm.currentPageFields}
                 eventConfig={eventConfig}
                 interact={interact}
                 highlight={highlight}
                 setHighlight={setHighlight}
-            /> */}
+            />
             <EventFormNavigation
                 eventForm={eventForm}
                 dispatchEventForm={dispatchEventForm}
