@@ -26,7 +26,7 @@ export default function EventFormNavigation({ eventForm, dispatchEventForm, setI
 
     const searchParams = useSearchParams()
     const pageParams = Number(searchParams.get('page') ?? 1)
-    usePageRouter(pageParams, eventForm.page, eventForm.currentPageFields, setInteract, setHighlight, dispatchEventForm)
+    //usePageRouter(pageParams, eventForm.page, eventForm.currentPageFields, setInteract, setHighlight, dispatchEventForm)
 
     return(
         <div className="grid grid-cols-2">
