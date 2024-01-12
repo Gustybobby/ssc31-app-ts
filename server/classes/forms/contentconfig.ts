@@ -21,8 +21,10 @@ export const contentPatterns = {
     placeholder: /^[\u0E00-\u0E7F\w\s\.\,\'\(\)\-]{0,64}$/,
     success: /^[\u0E00-\u0E7F\w\s\.\,\'\(\)\-]{0,64}$/,
     error: /^[\u0E00-\u0E7F\w\s\.\,\'\(\)\-]{0,64}$/,
-    min_length: /^[0-9]{1,20}$/,
-    max_length: /^[0-9]{1,20}$/,
+    min_length: /^[0-9]{1,3}$/,
+    max_length: /^[0-9]{1,3}$/,
+    min_value: /^[0-9]{1,16}$/,
+    max_value: /^[0-9]{1,16}$/,
     option_text: new RegExp(`^${dataTypes.STRING.pattern}{1,96}$`),
     option_num: new RegExp(`^${dataTypes.NUM.pattern}{1,96}$`)
 }

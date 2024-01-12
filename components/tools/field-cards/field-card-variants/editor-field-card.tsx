@@ -108,6 +108,7 @@ function EditorFieldCardComponent({
                     typePermission.fieldType.allowCustomLength.has(fieldConfig.field_type) &&
                     <FieldLengthConfigs
                         fieldId={fieldConfig.id}
+                        dataType={fieldConfig.data_type}
                         fieldMinLength={fieldConfig.min_length}
                         fieldMaxLength={fieldConfig.max_length}
                         dispatchFormConfig={dispatchFormConfig}
