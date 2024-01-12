@@ -43,7 +43,7 @@ export default function CreateButton({ eventId, formConfig }: CreateButtonProps)
                     })
                     switch(res?.message){
                         case 'SUCCESS':
-                            router.push(`/gustybobby/events/${eventId}/forms/${res.data.form_id}/editor`)
+                            router.replace(`/gustybobby/events/${eventId}/forms/${res.data.form_id}/editor`)
                             toast.success('Created', { id: createToast })
                             break
                         case 'ERROR':
