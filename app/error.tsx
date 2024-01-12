@@ -18,6 +18,9 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
             <button className={handlerStyles.link} onClick={() => reset()}>
                 Try again
             </button>
+            <div >
+                {JSON.stringify(error)}
+            </div>
         </MainWrapper>
     )
 }
