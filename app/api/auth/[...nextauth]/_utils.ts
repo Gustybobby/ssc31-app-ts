@@ -49,6 +49,9 @@ export const authOptions: AuthOptions = {
             session.user.id = token.id
             session.user.role = token.role
             return session
+        },
+        async redirect({ url, baseUrl }){
+            return baseUrl+'/profile'
         }
     }
 }
