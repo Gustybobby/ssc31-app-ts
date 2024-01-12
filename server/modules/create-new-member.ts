@@ -32,7 +32,7 @@ export default async function createNewEventMember(
             ...memberParams,
             user_id: user_id,
             event_id: event_id,
-        }
+        } as any
     })
     console.log('Created New Event Member', newEventMember)
     return newEventMember

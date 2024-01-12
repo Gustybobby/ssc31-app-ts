@@ -3,7 +3,7 @@ import formAuth from "@/server/modules/form-auth";
 import { NextResponse, type NextRequest } from "next/server";
 import prisma from "@/prisma-client";
 import FormPagination from "@/server/classes/forms/formpagination";
-import createNewEventMember from "@/server/modules/creant-new-member";
+import createNewEventMember from "@/server/modules/create-new-member";
 
 export async function POST(req: NextRequest, { params }: { params: { event_id: string, form_id: string }}){
     try{
