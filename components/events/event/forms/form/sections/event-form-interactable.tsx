@@ -27,12 +27,14 @@ export default function EventFormInteractable({ eventConfig, eventForm, dispatch
                 highlight={highlight}
                 setHighlight={setHighlight}
             />
+            {/*
             <EventFormNavigation
                 eventForm={eventForm}
                 dispatchEventForm={dispatchEventForm}
                 setInteract={setInteract}
                 setHighlight={setHighlight}
             />
+            */}
         </div>
     )
 }
