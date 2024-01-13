@@ -30,15 +30,15 @@ export default function MemberProfile({ profile, event_id, event_title }: { prof
                         {profile.status === 'ACTIVE' &&
                         <>
                             <span className={styles.label}>
-                                Position:&nbsp;
-                                <span className={styles.data}>
-                                    {profile.position_label}
+                                Role:&nbsp;
+                                <span className="font-normal text-amber-600 dark:text-amber-400">
+                                    {profile.role_label}
                                 </span>
                             </span>
                             <span className={styles.label}>
-                                Role:&nbsp;
-                                <span className={styles.data}>
-                                    {profile.role_label}
+                                Position:&nbsp;
+                                <span className="font-normal text-sky-600 dark:text-sky-400">
+                                    {profile.position_label}
                                 </span>
                             </span>
                         </>

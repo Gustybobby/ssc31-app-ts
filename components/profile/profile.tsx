@@ -112,11 +112,11 @@ function MemberTag({ status, positionLabel, roleLabel }: {
                     <span className={statusColorVariants[status]}>
                         🟢{status}
                     </span>
-                    <span className={textColorClassVariants.sky}>
-                        {positionLabel}
-                    </span>
                     <span className={textColorClassVariants.amber}>
                         {roleLabel}
+                    </span>
+                    <span className={textColorClassVariants.sky}>
+                        {positionLabel}
                     </span>
                 </div>
             )
