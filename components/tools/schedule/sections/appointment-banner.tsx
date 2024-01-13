@@ -2,15 +2,14 @@ import { useEffect, useState } from "react";
 import { MdAccessTimeFilled, MdLocationOn, MdOutlineEdit } from "react-icons/md";
 import { BiSolidDetail } from "react-icons/bi";
 import { HiUserGroup } from "react-icons/hi";
-import { IconMap, colorCycle, scheduleStyles } from "../styles";
+import { IconMap, getColorByIdHash, scheduleStyles } from "../styles";
 import type { GustybobbyAppointment } from "@/server/typeconfig/record";
 import { sectionStyles } from "@/components/styles/sections";
 import { usePathname, useRouter } from "next/navigation";
 import { shortMonthNames, shortWeekDays } from "../../date/date-picker";
 
-export default function AppointmentBanner({ appt, apptIndex, hideDetails }: {
+export default function AppointmentBanner({ appt, hideDetails }: {
     appt: GustybobbyAppointment
-    apptIndex: number
     hideDetails: boolean
 }){
 
@@ -24,15 +23,18 @@ export default function AppointmentBanner({ appt, apptIndex, hideDetails }: {
     },[appt])
 
     return(
-        <div className={scheduleStyles.banner(colorCycle[apptIndex%colorCycle.length], false, true)}>
+        <div className={scheduleStyles.banner(getColorByIdHash(appt.id), false, true)}>
             <div className="flex justify-between">
                 <span className="flex items-center font-bold text-2xl mb-1">
                     <span className="text-2xl">{IconMap[appt.icon]}</span>&nbsp;<span>{appt.title}</span>
                 </span>
-                {appt.permission === 'editable' &&
+                {!hideDetails && appt.permission === 'editable' &&
                 <button 
                     className={sectionStyles.button({ color: 'orange', border: true, hover: true })}
-                    onClick={() => router.push(pathname+`?view=appt&appt_id=${appt.id}`)}
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        router.push(pathname+`?view=appt&appt_id=${appt.id}&edit=true`)
+                    }}
                 >
                     <MdOutlineEdit className="text-2xl"/>
                 </button>

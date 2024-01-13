@@ -5,6 +5,13 @@ import { HiUserGroup } from "react-icons/hi"
 
 export const colorCycle: ColorVariants[] = ['blue','orange','fuchsia','pink','sky','yellow','purple']
 
+export function getColorByIdHash(id: string){
+    let hash: number = 0
+    for(var i=0;i<id.length;i++){
+        hash += id.charCodeAt(i)
+    }
+    return colorCycle[hash%colorCycle.length]
+}
 
 export const IconMap = {
     CONTACT: <BiSolidContact/>,

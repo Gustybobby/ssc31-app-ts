@@ -9,22 +9,36 @@ export interface UseSchedule {
     dispatchSchedule: Dispatch<ScheduleStateReducerAction>
     refetch: Dispatch<SetStateAction<{}>>
     view: string
+    month: string | null
+    year: string | null
     date_key: string | null
     appt_id: string | null
+    edit: string | null
+    editable: boolean
 }
 
-export default function useSchedule(fetchUrl: string){
+export default function useSchedule(fetchUrl: string, editable: boolean){
     const [schedule, dispatchSchedule] = useReducer(scheduleStateReducer, 'loading')
     const [shouldRefetch, refetch] = useState({})
     const searchParams = useSearchParams()
     const view = searchParams.get('view') ?? 'month'
+    const month = searchParams.get('month')
+    const year = searchParams.get('year')
     const date_key = searchParams.get('date_key')
     const appt_id = searchParams.get('appt_id')
+    const edit = searchParams.get('edit')
     useEffect(() => {
         fetch(fetchUrl)
             .then(res => res.ok? res.json() : { message: 'ERROR' })
             .then(data => data.message === 'SUCCESS'? data.data : 'error')
             .then(data => dispatchSchedule({ type: 'set_from_db', appt_array: data }))
     }, [fetchUrl, shouldRefetch])
-    return { schedule, dispatchSchedule, refetch, view, date_key, appt_id }
+    return { schedule, dispatchSchedule, refetch, view, month, year, date_key, appt_id, edit, editable }
+}
+
+export function safePositive(string: string | null): number | null{
+    if(!string || isNaN(Number(string)) || Number(string) < 0){
+        return null
+    }
+    return Number(string)
 }

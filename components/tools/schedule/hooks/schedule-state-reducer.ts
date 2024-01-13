@@ -4,6 +4,10 @@ export interface Schedule {
     next_appt: {
         appt: GustybobbyAppointment | null
         index: number
+    },
+    ongoing_appt: {
+        appt: GustybobbyAppointment | null
+        index: number
     }
     appointments: {
         [key: string]: {
@@ -40,7 +44,7 @@ export default function scheduleStateReducer(state: ScheduleState, action: Sched
             const currDate = new Date()
             const apptObject = getAppointmentArrayAsObject(action.appt_array)
             return {
-                next_appt: getNextAppt(new Date(), apptObject),
+                ...getNextAndOnGoingAppt(new Date(), apptObject),
                 current_date: currDate,
                 appointments: apptObject
             }
@@ -75,12 +79,21 @@ export function getAppointmentArrayAsObject(appt_array: GustybobbyAppointment[])
     return apptsObject
 }
 
-export function getNextAppt(current_date: Date, apptsObject: Schedule['appointments']){
+export function getNextAndOnGoingAppt(current_date: Date, apptsObject: Schedule['appointments']){
     let nextAppt: GustybobbyAppointment | null = null
     let nextApptIndex: number = 0
+    let onGoingAppt: GustybobbyAppointment | null = null
+    let onGoingApptIndex: number = 0
     for(const { order, appts } of Object.values(apptsObject)){
         order.forEach((appt_id, index) => {
             const appt = appts[appt_id]
+            if((new Date(appt.end_at)) < current_date){
+                return
+            }
+            if(current_date < new Date(appt.end_at) && current_date >= new Date(appt.start_at)){
+                onGoingAppt = appt
+                onGoingApptIndex = index
+            }
             if((new Date(appt.start_at)) < current_date){
                 return
             }
@@ -94,7 +107,10 @@ export function getNextAppt(current_date: Date, apptsObject: Schedule['appointme
             }
         })
     }
-    return { appt: nextAppt, index: nextApptIndex }
+    return {
+        next_appt: { appt: nextAppt, index: nextApptIndex },
+        ongoing_appt: { appt: onGoingAppt, index: onGoingApptIndex },
+    }
 }
 
 function assignAppt(appt: GustybobbyAppointment, dateKey: string, apptsObject: Schedule['appointments']){
@@ -102,7 +118,7 @@ function assignAppt(appt: GustybobbyAppointment, dateKey: string, apptsObject: S
     apptsObject[dateKey].appts[appt.id] = appt
 }
 
-function dateToDateKey(date: Date): string{
+export function dateToDateKey(date: Date): string{
     return [
         date.getFullYear(),
         date.getMonth(),
