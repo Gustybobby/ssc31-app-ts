@@ -1,12 +1,8 @@
 "use client"
 
-import type { StaticMembersTableState } from "../config-fetchers/config-types"
-import useStaticMembersTable from "./hooks/use-static-members-table"
+import Table from "@/server/classes/table"
 
-export default function StaticMembersTable({ formConfig, responses, members }: StaticMembersTableState){
-
-    const table = useStaticMembersTable({ formConfig, responses, members })
-
+export default function MembersTable({ table }: { table: Table }){
     return (
         <div className="w-full overflow-auto">
             <table className="table-fixed min-w-full">

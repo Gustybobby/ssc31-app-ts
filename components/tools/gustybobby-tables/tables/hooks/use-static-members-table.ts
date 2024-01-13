@@ -1,18 +1,30 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { StaticMembersTableState } from "../../config-fetchers/config-types";
+import { FormTableConfig, StaticMembersTableInitializeState } from "../../config-fetchers/config-types";
 import Table from "@/server/classes/table";
+import useFormConfig from "../../config-fetchers/hooks/use-form-config";
+import useResponses from "../../config-fetchers/hooks/use-responses";
+import useMembers from "../../config-fetchers/hooks/use-members";
 
-export default function useStaticMembersTable({ formConfig, responses, members }: StaticMembersTableState){
-    const [table, setTable] = useState<Table>(initializeTable({ formConfig, responses, members }))
+export default function useStaticMembersTable({ eventId, formId, role }: FormTableConfig){
+    const { formConfig } = useFormConfig({ eventId, formId, role })
+    const { responses } = useResponses({ eventId, formId, role })
+    const { members } = useMembers({ eventId, formId, role })
+    const [table, setTable] = useState<Table | 'loading' | 'error'>(initializeTable({ formConfig, responses, members }))
     useEffect(() => {
         setTable(initializeTable({ formConfig, responses, members }))
     }, [formConfig, responses, members])
     return table
 }
 
-function initializeTable({ formConfig, responses, members }: StaticMembersTableState){
+function initializeTable({ formConfig, responses, members }: StaticMembersTableInitializeState){
+    if(formConfig === 'loading' || responses === 'loading' || members === 'loading'){
+        return 'loading'
+    }
+    if(formConfig === 'error' || responses === 'error' || members === 'error'){
+        return 'error'
+    }
     return Table.initialize({
         columns: [
             {
@@ -24,16 +36,16 @@ function initializeTable({ formConfig, responses, members }: StaticMembersTableS
             },
             {
                 type: 'pure',
-                id: 'position',
-                label: 'Position',
-                data_type: 'POSITION',
+                id: 'role',
+                label: 'Role',
+                data_type: 'ROLE',
                 field_type: 'OPTIONS',
             },
             {
                 type: 'pure',
-                id: 'role',
-                label: 'Role',
-                data_type: 'ROLE',
+                id: 'position',
+                label: 'Position',
+                data_type: 'POSITION',
                 field_type: 'OPTIONS',
             },
             Table.formColumnAdapter(formConfig)

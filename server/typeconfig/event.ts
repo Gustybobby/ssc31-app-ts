@@ -35,3 +35,9 @@ interface CreateEventError {
 }
 
 export type CreateEventResponse = CreateEventSuccess | CreateEventError
+
+export type ColumnFetches = {
+    [key: string]: {
+        [key: string]: boolean
+    }
+} | null

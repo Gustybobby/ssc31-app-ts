@@ -1,4 +1,5 @@
 import type { AppointmentType, IconType } from "@prisma/client"
+import type { EventConfigPosition, EventConfigRole } from "./form"
 
 export interface ActivityRecord {
     label: string
@@ -14,8 +15,8 @@ export interface TransferRecord {
 
 export interface GustybobbyAttendance {
     id: string
-    check_in: string
-    check_out: string
+    check_in: string | null
+    check_out: string | null
     member_id: string
 }
 
@@ -41,6 +42,12 @@ interface ReadOnlyAppointment extends CoreAppointment {
 
 interface EditableAppointment extends CoreAppointment {
     permission: 'editable'
+    party_members: {
+        id: string,
+        user_id: string,
+        position: EventConfigPosition | null,
+        role: EventConfigRole | null,
+    }[]
     attendances: GustybobbyAttendance[]
 }
 

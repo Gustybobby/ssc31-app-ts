@@ -76,14 +76,14 @@ export default function datePickerReducer(state: DateProperty, action: DatePicke
     }
 }
 
-function getEditedMonthAndYear(year: number, month: number, amount: number){
+export function getEditedMonthAndYear(year: number, month: number, amount: number){
     return {
         year: year + Math.floor((month+amount)/12),
         month: (month+12+amount)%12,
     }
 }
 
-function getDatesInCalendar(year: number, month: number){
+export function getDatesInCalendar(year: number, month: number){
     const firstDate = new Date(year, month, 1)
     const dateList: Date[] = []
     var i = -firstDate.getDay()+1

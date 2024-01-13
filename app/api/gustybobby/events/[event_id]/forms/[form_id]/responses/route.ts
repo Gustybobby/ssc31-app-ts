@@ -6,6 +6,9 @@ export async function GET(req: NextRequest, { params }: { params: { form_id: str
         const formResponses = await prisma.eventFormResponse.findMany({
             where: {
                 form_id: params.form_id
+            },
+            orderBy: {
+                created_at: 'asc'
             }
         })
         return NextResponse.json({ message: "SUCCESS", data: formResponses }, { status: 200 })
