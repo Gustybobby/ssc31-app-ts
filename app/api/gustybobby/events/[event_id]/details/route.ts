@@ -69,7 +69,8 @@ export async function PUT(req: NextRequest,{ params }: { params: { event_id: str
             const newPositionIds = editData.positions.map((position) => position.id)
             createIds = setDifference<string>(new Set(newPositionIds), new Set(currentPositionIds))
             deleteIds = setDifference<string>(new Set(currentPositionIds), new Set(newPositionIds))
-            for(const position of editData.positions){
+            for(var i=0;i<editData.positions.length;i++){
+                const position = editData.positions[i]
                 if(createIds.has(position.id)){
                     continue
                 }
@@ -79,14 +80,19 @@ export async function PUT(req: NextRequest,{ params }: { params: { event_id: str
                     },
                     data: {
                         ...position,
-                        id: undefined
+                        id: undefined,
+                        order: i,
                     }
                 })
                 console.log("updated position", updatedPosition)
             }
             const createPositions = editData.positions.filter((position) => createIds.has(position.id))
             const createdPositions = await tx.eventPosition.createMany({
-                data: createPositions.map(({ id, ...position }) => ({ ...position, event_id: params.event_id }))
+                data: createPositions.map(({ id, ...position }, index) => ({
+                    ...position,
+                    order: currentPositionIds.length + index,
+                    event_id: params.event_id
+                }))
             })
             const deletedPositions = await tx.eventPosition.deleteMany({
                 where: {
@@ -106,7 +112,8 @@ export async function PUT(req: NextRequest,{ params }: { params: { event_id: str
             const newRoleIds = editData.roles.map((role) => role.id)
             createIds = setDifference<string>(new Set(newRoleIds), new Set(currentRoleIds))
             deleteIds = setDifference<string>(new Set(currentRoleIds), new Set(newRoleIds))
-            for(const role of editData.roles){
+            for(var i=0;i<editData.roles.length;i++){
+                const role = editData.roles[i]
                 if(createIds.has(role.id)){
                     continue
                 }
@@ -116,14 +123,19 @@ export async function PUT(req: NextRequest,{ params }: { params: { event_id: str
                     },
                     data: {
                         ...role,
-                        id: undefined
+                        id: undefined,
+                        order: i,
                     }
                 })
                 console.log("updated role", updatedRole)
             }
             const createRoles = editData.roles.filter((role) => createIds.has(role.id))
             const createdRoles = await tx.eventRole.createMany({
-                data: createRoles.map(({ id, ...role }) => ({ ...role, event_id: params.event_id }))
+                data: createRoles.map(({ id, ...role }, index) => ({
+                    ...role,
+                    order: currentRoleIds.length + index,
+                    event_id: params.event_id
+                }))
             })
             const deletedRoles = await tx.eventRole.deleteMany({
                 where: {

@@ -6,12 +6,23 @@ import { type NextRequest, NextResponse } from "next/server"
 export async function GET(req: NextRequest, { params } : { params: { event_id: string }}){
     try{
         const searchParams = req.nextUrl.searchParams
-        const select= searchParamsToSelect(searchParams)
+        const select = searchParamsToSelect(searchParams)
+        const modSelect = select? Object.fromEntries(Object.keys(select).map((key) => {
+            if(key === 'positions' || key === 'roles'){
+                return [key, {
+                    orderBy: {
+                        order: 'asc'
+                    }
+                }]
+            } else{
+                return [key, true]
+            }
+        })) : undefined
         const data = await prisma.event.findUniqueOrThrow({
             where:{
                 id: params.event_id
             },
-            select
+            select: modSelect
         })
         return NextResponse.json({ data, message: "SUCCESS" }, { status: 200 })
     } catch(e){
