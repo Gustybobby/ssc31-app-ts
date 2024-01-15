@@ -1,9 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
 import prisma from "@/prisma-client";
 import type { ColumnFetches } from "@/server/typeconfig/event";
-import type { FormConfigProperty } from "@/server/classes/forms/formconfig";
 import type { MemberReferencedResponses } from "@/server/typeconfig/table";
 import type { FormResponse } from "@/server/typeconfig/form";
+import { ColumnProperty } from "@/server/classes/table";
 
 export async function GET(req: NextRequest, { params }: { params: { event_id: string }}){
     try{
@@ -16,10 +16,16 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
             }
         })
         const column_fetches = event.column_fetches as ColumnFetches
-        const groups: FormConfigProperty[] = []
+        const groups: ColumnProperty[] = []
         const group_responses: MemberReferencedResponses = {}
         for(const [group_id, group] of Object.entries(column_fetches ?? {})){
-            groups.push({ id: group_id, title: group.name })
+            groups.push({
+                type: 'pure',
+                id: group_id,
+                label: group.name,
+                data_type: 'STRING',
+                field_type: 'SHORTANS',
+            })
             for(const [form_id, field_id] of Object.entries(group.forms)){
                 const formResponses = await prisma.eventFormResponse.findMany({
                     where: {
