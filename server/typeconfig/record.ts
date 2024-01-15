@@ -23,6 +23,7 @@ export interface GustybobbyAttendance {
 interface CoreAppointment {
     id: string
     title: string
+    public: boolean
     location: string
     description: string
     icon: IconType

@@ -135,6 +135,7 @@ const newApptConfig = (date: Date): EditableAppointment => {
         id: 'new',
         icon: 'CONTACT',
         title: '',
+        public: false,
         type: 'MEETING',
         attendance_required: false,
         start_at: (new Date(date.getFullYear(),date.getMonth(),date.getDate(),0,0,0)).toISOString(),

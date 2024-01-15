@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
@@ -144,6 +144,7 @@ model EventFormTemplate {
 model EventAppointment {
   id                  String          @id @default(cuid())
   title               String          @default("")
+  public              Boolean         @default(false)
   location            String          @default("")
   description         String          @default("")
   icon                IconType
