@@ -25,7 +25,7 @@ interface ActionTypeEditString {
 
 interface ActionTypeEditBoolean {
     type: 'edit_boolean'
-    key: 'attendance_required'
+    key: 'attendance_required' | 'public'
     value: boolean
 }
 
@@ -39,6 +39,11 @@ interface ActionTypeEditType {
     value: AppointmentType
 }
 
+interface ActionTypeEditMemberSelects {
+    type: 'edit_member_selects'
+    value: EditableAppointment['member_selects']
+}
+
 export type ApptConfigReducerAction =
     ActionTypeSetAppt |
     ActionTypeEditDate |
@@ -46,7 +51,8 @@ export type ApptConfigReducerAction =
     ActionTypeEditString |
     ActionTypeEditBoolean |
     ActionTypeEditIcon |
-    ActionTypeEditType
+    ActionTypeEditType |
+    ActionTypeEditMemberSelects
 
 export default function apptConfigReducer(state: EditableAppointment, action: ApptConfigReducerAction): EditableAppointment{
     switch(action.type){
@@ -83,6 +89,11 @@ export default function apptConfigReducer(state: EditableAppointment, action: Ap
             return {
                 ...state,
                 type: action.value
+            }
+        case 'edit_member_selects':
+            return {
+                ...state,
+                member_selects: action.value
             }
     }
 }

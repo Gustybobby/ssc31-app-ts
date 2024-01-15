@@ -21,7 +21,7 @@ export default function useSelectableMembersTable({ eventId, role, selection }: 
     useEffect(() => {
         refetchMembers({})
         refetchGroupResponses({})
-    }, [shouldRefetch])
+    }, [shouldRefetch, refetchMembers, refetchGroupResponses])
     useEffect(() => {
         setTable(initializeTable({
             groups: defaultGroups,

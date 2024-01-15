@@ -1,20 +1,23 @@
 "use client"
 
 import { sectionStyles } from "@/components/styles/sections"
-import { type Dispatch, useReducer, useState } from "react"
+import { type Dispatch, useReducer, useState, type SetStateAction } from "react"
 import apptConfigReducer, { type ApptConfigReducerAction } from "./hooks/appt-config-reducer"
 import type { EditableAppointment } from "@/server/typeconfig/record"
 import { usePathname, useRouter } from "next/navigation"
 import { RxCross1 } from "react-icons/rx"
 import DateTimePicker from "./sections/date-time-picker"
 import type { Schedule } from "../../../hooks/schedule-state-reducer"
-import CheckAttendance from "./sections/check-attendance"
 import IconPicker from "./sections/icon-picker"
 import TitleField from "./sections/title-field"
 import PopUpDelete from "./sections/pop-up-delete"
 import TypePicker from "./sections/type-picker"
 import DescriptionField from "./sections/description-field"
 import LocationField from "./sections/location-field"
+import PartySelectorTable from "./sections/party-selector-table"
+import SaveButton from "./sections/save-button"
+import CreateButton from "./sections/create-button"
+import CheckBoolean from "./sections/check-boolean"
 
 interface EditApptViewScheduleProps {
     eventId: string
@@ -22,13 +25,14 @@ interface EditApptViewScheduleProps {
     date: Date
     dateAppts: Schedule['appointments']['key']['appts']
     role: 'gustybobby' | 'user'
+    refetch: Dispatch<SetStateAction<{}>>
 }
 
 export interface dispatchApptConfig {
     dispatchApptConfig: Dispatch<ApptConfigReducerAction>
 }
 
-export default function EditApptViewSchedule({ eventId, appt, date, dateAppts, role }: EditApptViewScheduleProps){
+export default function EditApptViewSchedule({ eventId, appt, date, dateAppts, role, refetch }: EditApptViewScheduleProps){
 
     const [apptConfig, dispatchApptConfig] = useReducer(apptConfigReducer, appt ?? newApptConfig(date))
     const [openDelete, setOpenDelete] = useState(false)
@@ -61,6 +65,7 @@ export default function EditApptViewSchedule({ eventId, appt, date, dateAppts, r
                         openDelete={openDelete}
                         setOpenDelete={setOpenDelete}
                         role={role}
+                        refetch={refetch}
                     />
                 </div>
                 }
@@ -86,8 +91,9 @@ export default function EditApptViewSchedule({ eventId, appt, date, dateAppts, r
                             type={apptConfig.type}
                             dispatchApptConfig={dispatchApptConfig}
                         />
-                        <CheckAttendance
+                        <CheckBoolean
                             attendanceRequired={apptConfig.attendance_required}
+                            publicAppt={apptConfig.public}
                             dispatchApptConfig={dispatchApptConfig}
                         />
                     </div>
@@ -108,19 +114,29 @@ export default function EditApptViewSchedule({ eventId, appt, date, dateAppts, r
                     />
                 </div>
                 <div className="mx-2 flex flex-col justify-between space-y-2 xl:space-y-0">
-                    {/*<PartySelectorTable
-                        partyMembers={apptConfig.party_members}
-                        dispatchApptConfig={dispatchApptConfig}
-                        fetchMembersURL={urls.fetch_members}
-                    />
-                    <SaveCreate
-                        apptExisted={appts[apptId]? true : false}
+                    <div className="h-[90vh] overflow-auto">
+                        <PartySelectorTable
+                            eventId={eventId}
+                            role={role}
+                            dispatchApptConfig={dispatchApptConfig}
+                            partyMembers={appt?.party_members ?? []}
+                        />
+                    </div>
+                    {appt?
+                    <SaveButton
+                        eventId={eventId}
                         apptConfig={apptConfig}
-                        postURLs={urls.posts}
-                        setView={setView}
-                        setAppointments={setAppointments}
-                        setRefetch={setRefetch}
-                    />*/}
+                        role={role}
+                        refetch={refetch}
+                    />
+                    :
+                    <CreateButton
+                        eventId={eventId}
+                        apptConfig={apptConfig}
+                        role={role}
+                        refetch={refetch}
+                    />
+                    }
                 </div>
             </div>
             }

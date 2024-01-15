@@ -19,7 +19,7 @@ export default function useDefaultMembersTable({ eventId, role, options }: UseDe
     useEffect(() => {
         refetchMembers({})
         refetchGroupResponses({})
-    }, [shouldRefetch])
+    }, [shouldRefetch, refetchMembers, refetchGroupResponses])
     useEffect(() => {
         setTable(initializeTable({
             groups: defaultGroups,

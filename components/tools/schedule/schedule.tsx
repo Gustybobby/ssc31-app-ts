@@ -7,6 +7,7 @@ import ApptViewSchedule from "./views/appt/appt-view-schedule"
 import DayViewSchedule from "./views/day/day-view-schedule"
 import MonthViewSchedule from "./views/month/month-view-schedule"
 import EditApptViewSchedule from "./views/appt/edit-appt-view-schedule/edit-appt-view-schedule"
+import ScheduleLoading from "./schedule-loading"
 
 export default function Schedule({
     schedule,
@@ -30,12 +31,13 @@ export default function Schedule({
         throw 'fetch appointments error'
     }
     if(schedule === 'loading'){
-        return <>Loading</>
+        return <ScheduleLoading/>
     }
     if(view === 'month'){
         return (
             <MonthViewSchedule
                 schedule={schedule}
+                dispatchSchedule={dispatchSchedule}
                 month={safePositive(month) ?? schedule.current_date.getMonth()}
                 year={safePositive(year) ?? schedule.current_date.getFullYear()}
                 editable={editable}
@@ -61,6 +63,7 @@ export default function Schedule({
                     dateAppts={schedule.appointments[date_key ?? '']?.appts ?? []}
                     role={role}
                     date={date_key? dateKeyToDate(date_key) : new Date()}
+                    refetch={refetch}
                 />
             )
         }

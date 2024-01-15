@@ -24,7 +24,7 @@ export type ScheduleState = Schedule | 'loading' | 'error'
 
 interface ActionTypeSetFromDb {
     type: 'set_from_db'
-    appt_array: GustybobbyAppointment[] | 'error'
+    appt_array: GustybobbyAppointment[] | 'error' | 'loading'
 }
 
 interface ActionTypeUpdateCurrDate {
@@ -38,8 +38,8 @@ export type ScheduleStateReducerAction =
 export default function scheduleStateReducer(state: ScheduleState, action: ScheduleStateReducerAction): ScheduleState{
     switch(action.type){
         case 'set_from_db':
-            if(action.appt_array === 'error'){
-                return 'error'
+            if(action.appt_array === 'error' || action.appt_array === 'loading'){
+                return action.appt_array
             }
             const currDate = new Date()
             const apptObject = getAppointmentArrayAsObject(action.appt_array)
@@ -56,7 +56,8 @@ export default function scheduleStateReducer(state: ScheduleState, action: Sched
         case 'update_curr_date':
             return {
                 ...state,
-                current_date: new Date()
+                current_date: new Date(),
+                ...getNextAndOnGoingAppt(new Date(), state.appointments),
             }
     }
 }

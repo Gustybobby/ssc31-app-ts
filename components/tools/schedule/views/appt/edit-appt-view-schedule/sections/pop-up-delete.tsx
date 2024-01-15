@@ -13,9 +13,10 @@ interface PopUpDeleteProps {
     openDelete: boolean
     setOpenDelete: Dispatch<SetStateAction<boolean>>
     role: 'gustybobby' | 'user'
+    refetch: Dispatch<SetStateAction<{}>>
 }
 
-export default function PopUpDelete({ eventId, apptId, openDelete, setOpenDelete, role }: PopUpDeleteProps){
+export default function PopUpDelete({ eventId, apptId, openDelete, setOpenDelete, role, refetch }: PopUpDeleteProps){
 
     const [disable, setDisable] = useState(true)
     const router = useRouter()
@@ -58,14 +59,14 @@ export default function PopUpDelete({ eventId, apptId, openDelete, setOpenDelete
                     const button = e.target as HTMLButtonElement
                     button.disabled = true
                     const deleteToast = toast.loading('Deleting...')
-                    const deleteAppt = await sendDataToAPI({
+                    const res = await sendDataToAPI({
                         apiUrl: `/api/${role}/events/${eventId}/appointments/${apptId}`,
                         method: 'DELETE',
                     })
-                    const res = await deleteAppt.json()
-                    switch(res.message){
+                    switch(res?.message){
                         case 'SUCCESS':
                             toast.success('Deleted', { id: deleteToast })
+                            refetch({})
                             router.replace(pathname)
                             break
                         default:

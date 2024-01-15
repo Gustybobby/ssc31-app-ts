@@ -6,12 +6,14 @@ import AppointmentBanner from "../../sections/appointment-banner";
 import MonthNavBar from "./month-nav-bar";
 import DayTiles from "./day-tiles";
 import { usePathname, useRouter } from "next/navigation";
+import { UseSchedule } from "../../hooks/use-schedule";
 
-export default function MonthViewSchedule({ schedule, month, year, editable }: {
+export default function MonthViewSchedule({ schedule, month, year, editable, dispatchSchedule }: {
     schedule: Schedule,
     month: number,
     year: number,
     editable: boolean,
+    dispatchSchedule: UseSchedule['dispatchSchedule']
 }){
 
     const router = useRouter()
@@ -19,34 +21,38 @@ export default function MonthViewSchedule({ schedule, month, year, editable }: {
 
     return(
         <div className="bg-gray-200 dark:bg-black/40 border border-black dark:border-white">
-            {schedule.ongoing_appt.appt &&
-            <div className="p-2 border-b border-black dark:border-white">
-                <div className="font-bold text-xl mb-1">Ongoing</div>
-                <div
-                    className="w-full cursor-pointer"
-                    onClick={() => router.push(pathname+`?view=appt&appt_id=${schedule.ongoing_appt.appt?.id}`)}
-                >
-                    <AppointmentBanner
-                        appt={schedule.ongoing_appt.appt}
-                        hideDetails={true}
-                    />
+            <div className="grid grid-cols-1 md:grid-cols-2 border-b border-black dark:border-white">
+                {schedule.ongoing_appt.appt &&
+                <div className="p-2 border-b md:border-b-0 md:border-r border-black dark:border-white">
+                    <div className="font-bold text-xl mb-1">Ongoing</div>
+                    <div
+                        className="w-full cursor-pointer"
+                        onClick={() => router.push(pathname+`?view=appt&appt_id=${schedule.ongoing_appt.appt?.id}`)}
+                    >
+                        <AppointmentBanner
+                            appt={schedule.ongoing_appt.appt}
+                            hideDetails={true}
+                            dispatchSchedule={dispatchSchedule}
+                        />
+                    </div>
                 </div>
-            </div>
-            }
-            {schedule.next_appt.appt &&
-            <div className="p-2 border-b border-black dark:border-white">
-                <div className="font-bold text-xl mb-1">Upcoming</div>
-                <div
-                    className="w-full cursor-pointer"
-                    onClick={() => router.push(pathname+`?view=appt&appt_id=${schedule.next_appt.appt?.id}`)}
-                >
-                    <AppointmentBanner
-                        appt={schedule.next_appt.appt}
-                        hideDetails={true}
-                    />
+                }
+                {schedule.next_appt.appt &&
+                <div className="p-2 border-b md:border-b-0 border-black dark:border-white">
+                    <div className="font-bold text-xl mb-1">Upcoming</div>
+                    <div
+                        className="w-full cursor-pointer"
+                        onClick={() => router.push(pathname+`?view=appt&appt_id=${schedule.next_appt.appt?.id}`)}
+                    >
+                        <AppointmentBanner
+                            appt={schedule.next_appt.appt}
+                            hideDetails={true}
+                            dispatchSchedule={dispatchSchedule}
+                        />
+                    </div>
                 </div>
+                }
             </div>
-            }
             <MonthNavBar
                 month={month}
                 year={year}

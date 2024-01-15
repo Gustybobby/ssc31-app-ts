@@ -30,6 +30,7 @@ export default function useSchedule(fetchUrl: string, editable: boolean, role: '
     const appt_id = searchParams.get('appt_id')
     const edit = searchParams.get('edit')
     useEffect(() => {
+        dispatchSchedule({ type: 'set_from_db', appt_array: 'loading' })
         fetch(fetchUrl)
             .then(res => res.ok? res.json() : { message: 'ERROR' })
             .then(data => data.message === 'SUCCESS'? data.data : 'error')

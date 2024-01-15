@@ -8,10 +8,12 @@ import { sectionStyles } from "@/components/styles/sections";
 import { usePathname, useRouter } from "next/navigation";
 import { shortMonthNames, shortWeekDays } from "../../date/date-picker";
 import { BasicSyntaxedContentDisplay } from "../../paragraph";
+import type { UseSchedule } from "../hooks/use-schedule";
 
-export default function AppointmentBanner({ appt, hideDetails }: {
+export default function AppointmentBanner({ appt, hideDetails, dispatchSchedule }: {
     appt: GustybobbyAppointment
     hideDetails: boolean
+    dispatchSchedule?: UseSchedule['dispatchSchedule']
 }){
 
     const [apptTiming, setApptTiming] = useState(timing(new Date(), new Date(appt.start_at), new Date(appt.end_at)))
@@ -19,9 +21,15 @@ export default function AppointmentBanner({ appt, hideDetails }: {
     const pathname = usePathname()
 
     useEffect(() => {
-        const interval = setInterval(() => setApptTiming(timing(new Date(), new Date(appt.start_at), new Date(appt.end_at))), 5000)
+        const interval = setInterval(() => {
+            setApptTiming(timing(new Date(), new Date(appt.start_at), new Date(appt.end_at)))
+        }, 5000)
         return () => clearInterval(interval);
     },[appt])
+
+    useEffect(() => {
+        dispatchSchedule?.({ type: 'update_curr_date' })
+    }, [apptTiming, dispatchSchedule])
 
     return(
         <div className={scheduleStyles.banner(getColorByIdHash(appt.id), false, true)}>

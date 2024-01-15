@@ -50,6 +50,9 @@ export interface EditableAppointment extends CoreAppointment {
         role: EventConfigRole | null,
     }[]
     attendances: GustybobbyAttendance[]
+    member_selects?: {
+        [member_id: string]: boolean
+    }
 }
 
 export type GustybobbyAppointment = ReadOnlyAppointment | EditableAppointment
