@@ -1,13 +1,17 @@
 import type { EventConfigProperty } from "@/server/classes/eventconfig"
+import { FieldConfigProperty } from "@/server/classes/forms/fieldconfig"
 import type { FormConfigProperty } from "@/server/classes/forms/formconfig"
 import { GustybobbyOption } from "@/server/typeconfig/form"
 import { MemberStatus } from "@prisma/client"
 import type { MutableRefObject } from "react"
 
-export interface FormTableConfig {
+export interface EventTableConfig {
     eventId: string
-    formId: string
     role: 'user' | 'gustybobby'
+}
+
+export interface FormTableConfig extends EventTableConfig {
+    formId: string
 }
 
 export interface TableFormResponse {
@@ -39,6 +43,7 @@ export interface Member {
 export type FormConfigState = FormConfigProperty | 'loading' | 'error'
 export type ResponsesState = TableFormResponse[] | 'loading' | 'error'
 export type MembersState = Member[] | 'loading' | 'error'
+export type GroupsState = FieldConfigProperty[] | 'loading' | 'error'
 
 export interface StaticMembersTableInitializeState {
     formConfig: FormConfigState
@@ -67,4 +72,21 @@ export interface EditableMembersTableInitializeState extends StaticMembersTableI
             [key: string]: string
         }
     }>
+}
+
+export interface UseDefaultMembersTable extends EventTableConfig {
+    options?: {
+        columns?: {
+            status: boolean,
+            role: boolean,
+            position: boolean,
+        }
+    }
+}
+
+export interface DefaultMembersTableInitializeState {
+    groups: GroupsState
+    responses: ResponsesState
+    members: MembersState
+    options: UseDefaultMembersTable['options']
 }

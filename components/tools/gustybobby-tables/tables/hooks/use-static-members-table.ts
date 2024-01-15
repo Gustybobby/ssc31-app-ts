@@ -10,7 +10,7 @@ import useMembers from "../../config-fetchers/hooks/use-members";
 export default function useStaticMembersTable({ eventId, formId, role }: FormTableConfig){
     const { formConfig } = useFormConfig({ eventId, formId, role })
     const { responses } = useResponses({ eventId, formId, role })
-    const { members } = useMembers({ eventId, formId, role })
+    const { members } = useMembers({ eventId, role })
     const [table, setTable] = useState<Table | 'loading' | 'error'>(initializeTable({ formConfig, responses, members }))
     useEffect(() => {
         setTable(initializeTable({ formConfig, responses, members }))

@@ -17,7 +17,7 @@ export default function useEditableMembersTable({ eventId, formId, role, editRef
     const { formConfig, refetch: refetchFormConfig } = useFormConfig({ eventId, formId, role })
     const { eventConfig, refetch: refetchEventConfig } = useEventConfig({ eventId, role })
     const { responses, refetch: refetchResponses } = useResponses({ eventId, formId, role })
-    const { members, setMembers, refetch: refetchMembers } = useMembers({ eventId, formId, role })
+    const { members, setMembers, refetch: refetchMembers } = useMembers({ eventId, role })
     const [table, setTable] = useState<Table | 'loading' | 'error'>(initializeTable({
         formConfig,
         eventConfig,

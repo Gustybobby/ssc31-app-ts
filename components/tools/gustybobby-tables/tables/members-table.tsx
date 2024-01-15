@@ -2,7 +2,7 @@
 
 import Table from "@/server/classes/table"
 
-export default function MembersTable({ table }: { table: Table }){
+export default function MembersTable({ table, headerCellClassName }: { table: Table, headerCellClassName: string }){
     return (
         <div className="w-full overflow-auto">
             <table className="table-fixed min-w-full">
@@ -16,7 +16,7 @@ export default function MembersTable({ table }: { table: Table }){
                                 colSpan={column.col_span}
                                 className="border border-black dark:border-white p-2 overflow-auto bg-gray-200 dark:bg-gray-800"
                             >
-                                <div className="min-w-48">{column.label}</div>
+                                <div className={headerCellClassName}>{column.label}</div>
                             </th>
                         ))}
                     </tr>

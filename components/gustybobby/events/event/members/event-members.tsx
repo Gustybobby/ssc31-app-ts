@@ -76,8 +76,8 @@ export default function EventMembers({ event_id, event_title, forms }: {
                     {table === 'loading'?
                     <GustybobbyTableLoading/>
                     :
-                    <div className="h-[80vh] overflow-auto border border-black dark:border-white">
-                        <MembersTable table={table}/>
+                    <div className="max-h-[80vh] overflow-auto border border-black dark:border-white">
+                        <MembersTable table={table} headerCellClassName="max-h-12 min-w-48"/>
                     </div>
                     }
                 </div>

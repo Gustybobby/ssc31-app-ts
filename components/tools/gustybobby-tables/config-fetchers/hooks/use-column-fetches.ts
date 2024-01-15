@@ -3,7 +3,10 @@
 import type { ColumnFetches } from "@/server/typeconfig/event"
 import { useEffect, useState } from "react"
 
-export default function useColumnFetches(eventId: string, role: 'user' | 'gustybobby'){
+export default function useColumnFetches({ eventId, role }: {
+    eventId: string,
+    role: 'user' | 'gustybobby'
+}){
     const [columnFetches, setColumnFetches] = useState<ColumnFetches | 'loading' | 'error'>('loading')
     const [shouldRefetch, refetch] = useState({})
     useEffect(() => {
