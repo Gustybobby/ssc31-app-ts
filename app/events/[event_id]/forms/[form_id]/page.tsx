@@ -21,7 +21,11 @@ export default async function EventFormPage({ params }: { params: { event_id: st
         case "INVALID":
             redirect(`/events`)
         case "UNAUTHORIZED":
-            return <FormMessage message="You do not have permission to access this form"/>
+            return (
+                <FormMessage>
+                    You do not have permission to access this form.<br/>Try signing in with SIIT email.
+                </FormMessage>
+            )
         case "MEMBER_EXISTED":
         case "RESPONSE_EXISTED":
         case "SUCCESS":
@@ -37,11 +41,11 @@ export default async function EventFormPage({ params }: { params: { event_id: st
     }
 }
 
-function FormMessage({ message }: { message: string }){
+function FormMessage({ children }: { children: React.ReactNode }){
     return(
         <MainWrapper>
             <div className={eventStyles.box({ size: 'sm', round: true, extensions: 'my-4 p-4 text-2xl font-bold text-center' })}>
-                {message}
+                {children}
             </div>
         </MainWrapper>
     )
