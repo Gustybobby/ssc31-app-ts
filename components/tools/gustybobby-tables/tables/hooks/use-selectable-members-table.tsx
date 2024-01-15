@@ -1,19 +1,21 @@
 "use client"
 
-import type { DefaultMembersTableInitializeState, UseDefaultMembersTable } from "../../config-fetchers/config-types";
-import Table, { ColumnProperty } from "@/server/classes/table";
+import type { SelectableMembersTableInitiializeState, UseSelectableMembersTable } from "../../config-fetchers/config-types";
+import Table from "@/server/classes/table";
 import useMembers from "../../config-fetchers/hooks/use-members";
 import useDefaultGroupResponses from "../../config-fetchers/hooks/use-default-group-responses";
 import { useEffect, useState } from "react";
 
-export default function useDefaultMembersTable({ eventId, role, options }: UseDefaultMembersTable){
+export default function useSelectableMembersTable({ eventId, role, selection }: UseSelectableMembersTable){
     const { members, refetch: refetchMembers } = useMembers({ eventId, role })
     const { defaultGroups, defaultResponses, refetch: refetchGroupResponses } = useDefaultGroupResponses({ eventId, role })
+    const [memberSelects, setMemberSelects] = useState(selection)
     const [table, setTable] = useState<Table | 'loading' | 'error'>(initializeTable({
         groups: defaultGroups,
         defaultResponses,
         members,
-        options
+        memberSelects,
+        setMemberSelects,
     }))
     const [shouldRefetch, refetch] = useState({})
     useEffect(() => {
@@ -25,13 +27,14 @@ export default function useDefaultMembersTable({ eventId, role, options }: UseDe
             groups: defaultGroups,
             defaultResponses,
             members,
-            options
+            memberSelects,
+            setMemberSelects,
         }))
-    }, [defaultGroups, defaultResponses, members, options])
-    return { table, setTable, refetch }
+    }, [defaultGroups, defaultResponses, members, memberSelects])
+    return { table, setTable, memberSelects, setMemberSelects, refetch }
 }
 
-function initializeTable({ groups, defaultResponses, members, options }: DefaultMembersTableInitializeState){
+function initializeTable({ groups, defaultResponses, members, memberSelects, setMemberSelects }: SelectableMembersTableInitiializeState){
     if(groups === 'loading' || defaultResponses === 'loading' || members === 'loading'){
         return 'loading'
     }
@@ -40,17 +43,50 @@ function initializeTable({ groups, defaultResponses, members, options }: Default
     }
     return Table.initialize({
         columns: [
-            ...memberColumns(options),
+            {
+                type: 'pure',
+                id: 'select',
+                label: 'Select',
+                data_type: 'STRING',
+                field_type: 'SHORTANS',
+            },
+            {
+                type: 'pure',
+                id: 'role',
+                label: 'Role',
+                data_type: 'ROLE',
+                field_type: 'OPTIONS',
+            },
+            {
+                type: 'pure',
+                id: 'position',
+                label: 'Position',
+                data_type: 'POSITION',
+                field_type: 'OPTIONS',
+            },
             ...groups,
         ],
         rows: members.map((member) => {
             return ({
                 key: member.id,
                 value: {
-                    status: {
+                    select: {
                         type: 'pure_single',
-                        id: 'status',
-                        data: member.status ?? ''
+                        id: 'select',
+                        data: (
+                            <div className="w-full flex justify-center">
+                                <input
+                                    type="checkbox"
+                                    defaultChecked={!!memberSelects?.[member.id]}
+                                    onChange={(e) => {
+                                        setMemberSelects(memberSelects => ({
+                                            ...memberSelects,
+                                            [member.id]: e.target.checked,
+                                        }))
+                                    }}
+                                />
+                            </div>
+                        )
                     },
                     position: {
                         type: 'pure_single',
@@ -73,33 +109,4 @@ function initializeTable({ groups, defaultResponses, members, options }: Default
             })
         })
     })
-}
-
-function memberColumns(options: UseDefaultMembersTable['options']): ColumnProperty[]{
-    return [
-        {
-            type: 'pure',
-            id: 'status',
-            label: 'Status',
-            data_type: 'STRING',
-            field_type: 'OPTIONS',
-        },
-        {
-            type: 'pure',
-            id: 'role',
-            label: 'Role',
-            data_type: 'ROLE',
-            field_type: 'OPTIONS',
-        },
-        {
-            type: 'pure',
-            id: 'position',
-            label: 'Position',
-            data_type: 'POSITION',
-            field_type: 'OPTIONS',
-        },
-    ].filter((field) => {
-        const fieldId = field.id as ('status' | 'position' | 'role')
-        return !options?.columns || options.columns[fieldId]
-    }) as ColumnProperty[]
 }

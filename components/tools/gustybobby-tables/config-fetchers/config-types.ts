@@ -1,9 +1,10 @@
 import type { EventConfigProperty } from "@/server/classes/eventconfig"
-import { FieldConfigProperty } from "@/server/classes/forms/fieldconfig"
 import type { FormConfigProperty } from "@/server/classes/forms/formconfig"
-import { GustybobbyOption } from "@/server/typeconfig/form"
-import { MemberStatus } from "@prisma/client"
-import type { MutableRefObject } from "react"
+import type { ColumnProperty } from "@/server/classes/table"
+import type { GustybobbyOption } from "@/server/typeconfig/form"
+import type { EditableAppointment } from "@/server/typeconfig/record"
+import type { MemberStatus } from "@prisma/client"
+import type { Dispatch, MutableRefObject, SetStateAction } from "react"
 
 export interface EventTableConfig {
     eventId: string
@@ -40,10 +41,17 @@ export interface Member {
     } | null
 }
 
+export interface DefaultResponses {
+    [member_id: string]: {
+        [field_id: string]: string
+    }
+}
+
 export type FormConfigState = FormConfigProperty | 'loading' | 'error'
 export type ResponsesState = TableFormResponse[] | 'loading' | 'error'
+export type DefaultResponsesState = DefaultResponses | 'loading' | 'error'
 export type MembersState = Member[] | 'loading' | 'error'
-export type GroupsState = FieldConfigProperty[] | 'loading' | 'error'
+export type GroupsState = ColumnProperty[] | 'loading' | 'error'
 
 export interface StaticMembersTableInitializeState {
     formConfig: FormConfigState
@@ -86,7 +94,19 @@ export interface UseDefaultMembersTable extends EventTableConfig {
 
 export interface DefaultMembersTableInitializeState {
     groups: GroupsState
-    responses: ResponsesState
+    defaultResponses: DefaultResponsesState
     members: MembersState
     options: UseDefaultMembersTable['options']
+}
+
+export interface UseSelectableMembersTable extends EventTableConfig {
+    selection: EditableAppointment['member_selects']
+}
+
+export interface SelectableMembersTableInitiializeState {
+    groups: GroupsState
+    defaultResponses: DefaultResponsesState
+    members: MembersState,
+    memberSelects: EditableAppointment['member_selects']
+    setMemberSelects: Dispatch<SetStateAction<UseSelectableMembersTable['selection']>>
 }
