@@ -41,14 +41,14 @@ export default function timePickerReducer(state: TimePickerProperty, action: Tim
                     ...state.time,
                     [action.key]: action.value
                 },
-                selected_time: getNewSelectedTime({ ...state.time, [action.key]: action.value }, { ...state.time })
+                selected_time: getNewSelectedTime({ ...state.time, [action.key]: action.value }, state.selected_time)
             }
     }
 }
 
-function getNewSelectedTime(newTime: TimePickerProperty['time'], prevTime: TimePickerProperty['time']): Date{
-    const hour = isNaN(Number(newTime.hour))? Number(prevTime.hour) : Number(newTime.hour)
-    const minute = isNaN(Number(newTime.minute))? Number(prevTime.minute) : Number(newTime.minute)
-    const second = isNaN(Number(newTime.second))? Number(prevTime.second) : Number(newTime.second)
+function getNewSelectedTime(newTime: TimePickerProperty['time'], prevTime: Date): Date{
+    const hour = isNaN(Number(newTime.hour))? prevTime.getHours() : Number(newTime.hour)
+    const minute = isNaN(Number(newTime.minute))? prevTime.getMinutes() : Number(newTime.minute)
+    const second = isNaN(Number(newTime.second))? prevTime.getSeconds() : Number(newTime.second)
     return new Date((new Date()).getFullYear(), 0, 0, hour%12 + (newTime.meridiem === 'PM'? 12 : 0), minute, second)
 }

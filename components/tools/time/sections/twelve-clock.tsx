@@ -15,7 +15,7 @@ export default function TwelveClock({ timePicker, dispatchTimePicker }: TwelveCl
             <button 
                 key={'HOUR_'+index}
                 className={clockStyles.clockButton({
-                    selected: literalHour(index) === timePicker.selected_time.getHours(),
+                    selected: literalHour(index) === literalHour(timePicker.selected_time.getHours()),
                     extensions: position
                 })}
                 onClick={() => dispatchTimePicker({ type: 'set_time', key: 'hour', value: String(literalHour(index))})}

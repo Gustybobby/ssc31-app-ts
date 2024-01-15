@@ -63,7 +63,7 @@ export default function TimePicker({ id, label, buttonClassName, panelClassName,
                 >
                     <Popover.Panel className={styles.popOverPanel(panelClassName)}>
                         <TimeNavigation
-                            time={timePicker.time}
+                            selectedTime={timePicker.selected_time}
                             view={timePicker.view}
                             dispatchTimePicker={dispatchTimePicker}
                         />
