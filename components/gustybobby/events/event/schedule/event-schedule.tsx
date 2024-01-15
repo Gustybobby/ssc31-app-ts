@@ -7,7 +7,7 @@ import useSchedule from "@/components/tools/schedule/hooks/use-schedule"
 
 export default function EventSchedule({ event_id, event_title }: { event_id: string, event_title: string }){
 
-    const scheduleHook = useSchedule(`/api/gustybobby/events/${event_id}/appointments`, true)
+    const scheduleHook = useSchedule(`/api/gustybobby/events/${event_id}/appointments`, true, 'gustybobby', event_id)
     
     return (
         <DashboardWrapper eventId={event_id} eventTitle={event_title}>

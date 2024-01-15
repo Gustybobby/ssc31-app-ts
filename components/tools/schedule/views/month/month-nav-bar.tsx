@@ -16,7 +16,7 @@ export default function MonthNavBar({ month, year }: { month: number, year: numb
                 className={sectionStyles.button({ color: 'gray', border: true, hover: true, extensions: 'my-1' })}
                 onClick={() => {
                     const { month: newMonth, year: newYear }= getEditedMonthAndYear(year, month, -1)
-                    router.replace(pathname+`?month=${newMonth}&year=${newYear}`)
+                    router.replace(pathname+`?view=month&month=${newMonth}&year=${newYear}`)
                 }}
             >
                 {'<'}
@@ -28,7 +28,7 @@ export default function MonthNavBar({ month, year }: { month: number, year: numb
                 className={sectionStyles.button({ color: 'gray', border: true, hover: true, extensions: 'my-1' })}
                 onClick={() => {
                     const { month: newMonth, year: newYear }= getEditedMonthAndYear(year, month, +1)
-                    router.replace(pathname+`?month=${newMonth}&year=${newYear}`)
+                    router.replace(pathname+`?view=month&month=${newMonth}&year=${newYear}`)
                 }}
             >
                 {'>'}

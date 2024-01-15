@@ -7,6 +7,7 @@ import type { GustybobbyAppointment } from "@/server/typeconfig/record";
 import { sectionStyles } from "@/components/styles/sections";
 import { usePathname, useRouter } from "next/navigation";
 import { shortMonthNames, shortWeekDays } from "../../date/date-picker";
+import { BasicSyntaxedContentDisplay } from "../../paragraph";
 
 export default function AppointmentBanner({ appt, hideDetails }: {
     appt: GustybobbyAppointment
@@ -28,7 +29,7 @@ export default function AppointmentBanner({ appt, hideDetails }: {
                 <span className="flex items-center font-bold text-2xl mb-1">
                     <span className="text-2xl">{IconMap[appt.icon]}</span>&nbsp;<span>{appt.title}</span>
                 </span>
-                {!hideDetails && appt.permission === 'editable' &&
+                {appt.permission === 'editable' &&
                 <button 
                     className={sectionStyles.button({ color: 'orange', border: true, hover: true })}
                     onClick={(e) => {
@@ -46,6 +47,9 @@ export default function AppointmentBanner({ appt, hideDetails }: {
             <TimingStatus apptTiming={apptTiming}/>
             {!hideDetails &&
             <AppointmentDetails appt={appt}/>
+            }
+            {hideDetails &&
+            <span className="text-lg font-bold">See more...</span>
             }
         </div> 
     )
@@ -98,11 +102,14 @@ function AppointmentDetails({ appt }: { appt: GustybobbyAppointment }){
             <span className="flex items-center">
                 <MdAccessTimeFilled/>&nbsp;End At: {new Date(appt.end_at).toLocaleTimeString()}
             </span>
-            <span className="flex items-center"><MdLocationOn/>&nbsp;Location:</span>
-            <span className="flex items-center ml-5 text-base font-normal">{appt.location ?? 'Unspecified'}</span>
-            <span className="flex items-center"><BiSolidDetail/>&nbsp;Description:</span>
-            <span className="flex items-center ml-5 text-base font-normal">{appt.description}</span>
             <span className="flex items-center"><HiUserGroup/>&nbsp;{appt._count.party_members} Participants</span>
+            <span className="flex items-center"><MdLocationOn/>&nbsp;Location:</span>
+            <span className="flex items-center ml-5 text-lg font-normal">{appt.location ?? 'Unspecified'}</span>
+            <span className="flex items-center"><BiSolidDetail/>&nbsp;Description:</span>
+            <BasicSyntaxedContentDisplay
+                className="flex flex-col justify-start ml-5 font-normal rounded-2xl space-y-2 bg-gray-200 dark:bg-transparent"
+                textString={appt.description}
+            />
         </div>
     )
 }

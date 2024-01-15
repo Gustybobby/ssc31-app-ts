@@ -22,29 +22,29 @@ export default function MonthViewSchedule({ schedule, month, year, editable }: {
             {schedule.ongoing_appt.appt &&
             <div className="p-2 border-b border-black dark:border-white">
                 <div className="font-bold text-xl mb-1">Ongoing</div>
-                <button
-                    className="w-full"
+                <div
+                    className="w-full cursor-pointer"
                     onClick={() => router.push(pathname+`?view=appt&appt_id=${schedule.ongoing_appt.appt?.id}`)}
                 >
                     <AppointmentBanner
                         appt={schedule.ongoing_appt.appt}
                         hideDetails={true}
                     />
-                </button>
+                </div>
             </div>
             }
             {schedule.next_appt.appt &&
             <div className="p-2 border-b border-black dark:border-white">
                 <div className="font-bold text-xl mb-1">Upcoming</div>
-                <button
-                    className="w-full"
+                <div
+                    className="w-full cursor-pointer"
                     onClick={() => router.push(pathname+`?view=appt&appt_id=${schedule.next_appt.appt?.id}`)}
                 >
                     <AppointmentBanner
                         appt={schedule.next_appt.appt}
                         hideDetails={true}
                     />
-                </button>
+                </div>
             </div>
             }
             <MonthNavBar

@@ -125,3 +125,8 @@ export function dateToDateKey(date: Date): string{
         date.getDate(),
     ].join('-')
 }
+
+export function dateKeyToDate(dateKey: string): Date{
+    const [year,month,day] = dateKey.split('-')
+    return new Date(Number(year), Number(month), Number(day))
+}

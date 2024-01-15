@@ -39,7 +39,7 @@ export default function DayViewSchedule({ dateAppts, dateKey, editable }: {
                 >
                     <AppointmentBanner
                         appt={appts[key]}
-                        hideDetails={false}
+                        hideDetails={true}
                     />
                 </div>
                 ))}

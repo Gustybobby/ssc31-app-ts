@@ -1,9 +1,12 @@
 "use client"
 
-import { dateToDateKey } from "./hooks/schedule-state-reducer"
-import { safePositive, type UseSchedule } from "./hooks/use-schedule"
+import { usePathname, useRouter } from "next/navigation"
+import { dateKeyToDate, dateToDateKey } from "./hooks/schedule-state-reducer"
+import { findAppointmentById, safePositive, type UseSchedule } from "./hooks/use-schedule"
+import ApptViewSchedule from "./views/appt/appt-view-schedule"
 import DayViewSchedule from "./views/day/day-view-schedule"
 import MonthViewSchedule from "./views/month/month-view-schedule"
+import EditApptViewSchedule from "./views/appt/edit-appt-view-schedule/edit-appt-view-schedule"
 
 export default function Schedule({
     schedule,
@@ -15,8 +18,13 @@ export default function Schedule({
     date_key,
     appt_id,
     edit,
-    editable
+    editable,
+    role,
+    eventId,
 }: UseSchedule){
+
+    const router = useRouter()
+    const pathname = usePathname()
 
     if(schedule === 'error'){
         throw 'fetch appointments error'
@@ -25,7 +33,7 @@ export default function Schedule({
         return <>Loading</>
     }
     if(view === 'month'){
-        return(
+        return (
             <MonthViewSchedule
                 schedule={schedule}
                 month={safePositive(month) ?? schedule.current_date.getMonth()}
@@ -35,7 +43,7 @@ export default function Schedule({
         )
     }
     if(view === 'day'){
-        return(
+        return (
             <DayViewSchedule
                 dateAppts={schedule.appointments[date_key ?? dateToDateKey(new Date())]}
                 dateKey={date_key ?? dateToDateKey(new Date())}
@@ -43,4 +51,25 @@ export default function Schedule({
             />
         )
     }
+    if(view === 'appt'){
+        const appt = findAppointmentById(appt_id ?? '', schedule.appointments)
+        if(edit === 'true' && (appt?.permission === 'editable') || (!appt && appt_id === 'new')){
+            return (
+                <EditApptViewSchedule
+                    eventId={eventId}
+                    appt={appt}
+                    dateAppts={schedule.appointments[date_key ?? '']?.appts ?? []}
+                    role={role}
+                    date={date_key? dateKeyToDate(date_key) : new Date()}
+                />
+            )
+        }
+        return (
+            <ApptViewSchedule
+                appt={appt}
+            />
+        )
+    }
+    router.replace(pathname)
+    return <></>
 }
