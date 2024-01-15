@@ -28,10 +28,31 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
             ...appt,
             permission: 'editable',
         }))
-        console.log(data)
         return NextResponse.json({ message: "SUCCESS", data }, { status: 200 })
     } catch(e){
         console.log(e)
         return NextResponse.json({ message: "ERROR " }, { status: 500 })
+    }
+}
+
+export async function POST(req: NextRequest,{ params }:{ params: { event_id: string }}){
+    try{
+        const apptRequest = await req.json()
+        const { id, member_selects, ...apptData } = await apptRequest.data
+        const newAppt = await prisma.eventAppointment.create({
+            data: {
+                ...apptData,
+                party_members: {
+                    connect: Object.entries(member_selects).filter(([id, bool]) => bool)
+                        .map(([id, bool]) => ({ id }))
+                },
+                event_id: params.event_id
+            }
+        })
+        console.log("Created new appointment", newAppt)
+        return NextResponse.json({ message: "SUCCESS" }, { status: 200 })
+    } catch(e){
+        console.log(e)
+        return NextResponse.json({ message: "ERROR" }, { status: 500 })
     }
 }
