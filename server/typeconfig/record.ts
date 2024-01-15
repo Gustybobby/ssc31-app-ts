@@ -35,12 +35,12 @@ interface CoreAppointment {
     }
 }
 
-interface ReadOnlyAppointment extends CoreAppointment {
+export interface ReadOnlyAppointment extends CoreAppointment {
     permission: 'read_only'
     attendance: GustybobbyAttendance
 }
 
-interface EditableAppointment extends CoreAppointment {
+export interface EditableAppointment extends CoreAppointment {
     permission: 'editable'
     party_members: {
         id: string,
@@ -52,3 +52,21 @@ interface EditableAppointment extends CoreAppointment {
 }
 
 export type GustybobbyAppointment = ReadOnlyAppointment | EditableAppointment
+
+export const ApptTypes = {
+    INTERVIEW: {
+        id: 'INTERVIEW',
+        label: 'Interview',
+        admin_only: true,
+    },
+    MEETING: {
+        id: 'MEETING',
+        label: 'Meeting',
+        admin_only: false,
+    },
+    ACTIVITY: {
+        id: 'ACTIVITY',
+        label: 'Activity',
+        admin_only: false,
+    }
+}

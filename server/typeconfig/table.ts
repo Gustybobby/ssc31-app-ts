@@ -1,4 +1,4 @@
-import type { DataType, FieldType } from "./form";
+import type { DataType, FieldType, FormResponse } from "./form";
 
 export interface TableColumnConfig {
     id: string;
@@ -9,4 +9,8 @@ export interface TableColumnConfig {
     order: number
     active: boolean
     form_id: string
+}
+
+export interface MemberReferencedResponses {
+    [member_id: string]: FormResponse
 }

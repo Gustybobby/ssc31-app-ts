@@ -37,7 +37,11 @@ interface CreateEventError {
 export type CreateEventResponse = CreateEventSuccess | CreateEventError
 
 export type ColumnFetches = {
-    [key: string]: {
-        [key: string]: boolean
+    [group_id: string]: {
+        name: string,
+        order: number,
+        forms: {
+            [form_id: string]: string
+        }
     }
 } | null
