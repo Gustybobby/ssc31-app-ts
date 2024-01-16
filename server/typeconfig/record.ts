@@ -38,7 +38,7 @@ interface CoreAppointment {
 
 export interface ReadOnlyAppointment extends CoreAppointment {
     permission: 'read_only'
-    attendance: GustybobbyAttendance
+    attendance: GustybobbyAttendance | null
 }
 
 export interface EditableAppointment extends CoreAppointment {

@@ -1,0 +1,38 @@
+import { getServerAuthSession } from "@/app/api/auth/[...nextauth]/_utils";
+import MainWrapper from "@/components/globalui/main-wrapper";
+import MemberSchedule from "@/components/profile/events/event/profile/member-schedule";
+import prisma from "@/prisma-client";
+
+export default async function MemberSchedulePage({ params }: { params: { event_id: string }}){
+    const session = await getServerAuthSession()
+    if(!session?.user.id || !session?.user.role){
+        throw 'invalid session'
+    }
+    const member = await prisma.eventMember.findFirstOrThrow({
+        where: {
+            user_id: session.user.id,
+            event_id: params.event_id,
+        },
+        select: {
+            role: {
+                select: {
+                    can_appoint: true
+                }
+            },
+            event: {
+                select: {
+                    title: true
+                }
+            }
+        }
+    })
+    return(
+        <MainWrapper>
+            <MemberSchedule
+                event_id={params.event_id}
+                event_title={member.event.title}
+                can_appoint={!!member.role?.can_appoint}
+            />
+        </MainWrapper>
+    )
+}

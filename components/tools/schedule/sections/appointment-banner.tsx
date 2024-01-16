@@ -115,7 +115,7 @@ function AppointmentDetails({ appt }: { appt: GustybobbyAppointment }){
             <span className="flex items-center ml-5 text-lg font-normal">{appt.location ?? 'Unspecified'}</span>
             <span className="flex items-center"><BiSolidDetail/>&nbsp;Description:</span>
             <BasicSyntaxedContentDisplay
-                className="flex flex-col justify-start ml-5 font-normal rounded-2xl space-y-2 bg-gray-200 dark:bg-transparent"
+                className="flex flex-col justify-start ml-5 font-normal"
                 textString={appt.description}
             />
         </div>
