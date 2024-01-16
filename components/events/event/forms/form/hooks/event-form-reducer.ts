@@ -40,16 +40,13 @@ export default function eventFormReducer(state: EventForm, action: EventFormRedu
             const page = action.page
             let newPageFields: FieldConfigProperty[] = []
             let finished = false
-            while(newPageFields.length === 0){
-                if(page < 0){
-                    return { ...state }
-                }
-                if(page >= state.pagedFields.length){
-                    finished = true
-                    break
-                }
-                newPageFields = (new FormPagination({ ...state, page })).getCurrentPageFields()
+            if(page < 0){
+                return { ...state }
             }
+            if(page >= state.pagedFields.length){
+                finished = true
+            }
+            newPageFields = (new FormPagination({ ...state, page })).getCurrentPageFields()
             return { ...state, page, finished, currentPageFields: newPageFields }
         case 'set_submitted':
             return { ...state, submitted: true }
