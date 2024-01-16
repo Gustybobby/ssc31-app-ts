@@ -178,7 +178,7 @@ export default class Table {
                 return [field_id, {
                     type: 'pure_single',
                     id: field_id,
-                    data: extractTextFromResponseData(response[field_id] ?? ''),
+                    data: extractTextFromResponseData(response[field_id] ?? '', form_config.form_fields?.[field_id].field_type ?? 'SHORTANS'),
                 }]
             }))
         }

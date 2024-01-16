@@ -56,7 +56,7 @@ export default async function MemberProfilePage({ params }: { params: { event_id
     const joinResponse = memberFormResponse.form.field_order.map((id) => ({
         id,
         label: formFields[id].label,
-        data: extractTextFromResponseData(response[id] ?? '')
+        data: extractTextFromResponseData(response[id] ?? '', formFields[id].field_type)
     })).filter(({ data }) => data !== '')
     return(
         <MainWrapper>

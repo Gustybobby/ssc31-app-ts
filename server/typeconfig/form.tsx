@@ -53,6 +53,20 @@ export const dataTypes = {
         force: null,
         specialValid: null,
     },
+    LINK: {
+        id: 'LINK',
+        label: 'Link',
+        options: null,
+        pattern: '',
+        error: 'Not a valid link',
+        force: null,
+        specialValid: (string: string) => {
+            if(string.length > 256){
+                return false
+            }
+            return true
+        },
+    },
     NUM: {
         id: 'NUM',
         label: 'Number',
@@ -140,6 +154,7 @@ export const fieldTypes = {
         max_length: '64',
         allowed: [
             'STRING',
+            'LINK',
             'NUM',
             'NUM_STRING',
         ],

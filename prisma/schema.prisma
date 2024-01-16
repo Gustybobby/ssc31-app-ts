@@ -229,6 +229,7 @@ enum ResponseType {
 
 enum DataType {
   STRING
+  LINK
   NUM
   NUM_STRING
   BOOLEAN

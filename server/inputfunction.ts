@@ -1,4 +1,4 @@
-import { GustybobbyOption } from "./typeconfig/form";
+import { DataType, FieldType, GustybobbyOption, typePermission } from "./typeconfig/form";
 
 export function stringifyGustybobbySelection(options: GustybobbyOption[], optionState: { [key: string]: boolean }){
     const optionStrings = []
@@ -20,8 +20,8 @@ export function getOptionStateFromSelection(selectionString: string){
     return optionState
 }
 
-export function extractTextFromResponseData(dataString: string){
-    if(dataString.includes(':') && dataString.includes('//')){
+export function extractTextFromResponseData(dataString: string, fieldType: FieldType){
+    if(typePermission.fieldType.optionsLikeField.has(fieldType) && dataString.includes(':') && dataString.includes('//')){
         const options: string[] = []
         for(const selection of dataString.split('|')){
             options.push(selection.split(':')[1].split('//')[0])
