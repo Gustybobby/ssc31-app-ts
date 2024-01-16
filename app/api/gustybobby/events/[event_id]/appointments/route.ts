@@ -43,7 +43,7 @@ export async function POST(req: NextRequest,{ params }:{ params: { event_id: str
             data: {
                 ...apptData,
                 party_members: {
-                    connect: Object.entries(member_selects).filter(([id, bool]) => bool)
+                    connect: apptData.public? [] : Object.entries(member_selects).filter(([id, bool]) => bool)
                         .map(([id, bool]) => ({ id }))
                 },
                 event_id: params.event_id

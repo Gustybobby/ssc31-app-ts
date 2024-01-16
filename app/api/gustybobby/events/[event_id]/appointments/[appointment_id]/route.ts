@@ -12,7 +12,7 @@ export async function PUT(req: NextRequest, { params }: { params: { appointment_
             data: {
                 ...apptData,
                 party_members: {
-                    set: Object.entries(member_selects).filter(([id, bool]) => bool)
+                    set: apptData.public? [] : Object.entries(member_selects).filter(([id, bool]) => bool)
                         .map(([id, bool]) => ({ id }))
                 },
             }
