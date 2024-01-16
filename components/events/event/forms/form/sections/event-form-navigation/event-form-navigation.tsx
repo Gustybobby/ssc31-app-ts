@@ -30,7 +30,7 @@ export default function EventFormNavigation({ eventForm, dispatchEventForm, setI
     const pageParams = Number(searchParams.get('page') ?? 1)
     usePageRouter(pageParams, eventForm.page, eventForm.currentPageFields, setInteract, setHighlight, dispatchEventForm)
     useEffect(() => {
-        if(eventForm.currentPageFields.length === 0 && pageParams-1 === eventForm.page){
+        if(eventForm.currentPageFields.length === 0 && pageParams-1 === eventForm.page && !eventForm.finished){
             router.replace(pathname+'?page='+String(pageParams+1))
         }
     }, [eventForm, pageParams, pathname, router])

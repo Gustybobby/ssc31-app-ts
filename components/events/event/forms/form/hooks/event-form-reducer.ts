@@ -45,8 +45,9 @@ export default function eventFormReducer(state: EventForm, action: EventFormRedu
             }
             if(page >= state.pagedFields.length){
                 finished = true
+            } else {
+                newPageFields = (new FormPagination({ ...state, page })).getCurrentPageFields()
             }
-            newPageFields = (new FormPagination({ ...state, page })).getCurrentPageFields()
             return { ...state, page, finished, currentPageFields: newPageFields }
         case 'set_submitted':
             return { ...state, submitted: true }
