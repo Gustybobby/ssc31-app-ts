@@ -61,7 +61,7 @@ export const dataTypes = {
         error: 'Not a valid link',
         force: null,
         specialValid: (string: string) => {
-            if(string.length > 256){
+            if(string.length > 256 || string.includes(' ') || string.includes('<') || string.includes('>')){
                 return false
             }
             return true

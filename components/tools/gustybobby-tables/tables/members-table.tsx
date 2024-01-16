@@ -1,6 +1,7 @@
 "use client"
 
 import Table from "@/server/classes/table"
+import Link from "next/link"
 
 export default function MembersTable({ table, headerCellClassName }: { table: Table, headerCellClassName: string }){
     return (
@@ -25,11 +26,23 @@ export default function MembersTable({ table, headerCellClassName }: { table: Ta
                 <tbody>
                     {table.getRowsTableRows().map((row) => (
                     <tr key={row.key}>
-                        {row.value.map((row) => (
-                            <td key={row.id} rowSpan={row.row_span ?? 1} className="border border-black dark:border-white p-2 bg-gray-100 dark:bg-gray-700">
-                                {row.data}
-                            </td>
-                        ))}
+                        {row.value.map((row) => {
+                            return(
+                                <td key={row.id} rowSpan={row.row_span ?? 1} className="border border-black dark:border-white p-2 bg-gray-100 dark:bg-gray-700">
+                                    {row.data.toString().includes(':')?
+                                    <Link
+                                        href={row.data.toString()}
+                                        target="_blank"
+                                        className="text-blue-600 dark:text-blue-400 underline"
+                                    >
+                                        {row.data}
+                                    </Link>
+                                    :
+                                    <>{row.data}</>
+                                    }
+                                </td>
+                            )
+                        })}
                     </tr>
                     ))}
                 </tbody>

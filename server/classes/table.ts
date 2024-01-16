@@ -175,11 +175,12 @@ export default class Table {
             sub_data: Object.fromEntries(form_config.field_order
                 .filter((field_id) => form_config.form_fields?.[field_id].field_type !== 'INFO')
                 .map((field_id) => {
-                return [field_id, {
-                    type: 'pure_single',
-                    id: field_id,
-                    data: extractTextFromResponseData(response[field_id] ?? '', form_config.form_fields?.[field_id].field_type ?? 'SHORTANS'),
-                }]
+                    const fieldType = form_config.form_fields?.[field_id].field_type ?? 'SHORTANS'
+                    return [field_id, {
+                        type: 'pure_single',
+                        id: field_id,
+                        data: extractTextFromResponseData(response[field_id] ?? '', fieldType),
+                    }]
             }))
         }
         const rowKey = options?.reference_key === 'member_id'? member_id : id
