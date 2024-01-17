@@ -5,6 +5,7 @@ import Table from "@/server/classes/table";
 import useMembers from "../../config-fetchers/hooks/use-members";
 import useDefaultGroupResponses from "../../config-fetchers/hooks/use-default-group-responses";
 import { useEffect, useState } from "react";
+import { extractTextFromResponseData } from "@/server/inputfunction";
 
 export default function useSelectableMembersTable({ eventId, role, selection, transformation }: UseSelectableMembersTable){
     const { members, refetch: refetchMembers } = useMembers({ eventId, role })
@@ -110,13 +111,17 @@ function initializeTable({
                         raw_data: member.role?.label ?? '',
                         data: member.role?.label ?? '',
                     },
-                    ...Object.fromEntries(Object.entries(defaultResponses[member.id]).map(([field_id, value]) => [
-                        field_id, {
-                            type: 'pure_single',
-                            id: field_id,
-                            data: value,
-                        }
-                    ]))
+                    ...Object.fromEntries(Object.entries(defaultResponses[member.id]).map(([field_id, value]) => {
+                        const group = groups.find((group) => group.id === field_id)
+                        const fieldType = group?.type === 'pure'? group.field_type : 'SHORTANS'
+                        return [
+                            field_id, {
+                                type: 'pure_single',
+                                id: field_id,
+                                data: extractTextFromResponseData(value, fieldType),
+                            }
+                        ]
+                    }))
                 }
             })
         }),

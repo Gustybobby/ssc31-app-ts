@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import prisma from "@/prisma-client";
 import type { ColumnFetches } from "@/server/typeconfig/event";
 import type { MemberReferencedResponses } from "@/server/typeconfig/table";
-import type { FormResponse } from "@/server/typeconfig/form";
+import type { FormResponse, PrismaFieldConfig } from "@/server/typeconfig/form";
 import { ColumnProperty } from "@/server/classes/table";
 
 export async function GET(req: NextRequest, { params }: { params: { event_id: string }}){
@@ -18,25 +18,20 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
         const column_fetches = event.column_fetches as ColumnFetches
         const groups: ColumnProperty[] = []
         const group_responses: MemberReferencedResponses = {}
+        const forms = await getAllRequiredForms(column_fetches)
         for(const [group_id, group] of Object.entries(column_fetches ?? {})){
-            groups.push({
-                type: 'pure',
-                id: group_id,
-                label: group.name,
-                data_type: 'STRING',
-                field_type: 'SHORTANS',
-            })
+            let dataType = null
+            let fieldType = null
             for(const [form_id, field_id] of Object.entries(group.forms)){
-                const formResponses = await prisma.eventFormResponse.findMany({
-                    where: {
-                        form_id,
-                    },
-                    select: {
-                        member_id: true,
-                        response: true,
-                    }
-                })
-                for(const formResponse of formResponses){
+                const form = forms[form_id]
+                const formFields = form.form_fields as { [key: string]: PrismaFieldConfig }
+                const { data_type: newDataType, field_type: newFieldType } = formFields[field_id]
+                if((dataType || fieldType) && (newDataType !== dataType || newFieldType !== fieldType)){
+                    throw `group ${group_id} has inconsistent data type and field type`
+                }
+                dataType = newDataType
+                fieldType = newFieldType
+                for(const formResponse of form.responses_list){
                     if(!formResponse.member_id){
                         throw 'member id cannot be null in column fetches form'
                     }
@@ -47,6 +42,13 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
                     }
                 }
             }
+            groups.push({
+                type: 'pure',
+                id: group_id,
+                label: group.name,
+                data_type: dataType ?? 'STRING',
+                field_type: fieldType ?? 'SHORTANS',
+            })
         }
         groups.sort((g1, g2) => (column_fetches?.[g1.id ?? ''].order ?? 0) -  (column_fetches?.[g2.id ?? ''].order ?? 0))
         return NextResponse.json({ message: "SUCCESS", data: { groups, group_responses }}, { status: 200 })
@@ -54,4 +56,30 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
         console.log(e)
         return NextResponse.json({ message: "ERROR" }, { status: 500 })
     }
+}
+
+async function getAllRequiredForms(column_fetches: ColumnFetches){
+    const formIds = Object.values(column_fetches ?? {}).map((group) => Object.keys(group.forms)).flat()
+    const forms = await prisma.eventForm.findMany({
+        where: {
+            OR: uniqueFormIdsWhereInput(formIds)
+        },
+        select: {
+            id: true,
+            form_fields: true,
+            responses_list: {
+                select: {
+                    member_id: true,
+                    response: true,
+                }
+            }
+        }
+    })
+    return Object.fromEntries(forms.map((form) => [form.id, form]))
+}
+
+const uniqueFormIdsWhereInput = (formIds: string[]) => {
+    const ids = [] as { id: string }[]
+    (new Set(formIds)).forEach((id) => ids.push({ id }))
+    return ids
 }
