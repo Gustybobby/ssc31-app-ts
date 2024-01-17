@@ -5,10 +5,12 @@ export default async function getEventMember(
     { user_id, event_id }: { user_id: string, event_id: string },
     select?: { [key in keyof EventMember]?: boolean }
 ){
-    const eventMember = await prisma.eventMember.findFirst({
+    const eventMember = await prisma.eventMember.findUnique({
         where:{
-            user_id: user_id,
-            event_id: event_id,
+            user_id_event_id: {
+                user_id,
+                event_id,
+            }
         },
         select
     })

@@ -8,10 +8,12 @@ export default async function MemberSchedulePage({ params }: { params: { event_i
     if(!session?.user.id || !session?.user.role){
         throw 'invalid session'
     }
-    const member = await prisma.eventMember.findFirstOrThrow({
+    const member = await prisma.eventMember.findUniqueOrThrow({
         where: {
-            user_id: session.user.id,
-            event_id: params.event_id,
+            user_id_event_id: {
+                user_id: session.user.id,
+                event_id: params.event_id,
+            }
         },
         select: {
             role: {
