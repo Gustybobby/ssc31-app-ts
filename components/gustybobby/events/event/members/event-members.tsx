@@ -12,6 +12,9 @@ import useEditableMembersTable from "@/components/tools/gustybobby-tables/tables
 import GustybobbyTableLoading from "@/components/tools/gustybobby-tables/tables/gustybobby-table-loading"
 import { sendDataToAPI } from "@/components/tools/api"
 import toast from "react-hot-toast"
+import type Table from "@/server/classes/table"
+import GustybobbyFilters from "@/components/tools/gustybobby-tables/transformation/gustybobby-filters/gustybobby-filters"
+import type { FormConfigProperty } from "@/server/classes/forms/formconfig"
 
 export default function EventMembers({ event_id, event_title, forms }: {
     event_id: string,
@@ -23,14 +26,16 @@ export default function EventMembers({ event_id, event_title, forms }: {
         id, label: title, index, active: index === 0
     })))
     const editRef: UseEditableMembersTableProps['editRef'] = useRef({})
-    const { table, refetch } = useEditableMembersTable({
+    const [transformation, setTransformation] = useState<Table['transformation']>({})
+    const { table, formConfig, refetch } = useEditableMembersTable({
         eventId: event_id,
         formId: formOptions.find((option) => option.active)?.id ?? '',
         role: 'gustybobby',
-        editRef
+        editRef,
+        transformation,
     })
 
-    if(table === 'error'){
+    if(table === 'error' ){
         throw 'fetch table error'
     }
     return(
@@ -41,12 +46,20 @@ export default function EventMembers({ event_id, event_title, forms }: {
                         Members
                     </h1>
                     <div className="mb-2 flex justify-between items-end">
-                        <ListBoxSingleSelect
-                            list={formOptions}
-                            setList={(list) => setFormOptions(list)}
-                            width="w-64"
-                            maxHeight="max-h-36"
-                        />
+                        <div className="flex flex-col lg:flex-row lg:items-end space-y-1 lg:space-y-0 lg:space-x-1">
+                            <ListBoxSingleSelect
+                                list={formOptions}
+                                setList={(list) => setFormOptions(list)}
+                                width="w-64"
+                                maxHeight="max-h-36"
+                            />
+                            {!(formConfig === 'loading' || formConfig === 'error') &&
+                            <GustybobbyFilters
+                                columnOptions={filterColumnOptions(formConfig)}
+                                setTransformation={setTransformation}
+                            />
+                            }
+                        </div>
                         <button
                             className={sectionStyles.button({ color: 'blue', hover: true, border: true })}
                             onClick={async(e) => {
@@ -97,4 +110,32 @@ export default function EventMembers({ event_id, event_title, forms }: {
             </div>
         </DashboardWrapper>
     )
+}
+
+function filterColumnOptions(formConfig: FormConfigProperty){
+    return [
+        {
+            id: 'position',
+            label: 'Position',
+            index: 0,
+            active: false,
+        },
+        {
+            id: 'role',
+            label: 'Role',
+            index: 1,
+            active: false,
+        },
+        {
+            id: 'status',
+            label: 'Status',
+            index: 2,
+            active: false,
+        }
+    ].concat((formConfig.field_order ?? []).map((field_id, index) => ({
+        id: field_id,
+        label: formConfig.form_fields?.[field_id].label ?? '',
+        index: index+3,
+        active: false,
+    })))
 }

@@ -11,9 +11,10 @@ import useEventConfig from "../../config-fetchers/hooks/use-event-config";
 
 export interface UseEditableMembersTableProps extends FormTableConfig{
     editRef: MutableRefObject<{ [key: string]: { [key: string]: string }}>
+    transformation?: Table['transformation']
 }
 
-export default function useEditableMembersTable({ eventId, formId, role, editRef }: UseEditableMembersTableProps){
+export default function useEditableMembersTable({ eventId, formId, role, editRef, transformation }: UseEditableMembersTableProps){
     const { formConfig, refetch: refetchFormConfig } = useFormConfig({ eventId, formId, role })
     const { eventConfig, refetch: refetchEventConfig } = useEventConfig({ eventId, role })
     const { responses, refetch: refetchResponses } = useResponses({ eventId, formId, role })
@@ -24,7 +25,8 @@ export default function useEditableMembersTable({ eventId, formId, role, editRef
         responses,
         setMembers,
         members,
-        editRef
+        editRef,
+        transformation
     }))
     const [shouldRefetch, refetch] = useState({})
     useEffect(() => {
@@ -40,10 +42,11 @@ export default function useEditableMembersTable({ eventId, formId, role, editRef
             responses,
             setMembers,
             members,
-            editRef
+            editRef,
+            transformation,
         }))
-    }, [formConfig, eventConfig, responses, members, editRef, setMembers])
-    return { table, refetch }
+    }, [formConfig, eventConfig, responses, members, editRef, setMembers, transformation])
+    return { table, formConfig, refetch }
 }
 
 interface InitializeTable {
@@ -53,9 +56,10 @@ interface InitializeTable {
     members: MembersState
     editRef: UseEditableMembersTableProps['editRef']
     setMembers: Dispatch<SetStateAction<MembersState>>
+    transformation?: Table['transformation']
 }
 
-function initializeTable({ formConfig, eventConfig, responses, members, editRef, setMembers }: InitializeTable){
+function initializeTable({ formConfig, eventConfig, responses, members, editRef, setMembers, transformation }: InitializeTable){
     if(formConfig === 'loading' || eventConfig === 'loading' || responses === 'loading' || members === 'loading'){
         return 'loading'
     }
@@ -96,6 +100,7 @@ function initializeTable({ formConfig, eventConfig, responses, members, editRef,
                     status: {
                         type: 'pure_single',
                         id: 'status',
+                        raw_data: member?.status ?? '',
                         data: (
                             <ListBoxSingleSelect
                                 list={statusOptions.map((option) => ({ ...option, active: option.id === member?.status }))}
@@ -127,6 +132,7 @@ function initializeTable({ formConfig, eventConfig, responses, members, editRef,
                     position: {
                         type: 'pure_single',
                         id: 'position',
+                        raw_data: member?.position?.label ?? '',
                         data: (
                             <ListBoxSingleSelect
                                 list={eventConfig.positions.map((position, index) => ({
@@ -172,6 +178,7 @@ function initializeTable({ formConfig, eventConfig, responses, members, editRef,
                     role: {
                         type: 'pure_single',
                         id: 'role',
+                        raw_data: member?.role?.label ?? '',
                         data: (
                             <ListBoxSingleSelect
                                 list={eventConfig.roles.map((role, index) => ({
@@ -216,6 +223,7 @@ function initializeTable({ formConfig, eventConfig, responses, members, editRef,
                     }
                 }
             }
-        })
+        }),
+        transformation,
     })
 }

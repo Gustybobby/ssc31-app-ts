@@ -59,16 +59,19 @@ function initializeTable({ formConfig, responses, members }: StaticMembersTableI
                     status: {
                         type: 'pure_single',
                         id: 'status',
-                        data: member?.status ?? ''
+                        raw_data: member?.status ?? '',
+                        data: member?.status ?? '',
                     },
                     position: {
                         type: 'pure_single',
                         id: 'position',
-                        data: member?.position?.label ?? ''
+                        raw_data: member?.position?.label ?? '',
+                        data: member?.position?.label ?? '',
                     },
                     role: {
                         type: 'pure_single',
                         id: 'role',
+                        raw_data: member?.role?.label ?? '',
                         data: member?.role?.label ?? ''
                     }
                 }

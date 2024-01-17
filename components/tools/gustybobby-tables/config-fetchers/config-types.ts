@@ -1,6 +1,7 @@
 import type { EventConfigProperty } from "@/server/classes/eventconfig"
 import type { FormConfigProperty } from "@/server/classes/forms/formconfig"
 import type { ColumnProperty } from "@/server/classes/table"
+import type Table from "@/server/classes/table"
 import type { GustybobbyOption } from "@/server/typeconfig/form"
 import type { EditableAppointment } from "@/server/typeconfig/record"
 import type { MemberStatus } from "@prisma/client"
@@ -101,6 +102,7 @@ export interface DefaultMembersTableInitializeState {
 
 export interface UseSelectableMembersTable extends EventTableConfig {
     selection: EditableAppointment['member_selects']
+    transformation: Table['transformation']
 }
 
 export interface SelectableMembersTableInitiializeState {
@@ -109,4 +111,5 @@ export interface SelectableMembersTableInitiializeState {
     members: MembersState,
     memberSelects: EditableAppointment['member_selects']
     setMemberSelects: Dispatch<SetStateAction<UseSelectableMembersTable['selection']>>
+    transformation: Table['transformation']
 }

@@ -37,13 +37,15 @@ type RowData = string | JSX.Element
 
 interface PureSingleRowProperty {
     type: 'pure_single'
-    id: string
+    id: string,
+    raw_data: string,
     data: RowData
 }
 
 interface PureMultipleRowProperty {
     type: 'pure_multiple'
     id: string
+    raw_data: string,
     data: RowData | RowData[]
 }
 
@@ -102,28 +104,72 @@ interface ExpandedRowArray {
     value: ExpandedRowValue[]
 }
 
+export type TransformationOperator = 'has' | 'starts' | 'ends' | '=' | '>' | '<'
+
+export interface TransformationSort {
+    column_id: string,
+    direction: 'asc' | 'desc'
+}
+
+export interface TransformationFilter {
+    column_id: string,
+    value: string,
+    operator: TransformationOperator
+}
+
 export interface TableProperty {
     columns: Column[]
+    original_columns: Column[]
     rows: Row[]
+    original_rows: Row[]
     max_depth: number
+    transformation?: {
+        sorts?: TransformationSort[]
+        filters?: {
+            [column_id: string]: TransformationFilter
+        }
+    }
 }
 
 export default class Table {
     columns: TableProperty['columns']
+    original_columns: TableProperty['columns']
     rows: TableProperty['rows']
+    original_rows: TableProperty['rows']
     max_depth: TableProperty['max_depth']
+    transformation?: TableProperty['transformation']
 
     constructor(table: TableProperty){
         this.columns = table.columns
+        this.original_columns = table.original_columns
         this.rows = table.rows
+        this.original_rows = table.original_rows
         this.max_depth = table.max_depth
     }
 
-    static initialize({ columns, rows }: { columns: ColumnProperty[], rows: RowProperty[] }): Table{
-        const table = new Table({ columns: [], rows: [], max_depth: 0 })
+    static clone(table: Table): Table{
+        return new Table({
+            ...table,
+            columns: Table.cloneColumns(table.columns),
+            original_columns: Table.cloneColumns(table.original_columns),
+            rows: Table.cloneRows(table.rows),
+            original_rows: Table.cloneRows(table.original_rows),
+        })
+    }
+
+    static initialize({ columns, rows, transformation }: {
+        columns: ColumnProperty[],
+        rows: RowProperty[],
+        transformation?: TableProperty['transformation']
+    }): Table{
+        const table = new Table({ columns: [], rows: [], max_depth: 0, original_columns: [], original_rows: [] })
         table.max_depth = Table.getColumnsMaxDepth(columns)
         table.columns = Table.getColumnsWithSpan(columns, table.max_depth)
+        table.original_columns = Table.getColumnsWithSpan(columns, table.max_depth) 
         table.rows = Table.getRowsWithMaxSpan(rows)
+        table.original_rows = Table.getRowsWithMaxSpan(rows)
+        table.transformation = transformation
+        table.transform()
         return table
     }
 
@@ -150,11 +196,7 @@ export default class Table {
         return { id, sub_columns, type: 'group', label: title }
     }
     
-    static formResponseAdapter({
-        form_id,
-        id,
-        member_id,
-        response,
+    static formResponseAdapter({ form_id, id, member_id, response,
     }: {
         form_id: string,
         id: string,
@@ -176,10 +218,12 @@ export default class Table {
                 .filter((field_id) => form_config.form_fields?.[field_id].field_type !== 'INFO')
                 .map((field_id) => {
                     const fieldType = form_config.form_fields?.[field_id].field_type ?? 'SHORTANS'
+                    const extractedData = extractTextFromResponseData(response[field_id] ?? '', fieldType)
                     return [field_id, {
                         type: 'pure_single',
                         id: field_id,
-                        data: extractTextFromResponseData(response[field_id] ?? '', fieldType),
+                        raw_data: extractedData,
+                        data: extractedData,
                     }]
             }))
         }
@@ -211,6 +255,125 @@ export default class Table {
             }
         })
         return rowsTableRows
+    }
+
+    transform(){
+        for(const [column_id, filter] of Object.entries(this.transformation?.filters ?? {})){
+            this.rows = this.rows.filter(row => {
+                let data = null
+                for(const [id, value] of Object.entries(row.value)){
+                    data = Table.findRowValueRawDataById(value, column_id, id === column_id)
+                    if(data || data === ''){
+                        break
+                    }
+                }
+                if(!data && data !== ''){
+                    return false
+                }
+                if(Array.isArray(data)){
+                    let match = false
+                    data.forEach((dataString) => {
+                        match = Table.filterOperation(dataString.toString(), filter)
+                    })
+                    return match
+                }
+                return Table.filterOperation(data.toString(), filter)
+            })
+        }
+    }
+
+    private static findRowValueRawDataById(rowValue: RowValue, column_id: string, found: boolean): (RowData | RowData[] | null){
+        switch(rowValue.type){
+            case 'group':
+                let data = null
+                for(const [id, value] of Object.entries(rowValue.sub_data)){
+                    data = Table.findRowValueRawDataById(value, column_id, id === column_id)
+                    if(data){
+                        return data
+                    }
+                }
+                return data
+            case 'pure_multiple':
+            case 'pure_single':
+                if(!found){
+                    return null
+                }
+                return rowValue.raw_data
+        }
+    }
+
+    private static filterOperation(data: string, filter: TransformationFilter): boolean{
+        switch(filter.operator){
+            case 'has':
+                return data.includes(filter.value)
+            case 'starts':
+                return data.startsWith(filter.value)
+            case 'ends':
+                return data.endsWith(filter.value)
+            case '<':
+                if(!isNaN(Number(data)) && !isNaN(Number(filter.value))){
+                    return Number(data) < Number(filter.value)
+                }
+                return data < filter.value
+            case '=':
+                if(!isNaN(Number(data)) && !isNaN(Number(filter.value))){
+                    return Number(data) === Number(filter.value)
+                }
+                return data === filter.value
+            case '>':
+                if(!isNaN(Number(data)) && !isNaN(Number(filter.value))){
+                    return Number(data) > Number(filter.value)
+                }
+                return data > filter.value
+            default:
+                throw `${filter.operator} is not a valid operator`
+        }
+    }
+
+    private static cloneRows(rows: Row[]): Row[]{
+        return rows.map(row => {
+            return {
+                ...row,
+                value: Object.fromEntries(Object.entries(row.value).map(([key, value]) => [
+                    key, Table.cloneRowValue(value)
+                ]))
+            }
+        })
+    }
+
+    private static cloneColumns(columns: Column[]): Column[]{
+        return columns.map(column => {
+            if(column.type === 'group'){
+                return {
+                    ...column,
+                    sub_columns: Table.cloneColumns(column.sub_columns)
+                }
+            }
+            return {
+                ...column,
+                options: column.options? column.options.map((option) => ({...option})) : column.options,
+            }
+        })
+    } 
+
+    private static cloneRowValue(rowValue: RowValue): RowValue{
+        switch(rowValue.type){
+            case 'group':
+                return {
+                    ...rowValue,
+                    sub_data: Object.fromEntries(Object.entries(rowValue.sub_data).map(([key, value]) => [
+                        key, Table.cloneRowValue(value)
+                    ]))
+                }
+            case 'pure_multiple':
+                if(Array.isArray(rowValue.data)){
+                    return { ...rowValue, data: [...rowValue.data] }
+                }
+                return { ...rowValue }
+            case 'pure_single':
+                return { ...rowValue }
+            
+        }
     }
 
     private static getColumnsAt(column: Column, relativeDepth: number){
@@ -407,139 +570,3 @@ export default class Table {
         return rowsWithMaxSpan
     }
 }
-
-export const exampleColumns: ColumnProperty[] = [
-    {
-        type: 'pure',
-        id: 'student_id',
-        label: 'Student ID',
-        data_type: 'STRING',
-        field_type: 'SHORTANS',
-    },
-    {
-        type: 'group',
-        id: 'personal_info',
-        label: 'Personal Info',
-        sub_columns: [
-            {
-                type: 'group',
-                id: 'name',
-                label: 'Name',
-                sub_columns: [
-                    {
-                        type: 'pure',
-                        id: 'first',
-                        label: 'First',
-                        data_type: 'STRING',
-                        field_type: 'SHORTANS',
-                    },
-                    {
-                        type: 'pure',
-                        id: 'last',
-                        label: 'Last',
-                        data_type: 'STRING',
-                        field_type: 'SHORTANS',
-                    },
-                ]
-            },
-            {
-                type: 'pure',
-                id: 'year',
-                label: 'Year',
-                data_type: 'STRING',
-                field_type: 'SHORTANS',
-            },
-        ]
-    },
-    {
-        type: 'group',
-        id: 'medical_info',
-        label: 'Medical Info',
-        sub_columns: [
-            {
-                type: 'group',
-                id: 'restrictions',
-                label: 'Restrictions',
-                sub_columns: [
-                    {
-                        type: 'group',
-                        id: 'allergies',
-                        label: 'Allergies',
-                        sub_columns: [
-                            {
-                                type: 'pure',
-                                id: 'drug',
-                                label: 'Drug',
-                                data_type: 'STRING',
-                                field_type: 'SHORTANS',
-                            },
-                            {
-                                type: 'pure',
-                                id: 'food',
-                                label: 'Food',
-                                data_type: 'STRING',
-                                field_type: 'SHORTANS',
-                            },
-                        ]
-                    },
-                    {
-                        type: 'pure',
-                        id: 'other',
-                        label: 'Others',
-                        data_type: 'STRING',
-                        field_type: 'SHORTANS',
-                    },
-                ]
-            },
-            {
-                type: 'pure',
-                id: 'age',
-                label: 'Age',
-                data_type: 'STRING',
-                field_type: 'SHORTANS',
-            },
-        ]
-    },
-]
-
-const exampleRow: RowProperty = {
-    key: '6522781804',
-    value: {
-        student_id: {
-            type: 'pure_single',
-            id: 'student_id',
-            data: '6522781804'
-        },
-        personal_info: {
-            type: 'group',
-            id: 'personal_info',
-            sub_data: {
-                name: {
-                    type: 'group',
-                    id: 'name',
-                    sub_data: {
-                        first: {
-                            type: 'pure_multiple',
-                            id: 'first',
-                            data: ['Gustybob','Gustybobby']
-                        },
-                        last: {
-                            type: 'pure_multiple',
-                            id: 'last',
-                            data: ['Squarepants', 'Trianglepants','Hello','Whatsup','hi'],
-                        }
-                    }
-                },
-                year: {
-                    type: 'pure_single',
-                    id: 'year',
-                    data: '3',
-                }
-            }
-        }
-    }
-}
-
-export const exampleRows: RowProperty[] = [
-    exampleRow
-]

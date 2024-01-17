@@ -3,11 +3,18 @@
 import { usePathname, useRouter } from "next/navigation"
 import { dateKeyToDate, dateToDateKey } from "./hooks/schedule-state-reducer"
 import { findAppointmentById, safePositive, type UseSchedule } from "./hooks/use-schedule"
-import ApptViewSchedule from "./views/appt/appt-view-schedule"
-import DayViewSchedule from "./views/day/day-view-schedule"
-import MonthViewSchedule from "./views/month/month-view-schedule"
-import EditApptViewSchedule from "./views/appt/edit-appt-view-schedule/edit-appt-view-schedule"
 import ScheduleLoading from "./schedule-loading"
+import MonthViewSchedule from "./views/month/month-view-schedule"
+import dynamic from "next/dynamic"
+const ApptViewSchedule = dynamic(() => import("./views/appt/appt-view-schedule"), {
+    loading: () => <ScheduleLoading/>
+})
+const DayViewSchedule = dynamic(() => import("./views/day/day-view-schedule"), {
+    loading: () => <ScheduleLoading/>
+})
+const EditApptViewSchedule = dynamic(() => import("./views/appt/edit-appt-view-schedule/edit-appt-view-schedule"), {
+    loading: () => <ScheduleLoading/>
+})
 
 export default function Schedule({
     schedule,

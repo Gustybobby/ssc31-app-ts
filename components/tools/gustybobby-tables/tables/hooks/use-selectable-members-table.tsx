@@ -6,7 +6,7 @@ import useMembers from "../../config-fetchers/hooks/use-members";
 import useDefaultGroupResponses from "../../config-fetchers/hooks/use-default-group-responses";
 import { useEffect, useState } from "react";
 
-export default function useSelectableMembersTable({ eventId, role, selection }: UseSelectableMembersTable){
+export default function useSelectableMembersTable({ eventId, role, selection, transformation }: UseSelectableMembersTable){
     const { members, refetch: refetchMembers } = useMembers({ eventId, role })
     const { defaultGroups, defaultResponses, refetch: refetchGroupResponses } = useDefaultGroupResponses({ eventId, role })
     const [memberSelects, setMemberSelects] = useState(selection)
@@ -16,6 +16,7 @@ export default function useSelectableMembersTable({ eventId, role, selection }: 
         members,
         memberSelects,
         setMemberSelects,
+        transformation
     }))
     const [shouldRefetch, refetch] = useState({})
     useEffect(() => {
@@ -29,12 +30,20 @@ export default function useSelectableMembersTable({ eventId, role, selection }: 
             members,
             memberSelects,
             setMemberSelects,
+            transformation
         }))
-    }, [defaultGroups, defaultResponses, members, memberSelects])
-    return { table, setTable, memberSelects, setMemberSelects, refetch }
+    }, [defaultGroups, defaultResponses, members, memberSelects, transformation])
+    return { table, setTable, memberSelects, setMemberSelects, defaultGroups, refetch }
 }
 
-function initializeTable({ groups, defaultResponses, members, memberSelects, setMemberSelects }: SelectableMembersTableInitiializeState){
+function initializeTable({
+    groups,
+    defaultResponses,
+    members,
+    memberSelects,
+    setMemberSelects,
+    transformation,
+}: SelectableMembersTableInitiializeState){
     if(groups === 'loading' || defaultResponses === 'loading' || members === 'loading'){
         return 'loading'
     }
@@ -73,6 +82,7 @@ function initializeTable({ groups, defaultResponses, members, memberSelects, set
                     select: {
                         type: 'pure_single',
                         id: 'select',
+                        raw_data: '',
                         data: (
                             <div className="w-full flex justify-center">
                                 <input
@@ -91,12 +101,14 @@ function initializeTable({ groups, defaultResponses, members, memberSelects, set
                     position: {
                         type: 'pure_single',
                         id: 'position',
-                        data: member.position?.label ?? ''
+                        raw_data: member.position?.label ?? '',
+                        data: member.position?.label ?? '',
                     },
                     role: {
                         type: 'pure_single',
                         id: 'role',
-                        data: member.role?.label ?? ''
+                        raw_data: member.role?.label ?? '',
+                        data: member.role?.label ?? '',
                     },
                     ...Object.fromEntries(Object.entries(defaultResponses[member.id]).map(([field_id, value]) => [
                         field_id, {
@@ -107,6 +119,7 @@ function initializeTable({ groups, defaultResponses, members, memberSelects, set
                     ]))
                 }
             })
-        })
+        }),
+        transformation
     })
 }

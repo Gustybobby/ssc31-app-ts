@@ -5,7 +5,9 @@ import MembersTable from "@/components/tools/gustybobby-tables/tables/members-ta
 import GustybobbyTableLoading from "@/components/tools/gustybobby-tables/tables/gustybobby-table-loading"
 import useSelectableMembersTable from "@/components/tools/gustybobby-tables/tables/hooks/use-selectable-members-table"
 import type { EditableAppointment } from "@/server/typeconfig/record"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import type Table from "@/server/classes/table"
+import GustybobbyFilters from "@/components/tools/gustybobby-tables/transformation/gustybobby-filters/gustybobby-filters"
 
 interface PartySelectorTableProps extends dispatchApptConfig {
     eventId: string
@@ -15,23 +17,54 @@ interface PartySelectorTableProps extends dispatchApptConfig {
 
 export default function PartySelectorTable({ eventId, role, partyMembers, dispatchApptConfig }: PartySelectorTableProps){
 
-    const { table, memberSelects } = useSelectableMembersTable({
+    const [transformation, setTransformation] = useState<Table['transformation']>()
+    const { table, memberSelects, defaultGroups } = useSelectableMembersTable({
         eventId,
         role,
-        selection: Object.fromEntries(partyMembers.map((member) => [member.id, true]))
+        selection: Object.fromEntries(partyMembers.map((member) => [member.id, true])),
+        transformation,
     })
-
+    
     useEffect(() => {
         dispatchApptConfig({ type: 'edit_member_selects', value: memberSelects })
     }, [memberSelects, dispatchApptConfig])
 
-    if(table === 'error'){
+    if(table === 'error' || defaultGroups === 'error'){
         throw 'fetch table error'
     }
-    if(table === 'loading'){
+    if(table === 'loading' || defaultGroups === 'loading'){
         return <GustybobbyTableLoading/>
     }
     return(
-       <MembersTable table={table} headerCellClassName=""/>
+       <div className="space-y-1">
+            <GustybobbyFilters
+                columnOptions={memberColumns.concat(
+                    defaultGroups.map((group, index) => ({
+                        id: group.id,
+                        label: group.label.toString(),
+                        index: index + 3,
+                        active: false
+                })))}
+                setTransformation={setTransformation}
+            />
+            <div className="h-[90vh] overflow-auto">
+                <MembersTable table={table} headerCellClassName=""/>
+            </div>
+       </div>
     )
 }
+
+const memberColumns = [
+    {
+        id: 'role',
+        label: 'Role',
+        index: 1,
+        active: false,
+    },
+    {
+        id: 'position',
+        label: 'Position',
+        index: 2,
+        active: false,
+    },
+]

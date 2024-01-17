@@ -114,14 +114,12 @@ export default function EditApptViewSchedule({ eventId, appt, date, dateAppts, r
                     />
                 </div>
                 <div className="mx-2 flex flex-col justify-between space-y-2 xl:space-y-0">
-                    <div className="h-[90vh] overflow-auto">
-                        <PartySelectorTable
-                            eventId={eventId}
-                            role={role}
-                            dispatchApptConfig={dispatchApptConfig}
-                            partyMembers={appt?.party_members ?? []}
-                        />
-                    </div>
+                    <PartySelectorTable
+                        eventId={eventId}
+                        role={role}
+                        dispatchApptConfig={dispatchApptConfig}
+                        partyMembers={appt?.party_members ?? []}
+                    />
                     {appt?
                     <SaveButton
                         eventId={eventId}
