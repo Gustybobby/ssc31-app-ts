@@ -12,9 +12,18 @@ import type { TransformationFilter } from "@/server/classes/table"
 interface GustybobbyFiltersProps {
     columnOptions: GustybobbyOption[]
     setTransformation: Dispatch<SetStateAction<Table['transformation']>>
+    classNames?: {
+        panelWidth?: string
+    }
 }
 
-export default function GustybobbyFilters({ columnOptions, setTransformation }: GustybobbyFiltersProps){
+export default function GustybobbyFilters({
+    columnOptions,
+    setTransformation,
+    classNames = {
+        panelWidth: 'w-80 md:w-[36rem]'
+    }
+}: GustybobbyFiltersProps){
 
     const [filters, setFilters] = useState<TransformationFilter[]>([])
 
@@ -31,7 +40,7 @@ export default function GustybobbyFilters({ columnOptions, setTransformation }: 
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
             >
-                <Popover.Panel className={styles.popOverPanel()}>
+                <Popover.Panel className={styles.popOverPanel(classNames.panelWidth)}>
                     {filters.map((filter, index) => (
                     <FilterTag
                         key={index}
@@ -83,7 +92,7 @@ const styles = {
     ].join(' '),
     popOverPanel: (panelClassName?: string) => [
         'absolute space-y-1',
-        'p-2 w-80 md:w-[36rem] z-10 mt-1 shadow-lg rounded-lg',
+        'p-2 z-10 mt-1 shadow-lg rounded-lg',
         'text-base sm:text-sm',
         'bg-gray-100 dark:bg-gray-700',
         panelClassName ?? '',
