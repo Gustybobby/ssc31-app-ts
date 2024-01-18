@@ -1,12 +1,14 @@
 import { NextResponse, type NextRequest } from "next/server";
 import prisma from "@/prisma-client";
-import type { ColumnFetches } from "@/server/typeconfig/event";
+import type { ColumnFetches, TableView } from "@/server/typeconfig/event";
 import type { MemberReferencedResponses } from "@/server/typeconfig/table";
 import type { FormResponse, PrismaFieldConfig } from "@/server/typeconfig/form";
 import { ColumnProperty } from "@/server/classes/table";
 
 export async function GET(req: NextRequest, { params }: { params: { event_id: string }}){
     try{
+        const searchParams = req.nextUrl.searchParams
+        const table_view = searchParams.get('table_view')
         const event = await prisma.event.findUniqueOrThrow({
             where:{
                 id: params.event_id
@@ -15,7 +17,7 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
                 column_fetches: true
             }
         })
-        const column_fetches = event.column_fetches as ColumnFetches
+        const column_fetches = filteredColumnFetches(event.column_fetches as ColumnFetches, table_view as TableView | null)
         const groups: ColumnProperty[] = []
         const group_responses: MemberReferencedResponses = {}
         const forms = await getAllRequiredForms(column_fetches)
@@ -56,6 +58,12 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
         console.log(e)
         return NextResponse.json({ message: "ERROR" }, { status: 500 })
     }
+}
+
+function filteredColumnFetches(column_fetches: ColumnFetches, table_view: TableView | null): ColumnFetches{
+    return Object.fromEntries(Object.entries(column_fetches ?? {}).filter(([_, group]) => {
+        return !table_view || group.view_table.includes(table_view)
+    }))
 }
 
 async function getAllRequiredForms(column_fetches: ColumnFetches){

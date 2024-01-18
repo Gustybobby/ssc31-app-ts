@@ -10,9 +10,10 @@ import { shortMonthNames, shortWeekDays } from "../../date/date-picker";
 import { BasicSyntaxedContentDisplay } from "../../paragraph";
 import type { UseSchedule } from "../hooks/use-schedule";
 
-export default function AppointmentBanner({ appt, hideDetails, dispatchSchedule }: {
+export default function AppointmentBanner({ appt, hideDetails, regist, dispatchSchedule }: {
     appt: GustybobbyAppointment
     hideDetails: boolean
+    regist: boolean
     dispatchSchedule?: UseSchedule['dispatchSchedule']
 }){
 
@@ -38,7 +39,7 @@ export default function AppointmentBanner({ appt, hideDetails, dispatchSchedule 
                     <span className="text-2xl">{IconMap[appt.icon]}</span>&nbsp;<span>{appt.title}</span>
                 </span>
                 {appt.permission === 'editable' &&
-                <button 
+                <button
                     className={sectionStyles.button({ color: 'orange', border: true, hover: true })}
                     onClick={(e) => {
                         e.stopPropagation()
@@ -52,6 +53,14 @@ export default function AppointmentBanner({ appt, hideDetails, dispatchSchedule 
             <span className="text-left text-lg mb-1">
                 {getFormattedDateString(new Date(appt.start_at))}, {(new Date(appt.start_at)).toLocaleTimeString()}
             </span>
+            {(!hideDetails && regist) &&
+            <button
+                className={sectionStyles.button({ color: 'violet', hover: true, border: true, extensions: 'mb-2' })}
+                onClick={() => router.push(pathname+`?view=attd&appt_id=${appt.id}`)}
+            >
+                Attendances
+            </button>
+            }
             <TimingStatus apptTiming={apptTiming}/>
             {!hideDetails &&
             <AppointmentDetails appt={appt}/>
@@ -103,7 +112,7 @@ function TimingStatus({ apptTiming }: { apptTiming: Timing }){
 
 function AppointmentDetails({ appt }: { appt: GustybobbyAppointment }){
     return(
-        <div className="flex flex-col p-2 rounded-lg shadow-lg bg-white/20 dark:bg-black/20 font-bold text-lg">
+        <div className="flex flex-col p-2 rounded-lg shadow-lg bg-white/20 dark:bg-black/20 font-bold text-lg grow">
             <span className="flex items-center">
                 <MdAccessTimeFilled/>&nbsp;Start At: {new Date(appt.start_at).toLocaleTimeString()}
             </span>

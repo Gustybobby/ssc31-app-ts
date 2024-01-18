@@ -20,8 +20,8 @@ export default function MonthViewSchedule({ schedule, month, year, editable, dis
     const pathname = usePathname()
 
     return(
-        <div className="bg-gray-200 dark:bg-black/40 border border-t-0 border-black dark:border-white">
-            <div className="grid grid-cols-1 md:grid-cols-2 border-b border-black dark:border-white">
+        <div className="bg-gray-200 dark:bg-black/40 border border-black dark:border-white">
+            <div className="grid grid-cols-1 md:grid-cols-2 md:border-b md:border-black md:dark:border-white">
                 {schedule.ongoing_appt.appt &&
                 <div className="p-2 border-b md:border-b-0 md:border-r border-black dark:border-white">
                     <div className="font-bold text-xl mb-1">Ongoing</div>
@@ -32,6 +32,7 @@ export default function MonthViewSchedule({ schedule, month, year, editable, dis
                         <AppointmentBanner
                             appt={schedule.ongoing_appt.appt}
                             hideDetails={true}
+                            regist={false}
                             dispatchSchedule={dispatchSchedule}
                         />
                     </div>
@@ -47,6 +48,7 @@ export default function MonthViewSchedule({ schedule, month, year, editable, dis
                         <AppointmentBanner
                             appt={schedule.next_appt.appt}
                             hideDetails={true}
+                            regist={false}
                             dispatchSchedule={dispatchSchedule}
                         />
                     </div>

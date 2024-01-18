@@ -16,7 +16,6 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
                         role: true,
                     }
                 },
-                attendances: true,
                 _count: {
                     select: {
                         party_members: true

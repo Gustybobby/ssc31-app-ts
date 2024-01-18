@@ -15,6 +15,9 @@ const DayViewSchedule = dynamic(() => import("./views/day/day-view-schedule"), {
 const EditApptViewSchedule = dynamic(() => import("./views/appt/edit-appt-view-schedule/edit-appt-view-schedule"), {
     loading: () => <ScheduleLoading/>
 })
+const AttdViewSchedule = dynamic(() => import("./views/attd/attd-view-schedule"), {
+    loading: () => <ScheduleLoading/>
+})
 
 export default function Schedule({
     schedule,
@@ -27,6 +30,7 @@ export default function Schedule({
     appt_id,
     edit,
     editable,
+    regist,
     role,
     eventId,
 }: UseSchedule){
@@ -77,6 +81,18 @@ export default function Schedule({
         return (
             <ApptViewSchedule
                 appt={appt}
+                regist={regist}
+            />
+        )
+    }
+    if(view === 'attd'){
+        const appt = findAppointmentById(appt_id ?? '', schedule.appointments)
+        return(
+            <AttdViewSchedule
+                eventId={eventId}
+                role={role}
+                appt={appt}
+                regist={regist}
             />
         )
     }

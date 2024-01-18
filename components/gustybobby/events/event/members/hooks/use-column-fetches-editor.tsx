@@ -4,7 +4,7 @@ import useFormConfig from "@/components/tools/gustybobby-tables/config-fetchers/
 import { useEffect, useReducer, useState } from "react";
 import useColumnFetches from "../../../../../tools/gustybobby-tables/config-fetchers/hooks/use-column-fetches";
 import columnFetchesEditorReducer from "./column-fetches-editor-reducer";
-import type { ColumnFetches } from "@/server/typeconfig/event";
+import type { ColumnFetches, TableView } from "@/server/typeconfig/event";
 import { GustybobbyOption } from "@/server/typeconfig/form";
 
 export default function useColumnFetchesEditor(eventId: string, formId: string, role: 'gustybobby' | 'user'){
@@ -44,7 +44,11 @@ export default function useColumnFetchesEditor(eventId: string, formId: string, 
                 label: 'None',
                 index: formConfig.field_order?.length ?? 0,
                 active: !columnFetches?.[firstGroupId].forms[formConfig.id ?? ''],
-            })
+            }),
+            viewTableArray: tableViewOptions.map((option) => ({
+                ...option,
+                active: !!columnFetches?.[firstGroupId]?.view_table?.includes(option.id as TableView)
+            }))
         })
     }, [formConfig, columnFetches])
     return { columnFetchesEditor, dispatchColumnFetchesEditor, refetch }
@@ -61,3 +65,24 @@ export function getColumnFetchesGroupOptions(columnFetches: ColumnFetches, group
     groupOptions.sort((g1, g2) => g1.order - g2.order)
     return groupOptions
 }
+
+const tableViewOptions: GustybobbyOption[] = [
+    {
+        id: 'appt',
+        label: 'Appointment',
+        index: 0,
+        active: false
+    },
+    {
+        id: 'attd',
+        label: 'Attendance',
+        index: 1,
+        active: false
+    },
+    {
+        id: 'intv',
+        label: 'Interview',
+        index: 2,
+        active: false
+    },
+]

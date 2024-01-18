@@ -6,7 +6,7 @@ import { useState } from "react"
 import { FaInfoCircle } from "react-icons/fa"
 import PopUpDialog from "@/components/tools/pop-up-dialog"
 import useColumnFetchesEditor, { getColumnFetchesGroupOptions } from "./hooks/use-column-fetches-editor"
-import { ListBoxSingleSelect } from "@/components/tools/list-box"
+import { ListBoxMultiSelect, ListBoxSingleSelect } from "@/components/tools/list-box"
 import { contentPatterns } from "@/server/classes/forms/contentconfig"
 import { sectionStyles } from "@/components/styles/sections"
 import { sendDataToAPI } from "@/components/tools/api"
@@ -52,7 +52,7 @@ export default function EventDefaultColumns({ eventId, form }: {
             <div className="text-xl mb-2">
                 <span className="font-bold">Selected Form:</span> {form?.label}
             </div>
-            <div className="flex justify-between md:justify-start space-x-2">
+            <div className="flex space-x-2">
                 <div>
                     <span className="text-xl font-bold">Select Group</span>
                     <ListBoxSingleSelect
@@ -65,48 +65,72 @@ export default function EventDefaultColumns({ eventId, form }: {
                         maxHeight="max-h-28"
                     />
                 </div>
-                <div className="flex flex-col">
-                    <span className="text-xl font-bold">New Group</span>
-                    <div className="flex items-end space-x-1">
-                        <div>
-                            <InputField
-                                id="new_column_fetches_group"
-                                type="text"
-                                defaultValue=""
-                                pattern={contentPatterns.label}
-                                size="sm"
-                                required={false}
-                                autoComplete="off"
-                            />
-                        </div>
-                        <div className="mb-2">
-                            <button
-                                className={sectionStyles.button({ color: 'green', hover: true, border: true })}
-                                onClick={() => {
-                                    const groupNameField = document.getElementById('new_column_fetches_group') as HTMLInputElement
-                                    const validity = document.getElementById('new_column_fetches_group_VALIDITY') as HTMLInputElement
-                                    if(validity.value === 'true'){
-                                        dispatchColumnFetchesEditor({ type: 'add_group', name: groupNameField.value })
-                                    }
-                                }}
-                            >
-                                Add
-                            </button>
-                        </div>
+                <div className="flex items-end">
+                    <button
+                        className={sectionStyles.button({ color: 'red', border: true, hover: true })}
+                        onClick={() => {
+                            dispatchColumnFetchesEditor({ type: 'delete_group' })
+                        }}
+                    >
+                        Delete
+                    </button>
+                </div>
+            </div>
+            <div className="flex flex-col">
+                <span className="text-xl font-bold">New Group</span>
+                <div className="flex items-end space-x-1">
+                    <div>
+                        <InputField
+                            id="new_column_fetches_group"
+                            type="text"
+                            defaultValue=""
+                            pattern={contentPatterns.label}
+                            size="sm"
+                            required={false}
+                            autoComplete="off"
+                        />
+                    </div>
+                    <div className="mb-2">
+                        <button
+                            className={sectionStyles.button({ color: 'green', hover: true, border: true })}
+                            onClick={() => {
+                                const groupNameField = document.getElementById('new_column_fetches_group') as HTMLInputElement
+                                const validity = document.getElementById('new_column_fetches_group_VALIDITY') as HTMLInputElement
+                                if(validity.value === 'true'){
+                                    dispatchColumnFetchesEditor({ type: 'add_group', name: groupNameField.value })
+                                }
+                            }}
+                        >
+                            Add
+                        </button>
                     </div>
                 </div>
             </div>
             {columnFetchesEditor.group_id_view !== '' &&
-            <div>
-                <SelectColumnsLabel/>
-                <ListBoxSingleSelect
-                    list={columnFetchesEditor.fieldArray}
-                    setList={(list)=> {
-                        dispatchColumnFetchesEditor({ type: 'edit_fields', fields: list })
-                    }}
-                    width="w-72"
-                    maxHeight="max-h-96"
-                />
+            <div className="flex justify-start space-x-2">
+                <div>
+                    <SelectColumnsLabel/>
+                    <ListBoxSingleSelect
+                        list={columnFetchesEditor.fieldArray}
+                        setList={(list)=> {
+                            dispatchColumnFetchesEditor({ type: 'edit_fields', fields: list })
+                        }}
+                        width="w-48"
+                        maxHeight="max-h-96"
+                    />
+                </div>
+                <div>
+                    <span>Table View</span>
+                    <ListBoxMultiSelect
+                        list={columnFetchesEditor.viewTableArray}
+                        placeholder="Table View"
+                        setList={(list)=> {
+                            dispatchColumnFetchesEditor({ type: 'edit_table_view', fields: list })
+                        }}
+                        width="w-28"
+                        maxHeight="max-h-96"
+                    />
+                </div>
             </div>
             }
         </div>

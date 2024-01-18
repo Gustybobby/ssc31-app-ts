@@ -22,6 +22,7 @@ export default function PartySelectorTable({ eventId, role, partyMembers, dispat
         eventId,
         role,
         selection: Object.fromEntries(partyMembers.map((member) => [member.id, true])),
+        tableView: 'appt',
         transformation,
     })
     

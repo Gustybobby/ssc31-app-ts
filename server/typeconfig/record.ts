@@ -49,7 +49,6 @@ export interface EditableAppointment extends CoreAppointment {
         position: EventConfigPosition | null,
         role: EventConfigRole | null,
     }[]
-    attendances: GustybobbyAttendance[]
     member_selects?: {
         [member_id: string]: boolean
     }

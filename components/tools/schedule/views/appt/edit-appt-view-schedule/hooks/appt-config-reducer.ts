@@ -61,7 +61,6 @@ export default function apptConfigReducer(state: EditableAppointment, action: Ap
                 ...action.appt,
                 _count: { ...action.appt._count },
                 party_members: action.appt.party_members.map((member) => ({ ...member })),
-                attendances: action.appt.attendances.map((attendance) => ({ ...attendance })),
             }
         case 'edit_date':
             return {

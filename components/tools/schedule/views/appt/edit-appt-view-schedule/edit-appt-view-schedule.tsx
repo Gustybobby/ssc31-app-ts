@@ -157,7 +157,6 @@ const newApptConfig = (date: Date): EditableAppointment => {
         location: '',
         description: '',
         party_members: [],
-        attendances: [],
         _count: {
             party_members: 0,
         }

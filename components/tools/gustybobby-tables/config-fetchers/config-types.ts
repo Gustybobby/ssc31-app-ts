@@ -2,8 +2,9 @@ import type { EventConfigProperty } from "@/server/classes/eventconfig"
 import type { FormConfigProperty } from "@/server/classes/forms/formconfig"
 import type { ColumnProperty } from "@/server/classes/table"
 import type Table from "@/server/classes/table"
+import type { TableView } from "@/server/typeconfig/event"
 import type { GustybobbyOption } from "@/server/typeconfig/form"
-import type { EditableAppointment } from "@/server/typeconfig/record"
+import type { EditableAppointment, GustybobbyAttendance } from "@/server/typeconfig/record"
 import type { MemberStatus } from "@prisma/client"
 import type { Dispatch, MutableRefObject, SetStateAction } from "react"
 
@@ -12,8 +13,16 @@ export interface EventTableConfig {
     role: 'user' | 'gustybobby'
 }
 
+export interface AppointmentConfig extends EventTableConfig {
+    apptId: string
+}
+
 export interface FormTableConfig extends EventTableConfig {
     formId: string
+}
+
+export interface DefaultGroupTableConfig extends EventTableConfig {
+    tableView: TableView | null
 }
 
 export interface TableFormResponse {
@@ -42,6 +51,10 @@ export interface Member {
     } | null
 }
 
+export interface MemberWithAttendance extends Member {
+    attendance: GustybobbyAttendance | null
+}
+
 export interface DefaultResponses {
     [member_id: string]: {
         [field_id: string]: string
@@ -52,6 +65,7 @@ export type FormConfigState = FormConfigProperty | 'loading' | 'error'
 export type ResponsesState = TableFormResponse[] | 'loading' | 'error'
 export type DefaultResponsesState = DefaultResponses | 'loading' | 'error'
 export type MembersState = Member[] | 'loading' | 'error'
+export type MembersWithAttendanceState = MemberWithAttendance[] | 'loading' | 'error'
 export type GroupsState = ColumnProperty[] | 'loading' | 'error'
 
 export interface StaticMembersTableInitializeState {
@@ -83,7 +97,7 @@ export interface EditableMembersTableInitializeState extends StaticMembersTableI
     }>
 }
 
-export interface UseDefaultMembersTable extends EventTableConfig {
+export interface UseDefaultMembersTable extends DefaultGroupTableConfig {
     options?: {
         columns?: {
             status: boolean,
@@ -100,7 +114,7 @@ export interface DefaultMembersTableInitializeState {
     options: UseDefaultMembersTable['options']
 }
 
-export interface UseSelectableMembersTable extends EventTableConfig {
+export interface UseSelectableMembersTable extends DefaultGroupTableConfig {
     selection: EditableAppointment['member_selects']
     transformation: Table['transformation']
 }
@@ -111,5 +125,17 @@ export interface SelectableMembersTableInitiializeState {
     members: MembersState,
     memberSelects: EditableAppointment['member_selects']
     setMemberSelects: Dispatch<SetStateAction<UseSelectableMembersTable['selection']>>
+    transformation: Table['transformation']
+}
+
+export interface UseAttendanceMembersTable extends DefaultGroupTableConfig {
+    apptId: string
+    transformation: Table['transformation']
+}
+
+export interface AttendanceMembersTableInitializeState {
+    groups: GroupsState
+    defaultResponses: DefaultResponsesState
+    members: MembersWithAttendanceState,
     transformation: Table['transformation']
 }

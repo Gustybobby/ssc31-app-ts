@@ -15,11 +15,12 @@ export interface UseSchedule {
     appt_id: string | null
     edit: string | null
     editable: boolean
+    regist: boolean
     role: 'gustybobby' | 'user'
     eventId: string
 }
 
-export default function useSchedule(fetchUrl: string, editable: boolean, role: 'gustybobby' | 'user', eventId: string){
+export default function useSchedule(fetchUrl: string, editable: boolean, regist: boolean, role: 'gustybobby' | 'user', eventId: string){
     const [schedule, dispatchSchedule] = useReducer(scheduleStateReducer, 'loading')
     const [shouldRefetch, refetch] = useState({})
     const searchParams = useSearchParams()
@@ -36,7 +37,7 @@ export default function useSchedule(fetchUrl: string, editable: boolean, role: '
             .then(data => data.message === 'SUCCESS'? data.data : 'error')
             .then(data => dispatchSchedule({ type: 'set_from_db', appt_array: data }))
     }, [fetchUrl, shouldRefetch])
-    return { schedule, dispatchSchedule, refetch, view, month, year, date_key, appt_id, edit, editable, role, eventId }
+    return { schedule, dispatchSchedule, refetch, view, month, year, date_key, appt_id, edit, editable, regist, role, eventId }
 }
 
 export function safePositive(string: string | null): number | null{

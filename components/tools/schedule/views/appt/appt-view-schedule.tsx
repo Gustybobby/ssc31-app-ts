@@ -5,8 +5,9 @@ import { GustybobbyAppointment } from "@/server/typeconfig/record"
 import { usePathname, useRouter } from "next/navigation"
 import AppointmentBanner from "../../sections/appointment-banner"
 
-export default function ApptViewSchedule({ appt }: {
+export default function ApptViewSchedule({ appt, regist }: {
     appt: GustybobbyAppointment | undefined
+    regist: boolean
 }){
 
     const router = useRouter()
@@ -37,6 +38,7 @@ export default function ApptViewSchedule({ appt }: {
                 <AppointmentBanner
                     appt={appt}
                     hideDetails={false}
+                    regist={regist}
                 />
             </div>
         </div>

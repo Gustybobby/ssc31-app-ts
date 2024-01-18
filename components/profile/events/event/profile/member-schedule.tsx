@@ -5,13 +5,14 @@ import Schedule from "@/components/tools/schedule/schedule"
 import useSchedule from "@/components/tools/schedule/hooks/use-schedule"
 import MemberDashboardWrapper from "../member-dashboard-wrapper"
 
-export default function MemberSchedule({ event_id, event_title, can_appoint }: {
+export default function MemberSchedule({ event_id, event_title, can_appoint, can_regist }: {
     event_id: string
     event_title: string
     can_appoint: boolean
+    can_regist: boolean
 }){
 
-    const scheduleHook = useSchedule(`/api/user/events/${event_id}/appointments`, can_appoint, 'user', event_id)
+    const scheduleHook = useSchedule(`/api/user/events/${event_id}/appointments`, can_appoint, can_regist, 'user', event_id)
     
     return (
         <MemberDashboardWrapper eventId={event_id} eventTitle={event_title}>

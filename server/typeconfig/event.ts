@@ -36,9 +36,12 @@ interface CreateEventError {
 
 export type CreateEventResponse = CreateEventSuccess | CreateEventError
 
+export type TableView = 'appt' | 'attd' | 'intv'
+
 export type ColumnFetches = {
     [group_id: string]: {
         name: string,
+        view_table: TableView[],
         order: number,
         forms: {
             [form_id: string]: string

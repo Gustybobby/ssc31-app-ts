@@ -1,50 +1,44 @@
 "use client"
 
-import type { SelectableMembersTableInitiializeState, UseSelectableMembersTable } from "../../config-fetchers/config-types";
+import type { AttendanceMembersTableInitializeState, UseAttendanceMembersTable } from "../../config-fetchers/config-types";
 import Table from "@/server/classes/table";
-import useMembers from "../../config-fetchers/hooks/use-members";
 import useDefaultGroupResponses from "../../config-fetchers/hooks/use-default-group-responses";
 import { useEffect, useState } from "react";
 import { extractTextFromResponseData } from "@/server/inputfunction";
+import useMembersWithAttendance from "../../config-fetchers/hooks/use-members-with-attendance";
+import { sectionStyles } from "@/components/styles/sections";
 
-export default function useSelectableMembersTable({ eventId, role, tableView, selection, transformation }: UseSelectableMembersTable){
-    const { members, refetch: refetchMembers } = useMembers({ eventId, role })
+export default function useAttendanceMembersTable({ eventId, role, apptId, tableView, transformation }: UseAttendanceMembersTable){
     const { defaultGroups, defaultResponses, refetch: refetchGroupResponses } = useDefaultGroupResponses({ eventId, role, tableView })
-    const [memberSelects, setMemberSelects] = useState(selection)
+    const { members, refetch: refetchMembers } = useMembersWithAttendance({ eventId, role, apptId })
     const [table, setTable] = useState<Table | 'loading' | 'error'>(initializeTable({
         groups: defaultGroups,
         defaultResponses,
+        transformation,
         members,
-        memberSelects,
-        setMemberSelects,
-        transformation
     }))
     const [shouldRefetch, refetch] = useState({})
     useEffect(() => {
         refetchMembers({})
         refetchGroupResponses({})
-    }, [shouldRefetch, refetchMembers, refetchGroupResponses])
+    }, [shouldRefetch, refetchGroupResponses, refetchMembers])
     useEffect(() => {
         setTable(initializeTable({
             groups: defaultGroups,
             defaultResponses,
+            transformation,
             members,
-            memberSelects,
-            setMemberSelects,
-            transformation
         }))
-    }, [defaultGroups, defaultResponses, members, memberSelects, transformation])
-    return { table, setTable, memberSelects, setMemberSelects, defaultGroups, refetch }
+    }, [defaultGroups, defaultResponses, transformation, members])
+    return { table, setTable, defaultGroups, refetch }
 }
 
 function initializeTable({
     groups,
     defaultResponses,
     members,
-    memberSelects,
-    setMemberSelects,
     transformation,
-}: SelectableMembersTableInitiializeState){
+}: AttendanceMembersTableInitializeState){
     if(groups === 'loading' || defaultResponses === 'loading' || members === 'loading'){
         return 'loading'
     }
@@ -55,10 +49,31 @@ function initializeTable({
         columns: [
             {
                 type: 'pure',
-                id: 'select',
-                label: 'Select',
+                id: 'check_in_button',
+                label: 'Check-in',
                 data_type: 'STRING',
-                field_type: 'SHORTANS',
+                field_type: 'SHORTANS'
+            },
+            {
+                type: 'pure',
+                id: 'check_out_button',
+                label: 'Check-out',
+                data_type: 'STRING',
+                field_type: 'SHORTANS'
+            },
+            {
+                type: 'pure',
+                id: 'check_in',
+                label: 'Time In',
+                data_type: 'STRING',
+                field_type: 'SHORTANS'
+            },
+            {
+                type: 'pure',
+                id: 'check_out',
+                label: 'Time Out',
+                data_type: 'STRING',
+                field_type: 'SHORTANS'
             },
             {
                 type: 'pure',
@@ -80,24 +95,41 @@ function initializeTable({
             return ({
                 key: member.id,
                 value: {
-                    select: {
+                    check_in_button: {
                         type: 'pure_single',
-                        id: 'select',
+                        id: 'check_in_button',
                         raw_data: '',
                         data: (
-                            <div className="w-full flex justify-center">
-                                <input
-                                    type="checkbox"
-                                    defaultChecked={!!memberSelects?.[member.id]}
-                                    onChange={(e) => {
-                                        setMemberSelects(memberSelects => ({
-                                            ...memberSelects,
-                                            [member.id]: e.target.checked,
-                                        }))
-                                    }}
-                                />
+                            <div className="flex justify-center">
+                                <button className={sectionStyles.button({ color: 'green', hover: true, border: true  })}>
+                                    C-in
+                                </button>
                             </div>
                         )
+                    },
+                    check_out_button: {
+                        type: 'pure_single',
+                        id: 'check_out_button',
+                        raw_data: '',
+                        data: (
+                            <div className="flex justify-center">
+                                <button className={sectionStyles.button({ color: 'blue', hover: true, border: true  })}>
+                                    C-out
+                                </button>
+                            </div>
+                        )
+                    },
+                    check_in: {
+                        type: 'pure_single',
+                        id: 'check_in',
+                        raw_data: member.attendance?.check_in ?? '',
+                        data: member.attendance?.check_in ?? '-',
+                    },
+                    check_out: {
+                        type: 'pure_single',
+                        id: 'check_out',
+                        raw_data: member.attendance?.check_out ?? '',
+                        data: member.attendance?.check_out ?? '-',
                     },
                     position: {
                         type: 'pure_single',

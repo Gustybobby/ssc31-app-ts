@@ -1,5 +1,5 @@
 import { createCUID } from "@/cuid"
-import type { ColumnFetches } from "@/server/typeconfig/event"
+import type { ColumnFetches, TableView } from "@/server/typeconfig/event"
 import type { GustybobbyOption } from "@/server/typeconfig/form"
 
 interface ColumnFetchesEditor {
@@ -7,6 +7,7 @@ interface ColumnFetchesEditor {
     form_id_view: string,
     groups: ColumnFetches
     fieldArray: GustybobbyOption[]
+    viewTableArray: GustybobbyOption[]
 }
 
 interface ActionTypeSet {
@@ -15,6 +16,7 @@ interface ActionTypeSet {
     column_fetches: ColumnFetchesEditor['groups']
     form_id: ColumnFetchesEditor['form_id_view'],
     fieldArray: ColumnFetchesEditor['fieldArray']
+    viewTableArray: ColumnFetchesEditor['viewTableArray']
 }
 
 interface ActionTypeSetStatus {
@@ -32,8 +34,12 @@ interface ActionTypeAddGroup {
     name: string
 }
 
+interface ActionTypeDeleteGroup {
+    type: 'delete_group'
+}
+
 interface ActionTypeEditFields {
-    type: 'edit_fields'
+    type: 'edit_fields' | 'edit_table_view'
     fields: GustybobbyOption[]
 }
 
@@ -42,6 +48,7 @@ type ColumnFetchesEditorReducerAction =
     ActionTypeSetStatus |
     ActionTypeSetGroupView |
     ActionTypeAddGroup |
+    ActionTypeDeleteGroup |
     ActionTypeEditFields
 
 export type ColumnFetchesEditorState = ColumnFetchesEditor | 'loading' | 'error'
@@ -54,6 +61,7 @@ export default function columnFetchesEditorReducer(state: ColumnFetchesEditorSta
                 groups: action.column_fetches,
                 form_id_view: action.form_id,
                 fieldArray: action.fieldArray,
+                viewTableArray: action.viewTableArray
             }
         case 'set_status':
             return action.status
@@ -69,7 +77,11 @@ export default function columnFetchesEditorReducer(state: ColumnFetchesEditorSta
                 fieldArray: state.fieldArray.map((field) => ({
                     ...field,
                     active: field.id === (state.groups?.[action.value].forms[state.form_id_view] ?? 'none')
-                }))
+                })),
+                viewTableArray: state.viewTableArray.map((field) => ({
+                    ...field,
+                    active: !!state.groups?.[action.value].view_table?.includes(field.id as TableView)
+                })),
             }
         case 'add_group':
             return {
@@ -79,10 +91,22 @@ export default function columnFetchesEditorReducer(state: ColumnFetchesEditorSta
                     [createCUID()]: {
                         name: action.name,
                         order: Object.keys(state.groups ?? {}).length,
+                        view_table: [],
                         forms: {},
                     }
                 }
             }
+        case 'delete_group':
+            const deletedGroups = { ...state.groups }
+            delete deletedGroups[state.group_id_view]
+            return {
+                ...state,
+                groups: deletedGroups,
+                group_id_view: '',
+            }
+    }
+    const group = state.groups?.[state.group_id_view]
+    switch(action.type){
         case 'edit_fields':
             const selectedFieldId = action.fields.find((field) => field.active)?.id ?? 'none'
             return {
@@ -91,12 +115,28 @@ export default function columnFetchesEditorReducer(state: ColumnFetchesEditorSta
                 groups: selectedFieldId === 'none'? { ...state.groups }: {
                     ...state.groups,
                     [state.group_id_view]: {
-                        name: state.groups?.[state.group_id_view].name ?? '',
-                        order: state.groups?.[state.group_id_view].order ?? 0,
+                        name: group?.name ?? '',
+                        order: group?.order ?? 0,
+                        view_table: group?.view_table ?? [],
                         forms: {
-                            ...state.groups?.[state.group_id_view].forms,
+                            ...group?.forms,
                             [state.form_id_view]: selectedFieldId 
                         }
+                    }
+                }
+            }
+        case 'edit_table_view':
+            const activeTableViews = action.fields.filter(({ active }) => active).map(({ id }) => id)
+            return {
+                ...state,
+                viewTableArray: action.fields,
+                groups: {
+                    ...state.groups,
+                    [state.group_id_view]: {
+                        name: group?.name ?? '',
+                        order: group?.order ?? 0,
+                        view_table: activeTableViews as TableView[],
+                        forms: group?.forms ?? {}
                     }
                 }
             }

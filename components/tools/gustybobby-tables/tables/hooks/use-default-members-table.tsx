@@ -6,9 +6,9 @@ import useMembers from "../../config-fetchers/hooks/use-members";
 import useDefaultGroupResponses from "../../config-fetchers/hooks/use-default-group-responses";
 import { useEffect, useState } from "react";
 
-export default function useDefaultMembersTable({ eventId, role, options }: UseDefaultMembersTable){
+export default function useDefaultMembersTable({ eventId, role, tableView, options }: UseDefaultMembersTable){
     const { members, refetch: refetchMembers } = useMembers({ eventId, role })
-    const { defaultGroups, defaultResponses, refetch: refetchGroupResponses } = useDefaultGroupResponses({ eventId, role })
+    const { defaultGroups, defaultResponses, refetch: refetchGroupResponses } = useDefaultGroupResponses({ eventId, role, tableView })
     const [table, setTable] = useState<Table | 'loading' | 'error'>(initializeTable({
         groups: defaultGroups,
         defaultResponses,
@@ -65,7 +65,7 @@ function initializeTable({ groups, defaultResponses, members, options }: Default
                         raw_data: member.role?.label ?? '',
                         data: member.role?.label ?? '',
                     },
-                    ...Object.fromEntries(Object.entries(defaultResponses[member.id]).map(([field_id, value]) => [
+                    ...Object.fromEntries(Object.entries(defaultResponses[member.id] ?? {}).map(([field_id, value]) => [
                         field_id, {
                             type: 'pure_single',
                             id: field_id,

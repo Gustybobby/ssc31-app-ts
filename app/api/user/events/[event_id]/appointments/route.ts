@@ -38,7 +38,6 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
                                         role: true,
                                     }
                                 },
-                                attendances: true,
                                 _count: {
                                     select: {
                                         party_members: true
@@ -86,11 +85,6 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
                 permission: 'editable',
                 start_at: appt.start_at.toISOString(),
                 end_at: appt.end_at.toISOString(),
-                attendances: appt.attendances.map((atd) => ({
-                    ...atd,
-                    check_in: atd.check_in?.toISOString() ?? null,
-                    check_out: atd.check_out?.toISOString() ?? null,
-                }))
             }
         }
         return NextResponse.json({ message: "SUCCESS", data: Object.values(apptObject) }, { status: 200 })
