@@ -21,7 +21,6 @@ export default function EventMembers({ event_id, event_title, forms }: {
     event_title: string,
     forms: { id: string, title: string }[]
 }){
-
     const [formOptions, setFormOptions] = useState<GustybobbyOption[]>(forms.map(({ id, title }, index) => ({
         id, label: title, index, active: index === 0
     })))
@@ -35,7 +34,7 @@ export default function EventMembers({ event_id, event_title, forms }: {
         transformation,
     })
 
-    if(table === 'error' ){
+    if(table === 'error'){
         throw 'fetch table error'
     }
     return(
