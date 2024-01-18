@@ -7,17 +7,24 @@ import { useEffect, useState } from "react";
 import { extractTextFromResponseData } from "@/server/inputfunction";
 import useMembersWithAttendance from "../../config-fetchers/hooks/use-members-with-attendance";
 import { sectionStyles } from "@/components/styles/sections";
+import { sendDataToAPI } from "@/components/tools/api";
+import { attendancesApiUrl } from "../../config-fetchers/config-urls";
+import toast from "react-hot-toast";
 
 export default function useAttendanceMembersTable({ eventId, role, apptId, tableView, transformation }: UseAttendanceMembersTable){
     const { defaultGroups, defaultResponses, refetch: refetchGroupResponses } = useDefaultGroupResponses({ eventId, role, tableView })
     const { members, refetch: refetchMembers } = useMembersWithAttendance({ eventId, role, apptId })
+    const [shouldRefetch, refetch] = useState({})
     const [table, setTable] = useState<Table | 'loading' | 'error'>(initializeTable({
         groups: defaultGroups,
         defaultResponses,
         transformation,
         members,
+        role,
+        apptId,
+        eventId,
+        refetch,
     }))
-    const [shouldRefetch, refetch] = useState({})
     useEffect(() => {
         refetchMembers({})
         refetchGroupResponses({})
@@ -28,8 +35,12 @@ export default function useAttendanceMembersTable({ eventId, role, apptId, table
             defaultResponses,
             transformation,
             members,
+            role,
+            apptId,
+            eventId,
+            refetch,
         }))
-    }, [defaultGroups, defaultResponses, transformation, members])
+    }, [defaultGroups, defaultResponses, transformation, members, role, apptId, eventId, refetch])
     return { table, setTable, defaultGroups, refetch }
 }
 
@@ -38,6 +49,10 @@ function initializeTable({
     defaultResponses,
     members,
     transformation,
+    role,
+    apptId,
+    eventId,
+    refetch,
 }: AttendanceMembersTableInitializeState){
     if(groups === 'loading' || defaultResponses === 'loading' || members === 'loading'){
         return 'loading'
@@ -92,6 +107,9 @@ function initializeTable({
             ...groups,
         ],
         rows: members.map((member) => {
+            const attendanceExisted = !!member.attendance
+            const checkInExisted = !!member.attendance?.check_in
+            const checkOutExisted = !!member.attendance?.check_out
             return ({
                 key: member.id,
                 value: {
@@ -101,8 +119,30 @@ function initializeTable({
                         raw_data: '',
                         data: (
                             <div className="flex justify-center">
-                                <button className={sectionStyles.button({ color: 'green', hover: true, border: true  })}>
-                                    C-in
+                                <button
+                                    className={sectionStyles.button({
+                                        color: checkInExisted? 'red' : 'green',
+                                        hover: true,
+                                        border: true
+                                    })}
+                                    onClick={async() => {
+                                        const checkInToast = toast.loading(checkInExisted? 'Canceling...' : 'Checking in...')
+                                        await sendDataToAPI({
+                                            apiUrl: attendancesApiUrl({ eventId, role, apptId, memberId: member.id }),
+                                            method: attendanceExisted? 'PATCH' : 'POST',
+                                            body: JSON.stringify({
+                                                data: {
+                                                    member_id: member.id,
+                                                    appointment_id: apptId,
+                                                    check_in: checkInExisted? null : new Date(),
+                                                }
+                                            })
+                                        })
+                                        toast.success(checkInExisted? 'Canceled' : 'Checked in', { id: checkInToast })
+                                        refetch({})
+                                    }}
+                                >
+                                    {checkInExisted? 'Cancel' : 'C-in'}
                                 </button>
                             </div>
                         )
@@ -113,8 +153,30 @@ function initializeTable({
                         raw_data: '',
                         data: (
                             <div className="flex justify-center">
-                                <button className={sectionStyles.button({ color: 'blue', hover: true, border: true  })}>
-                                    C-out
+                                <button
+                                    className={sectionStyles.button({
+                                        color: checkOutExisted? 'red' : 'blue',
+                                        hover: true,
+                                        border: true
+                                    })}
+                                    onClick={async() => {
+                                        const checkOutToast = toast.loading(checkOutExisted?  'Canceling...' : 'Checking out...')
+                                        await sendDataToAPI({
+                                            apiUrl: attendancesApiUrl({ eventId, role, apptId, memberId: member.id }),
+                                            method: attendanceExisted? 'PATCH' : 'POST',
+                                            body: JSON.stringify({
+                                                data: {
+                                                    member_id: member.id,
+                                                    appointment_id: apptId,
+                                                    check_out: checkOutExisted? null : new Date(),
+                                                }
+                                            })
+                                        })
+                                        toast.success(checkOutExisted? 'Canceled' : 'Checked out', { id: checkOutToast })
+                                        refetch({})
+                                    }}
+                                >
+                                    {checkOutExisted? 'Cancel' : 'C-out'}
                                 </button>
                             </div>
                         )
@@ -122,14 +184,14 @@ function initializeTable({
                     check_in: {
                         type: 'pure_single',
                         id: 'check_in',
-                        raw_data: member.attendance?.check_in ?? '',
-                        data: member.attendance?.check_in ?? '-',
+                        raw_data: formatDate(member.attendance?.check_in),
+                        data: formatDate(member.attendance?.check_in),
                     },
                     check_out: {
                         type: 'pure_single',
                         id: 'check_out',
-                        raw_data: member.attendance?.check_out ?? '',
-                        data: member.attendance?.check_out ?? '-',
+                        raw_data: formatDate(member.attendance?.check_out),
+                        data: formatDate(member.attendance?.check_out),
                     },
                     position: {
                         type: 'pure_single',
@@ -159,4 +221,8 @@ function initializeTable({
         }),
         transformation
     })
+}
+
+function formatDate(isoString: string | null | undefined){
+    return isoString? (new Date(isoString)).toLocaleString() : '-'
 }

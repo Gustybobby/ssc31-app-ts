@@ -53,7 +53,7 @@ export default function AppointmentBanner({ appt, hideDetails, regist, dispatchS
             <span className="text-left text-lg mb-1">
                 {getFormattedDateString(new Date(appt.start_at))}, {(new Date(appt.start_at)).toLocaleTimeString()}
             </span>
-            {(!hideDetails && regist) &&
+            {(!hideDetails && regist && appt.attendance_required) &&
             <button
                 className={sectionStyles.button({ color: 'violet', hover: true, border: true, extensions: 'mb-2' })}
                 onClick={() => router.push(pathname+`?view=attd&appt_id=${appt.id}`)}

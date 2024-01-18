@@ -29,7 +29,7 @@ export default function MembersTable({ table, headerCellClassName }: { table: Ta
                         {row.value.map((row) => {
                             return(
                                 <td key={row.id} rowSpan={row.row_span ?? 1} className="border border-black dark:border-white p-2 bg-gray-100 dark:bg-gray-700">
-                                    {row.data.toString().includes(':')?
+                                    {(row.data.toString().includes(':') && row.data.toString().includes('.'))?
                                     <Link
                                         href={row.data.toString()}
                                         target="_blank"

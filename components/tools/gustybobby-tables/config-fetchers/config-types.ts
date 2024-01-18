@@ -138,4 +138,8 @@ export interface AttendanceMembersTableInitializeState {
     defaultResponses: DefaultResponsesState
     members: MembersWithAttendanceState,
     transformation: Table['transformation']
+    role: 'user' | 'gustybobby'
+    apptId: string
+    eventId: string,
+    refetch: Dispatch<SetStateAction<{}>>
 }

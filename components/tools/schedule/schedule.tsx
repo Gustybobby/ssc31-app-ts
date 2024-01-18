@@ -64,8 +64,8 @@ export default function Schedule({
             />
         )
     }
+    const appt = findAppointmentById(appt_id ?? '', schedule.appointments)
     if(view === 'appt'){
-        const appt = findAppointmentById(appt_id ?? '', schedule.appointments)
         if(edit === 'true' && (appt?.permission === 'editable') || (!appt && appt_id === 'new')){
             return (
                 <EditApptViewSchedule
@@ -85,8 +85,7 @@ export default function Schedule({
             />
         )
     }
-    if(view === 'attd'){
-        const appt = findAppointmentById(appt_id ?? '', schedule.appointments)
+    if(view === 'attd' && appt?.attendance_required){
         return(
             <AttdViewSchedule
                 eventId={eventId}

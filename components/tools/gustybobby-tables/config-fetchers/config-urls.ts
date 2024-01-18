@@ -23,3 +23,12 @@ export const formResponseApiUrl = ({ eventId, formId, role }: FormTableConfig) =
 export const eventColumnFetchesApiUrl = ({ eventId, role, tableView }: DefaultGroupTableConfig) => (
     `/api/${role}/events/${eventId}/column-fetches?${tableView? `table_view=${tableView}` : ''}`
 )
+
+export const attendancesApiUrl = ({ eventId, role, apptId, memberId }: {
+    eventId: string
+    role: 'user' | 'gustybobby'
+    apptId: string
+    memberId: string
+}) => (
+    `/api/${role}/events/${eventId}/members/${memberId}/appointments/${apptId}/attendances`
+)
