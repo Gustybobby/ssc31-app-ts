@@ -15,9 +15,11 @@ export default function MembersTable({ table, headerCellClassName }: { table: Ta
                                 key={column.id}
                                 rowSpan={column.row_span}
                                 colSpan={column.col_span}
-                                className="border border-black dark:border-white p-2 overflow-auto bg-gray-200 dark:bg-gray-800"
+                                className={styles.headerCell}
                             >
-                                <div className={headerCellClassName}>{column.label}</div>
+                                <div className={column.id === 'index'? 'w-16' : headerCellClassName}>
+                                    {column.label}
+                                </div>
                             </th>
                         ))}
                     </tr>
@@ -28,7 +30,7 @@ export default function MembersTable({ table, headerCellClassName }: { table: Ta
                     <tr key={row.key}>
                         {row.value.map((row) => {
                             return(
-                                <td key={row.id} rowSpan={row.row_span ?? 1} className="border border-black dark:border-white p-2 bg-gray-100 dark:bg-gray-700">
+                                <td key={row.id} rowSpan={row.row_span ?? 1} className={styles.rowCell}>
                                     {(row.data.toString().includes(':') && row.data.toString().includes('.'))?
                                     <Link
                                         href={row.data.toString()}
@@ -49,4 +51,17 @@ export default function MembersTable({ table, headerCellClassName }: { table: Ta
             </table>
         </div>
     )
+}
+
+const styles = {
+    headerCell: [
+        'p-2 overflow-auto',
+        'border border-black dark:border-white',
+        'bg-gray-200 dark:bg-gray-800',
+    ].join(' '),
+    rowCell: [
+        'p-2',
+        'border border-black dark:border-white',
+        'bg-gray-100 dark:bg-gray-700',
+    ].join(' '),
 }

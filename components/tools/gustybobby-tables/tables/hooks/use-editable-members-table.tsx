@@ -70,6 +70,13 @@ function initializeTable({ formConfig, eventConfig, responses, members, editRef,
         columns: [
             {
                 type: 'pure',
+                id: 'index',
+                label: 'No.',
+                data_type: 'NUM',
+                field_type: 'SHORTANS',
+            },
+            {
+                type: 'pure',
                 id: 'status',
                 label: 'Status',
                 data_type: 'STRING',
@@ -91,12 +98,18 @@ function initializeTable({ formConfig, eventConfig, responses, members, editRef,
             },
             Table.formColumnAdapter(formConfig)
         ],
-        rows: responses.map((response) => {
+        rows: responses.map((response, index) => {
             const member = members.find((member) => member.id === response.member_id)
             return {
                 key: response.member_id,
                 value: {
                     ...Table.formResponseAdapter(response, formConfig, { reference_key: 'member_id' }).value,
+                    index: {
+                        type: 'pure_single',
+                        id: 'index',
+                        raw_data: String(index+1),
+                        data: String(index+1),
+                    },
                     status: {
                         type: 'pure_single',
                         id: 'status',
