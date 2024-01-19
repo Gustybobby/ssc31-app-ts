@@ -4,11 +4,12 @@ import MemberProfile from "@/components/profile/events/event/profile/member-prof
 import prisma from "@/prisma-client";
 import { extractTextFromResponseData } from "@/server/inputfunction";
 import type { PrismaFieldConfig } from "@/server/typeconfig/form";
+import { redirect } from "next/navigation";
 
 export default async function MemberProfilePage({ params }: { params: { event_id: string }}){
     const session = await getServerAuthSession()
     if(!session?.user.id || !session?.user.role){
-        throw 'invalid session'
+        redirect('/profile')
     }
     const memberProfile = await prisma.eventMember.findUniqueOrThrow({
         where: {

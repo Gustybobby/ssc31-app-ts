@@ -2,11 +2,12 @@ import { getServerAuthSession } from "@/app/api/auth/[...nextauth]/_utils";
 import MainWrapper from "@/components/globalui/main-wrapper";
 import MemberSchedule from "@/components/profile/events/event/profile/member-schedule";
 import prisma from "@/prisma-client";
+import { redirect } from "next/navigation";
 
 export default async function MemberSchedulePage({ params }: { params: { event_id: string }}){
     const session = await getServerAuthSession()
     if(!session?.user.id || !session?.user.role){
-        throw 'invalid session'
+        redirect('/profile')
     }
     const member = await prisma.eventMember.findUniqueOrThrow({
         where: {
