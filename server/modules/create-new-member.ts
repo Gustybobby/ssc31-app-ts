@@ -1,6 +1,5 @@
 import type { MemberStatus, PrismaClient } from "@prisma/client"
 import type { ActivityRecord, TransferRecord } from "../typeconfig/record"
-import getEventMember from "./get-event-member"
 
 interface OptionalMemberData {
     status?: MemberStatus
@@ -23,10 +22,6 @@ export default async function createNewEventMember(
         memberParams?: OptionalMemberData
     }
 ){
-    const eventMember = await getEventMember(prisma, { user_id, event_id })
-    if(eventMember?.id){
-        throw "MEMBER EXISTED"
-    }
     const newEventMember = await prisma.eventMember.create({ 
         data:{
             ...memberParams,

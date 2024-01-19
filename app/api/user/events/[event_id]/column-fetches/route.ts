@@ -4,10 +4,27 @@ import type { ColumnFetches, TableView } from "@/server/typeconfig/event";
 import type { MemberReferencedResponses } from "@/server/typeconfig/table";
 import type { FormResponse, PrismaFieldConfig } from "@/server/typeconfig/form";
 import type { ColumnProperty } from "@/server/classes/table";
+import { getServerAuthSession } from "@/app/api/auth/[...nextauth]/_utils";
 import { filteredColumnFetches, getAllRequiredForms } from "@/server/modules/column-fetches-modules";
 
 export async function GET(req: NextRequest, { params }: { params: { event_id: string }}){
     try{
+        const session = await getServerAuthSession()
+        if(!session?.user.id){
+            throw 'invalid session'
+        }
+        const { position_id, role_id } = await prisma.eventMember.findUniqueOrThrow({
+            where: {
+                user_id_event_id: {
+                    user_id: session.user.id,
+                    event_id: params.event_id,
+                }
+            },
+            select: {
+                position_id: true,
+                role_id: true,
+            }
+        })
         const searchParams = req.nextUrl.searchParams
         const table_view = searchParams.get('table_view')
         const event = await prisma.event.findUniqueOrThrow({
@@ -21,19 +38,25 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
         const column_fetches = filteredColumnFetches(event.column_fetches as ColumnFetches, table_view as TableView | null)
         const groups: ColumnProperty[] = []
         const group_responses: MemberReferencedResponses = {}
-        const forms = await getAllRequiredForms(prisma, column_fetches, true)
+        const forms = await getAllRequiredForms(prisma, column_fetches, false)
         for(const [group_id, group] of Object.entries(column_fetches ?? {})){
             let dataType = null
             let fieldType = null
+            let hasValidField = false
             for(const [form_id, field_id] of Object.entries(group.forms)){
                 const form = forms[form_id]
+                const { global_position_access, global_role_access } = form
                 const formFields = form.form_fields as { [key: string]: PrismaFieldConfig }
-                const { data_type: newDataType, field_type: newFieldType } = formFields[field_id]
+                const { data_type: newDataType, field_type: newFieldType, position_access, role_access } = formFields[field_id]
+                if(!userHasFieldAccess({ global_position_access, global_role_access, position_access, role_access, position_id, role_id })){
+                    continue
+                }
                 if((dataType || fieldType) && (newDataType !== dataType || newFieldType !== fieldType)){
                     throw `group ${group_id} has inconsistent data type and field type`
                 }
                 dataType = newDataType
                 fieldType = newFieldType
+                hasValidField = true
                 for(const formResponse of form.responses_list){
                     if(!formResponse.member_id){
                         throw 'member id cannot be null in column fetches form'
@@ -44,6 +67,9 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
                         [group_id]: response?.[field_id] ?? ''
                     }
                 }
+            }
+            if(!hasValidField){
+                continue
             }
             groups.push({
                 type: 'pure',
@@ -59,4 +85,26 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
         console.log(e)
         return NextResponse.json({ message: "ERROR" }, { status: 500 })
     }
+}
+
+function userHasFieldAccess({ global_position_access, global_role_access, position_access, role_access, position_id, role_id }: {
+    global_position_access: { id: string }[]
+    global_role_access: { id: string }[]
+    position_access: string[]
+    role_access: string[]
+    position_id: string | null
+    role_id: string | null
+}) {
+    const globalAccessIsEmpty = global_position_access.length === 0 && global_role_access.length === 0
+    const hasGlobalPositionAccess = global_position_access.length === 0 || global_position_access.find(({ id }) => id === position_id)
+    const hasGlobalRoleAccess = global_role_access.length === 0 || global_role_access.find(({ id }) => id === role_id)
+    const hasGlobalAccess = !globalAccessIsEmpty && hasGlobalPositionAccess && hasGlobalRoleAccess
+    if(hasGlobalAccess){
+        return true
+    }
+    const fieldAccessIsEmpty = position_access.length === 0 && role_access.length === 0
+    const hasFieldPositionAccess = position_access.length === 0 || position_access.includes(position_id ?? '')
+    const hasFieldRoleAccess = role_access.length === 0 || role_access.includes(role_id ?? '')
+    const hasFieldAccess = !fieldAccessIsEmpty && hasFieldPositionAccess && hasFieldRoleAccess
+    return hasFieldAccess
 }

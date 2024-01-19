@@ -1,19 +1,19 @@
 "use client"
 
-import type { AttendanceMembersTableInitializeState, UseAttendanceMembersTable } from "../../config-fetchers/config-types";
+import type { AttendanceMembersTableInitializeState, UseAppointmentMembersTable } from "../../config-fetchers/config-types";
 import Table from "@/server/classes/table";
 import useDefaultGroupResponses from "../../config-fetchers/hooks/use-default-group-responses";
 import { useEffect, useState } from "react";
 import { extractTextFromResponseData } from "@/server/inputfunction";
-import useMembersWithAttendance from "../../config-fetchers/hooks/use-members-with-attendance";
 import { sectionStyles } from "@/components/styles/sections";
 import { sendDataToAPI } from "@/components/tools/api";
 import { attendancesApiUrl } from "../../config-fetchers/config-urls";
 import toast from "react-hot-toast";
+import useAppointmentMembers from "../../config-fetchers/hooks/use-appointment-members";
 
-export default function useAttendanceMembersTable({ eventId, role, apptId, tableView, transformation }: UseAttendanceMembersTable){
+export default function useAttendanceMembersTable({ eventId, role, apptId, tableView, transformation }: UseAppointmentMembersTable){
     const { defaultGroups, defaultResponses, refetch: refetchGroupResponses } = useDefaultGroupResponses({ eventId, role, tableView })
-    const { members, refetch: refetchMembers } = useMembersWithAttendance({ eventId, role, apptId })
+    const { members, refetch: refetchMembers } = useAppointmentMembers({ eventId, role, apptId })
     const [shouldRefetch, refetch] = useState({})
     const [table, setTable] = useState<Table | 'loading' | 'error'>(initializeTable({
         groups: defaultGroups,
@@ -205,14 +205,16 @@ function initializeTable({
                         raw_data: member.role?.label ?? '',
                         data: member.role?.label ?? '',
                     },
-                    ...Object.fromEntries(Object.entries(defaultResponses[member.id] ?? {}).map(([field_id, value]) => {
-                        const group = groups.find((group) => group.id === field_id)
-                        const fieldType = group?.type === 'pure'? group.field_type : 'SHORTANS'
+                    ...Object.fromEntries(groups.map((group) => {
+                        const response = defaultResponses[member.id]?.[group.id]
+                        const fieldType = group.type === 'pure'? group.field_type : 'SHORTANS'
+                        const extractedResponse = extractTextFromResponseData(response ?? '', fieldType)
                         return [
-                            field_id, {
+                            [group.id], {
                                 type: 'pure_single',
-                                id: field_id,
-                                data: extractTextFromResponseData(value, fieldType),
+                                id: group.id,
+                                raw_data: extractedResponse,
+                                data: extractedResponse,
                             }
                         ]
                     }))

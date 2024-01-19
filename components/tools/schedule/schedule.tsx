@@ -80,6 +80,8 @@ export default function Schedule({
         }
         return (
             <ApptViewSchedule
+                eventId={eventId}
+                role={role}
                 appt={appt}
                 regist={regist}
             />

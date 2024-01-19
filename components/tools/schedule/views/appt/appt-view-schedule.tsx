@@ -4,8 +4,11 @@ import { sectionStyles } from "@/components/styles/sections"
 import { GustybobbyAppointment } from "@/server/typeconfig/record"
 import { usePathname, useRouter } from "next/navigation"
 import AppointmentBanner from "../../sections/appointment-banner"
+import InterviewMembersTable from "./interview-members-table"
 
-export default function ApptViewSchedule({ appt, regist }: {
+export default function ApptViewSchedule({ eventId, role, appt, regist }: {
+    eventId: string
+    role: 'user' | 'gustybobby'
     appt: GustybobbyAppointment | undefined
     regist: boolean
 }){
@@ -41,6 +44,13 @@ export default function ApptViewSchedule({ appt, regist }: {
                     regist={regist}
                 />
             </div>
+            {appt.type === 'INTERVIEW' &&
+            <InterviewMembersTable
+                eventId={eventId}
+                role={role}
+                apptId={appt.id}
+            />
+            }
         </div>
     )
 }

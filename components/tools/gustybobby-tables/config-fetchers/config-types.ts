@@ -65,7 +65,7 @@ export type FormConfigState = FormConfigProperty | 'loading' | 'error'
 export type ResponsesState = TableFormResponse[] | 'loading' | 'error'
 export type DefaultResponsesState = DefaultResponses | 'loading' | 'error'
 export type MembersState = Member[] | 'loading' | 'error'
-export type MembersWithAttendanceState = MemberWithAttendance[] | 'loading' | 'error'
+export type AppointmentMembersState = MemberWithAttendance[] | 'loading' | 'error'
 export type GroupsState = ColumnProperty[] | 'loading' | 'error'
 
 export interface StaticMembersTableInitializeState {
@@ -128,16 +128,19 @@ export interface SelectableMembersTableInitiializeState {
     transformation: Table['transformation']
 }
 
-export interface UseAttendanceMembersTable extends DefaultGroupTableConfig {
+export interface UseAppointmentMembersTable extends DefaultGroupTableConfig {
     apptId: string
     transformation: Table['transformation']
 }
 
-export interface AttendanceMembersTableInitializeState {
+export interface AppointmentMembersTableInitializeState {
     groups: GroupsState
     defaultResponses: DefaultResponsesState
-    members: MembersWithAttendanceState,
+    members: AppointmentMembersState,
     transformation: Table['transformation']
+}
+
+export interface AttendanceMembersTableInitializeState extends AppointmentMembersTableInitializeState{
     role: 'user' | 'gustybobby'
     apptId: string
     eventId: string,

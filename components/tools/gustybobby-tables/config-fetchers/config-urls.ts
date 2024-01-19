@@ -12,7 +12,7 @@ export const membersApiUrl = ({ eventId, role }: EventTableConfig) => (
     `/api/${role}/events/${eventId}/members`
 )
 
-export const membersWithAttendanceApiUrl = ({ eventId, role, apptId }: AppointmentConfig) => (
+export const appointmentMembersApiUrl = ({ eventId, role, apptId }: AppointmentConfig) => (
     `/api/${role}/events/${eventId}/appointments/${apptId}?party_members=1`
 )
 

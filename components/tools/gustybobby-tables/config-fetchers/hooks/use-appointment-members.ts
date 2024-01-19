@@ -1,21 +1,21 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import type { AppointmentConfig, MembersWithAttendanceState } from "../config-types";
-import { membersWithAttendanceApiUrl } from "../config-urls";
+import type { AppointmentConfig, AppointmentMembersState } from "../config-types";
+import { appointmentMembersApiUrl } from "../config-urls";
 
-export default function useMembersWithAttendance({ eventId, role, apptId }: AppointmentConfig){
-    const [members, setMembers] = useState<MembersWithAttendanceState>('loading')
+export default function useAppointmentMembers({ eventId, role, apptId }: AppointmentConfig){
+    const [members, setMembers] = useState<AppointmentMembersState>('loading')
     const [shouldRefetch, refetch] = useState({})
     useEffect(() => {
         setMembers('loading')
-        fetch(membersWithAttendanceApiUrl({ eventId, role, apptId }))
+        fetch(appointmentMembersApiUrl({ eventId, role, apptId }))
             .then(res => res.ok? res.json() : { message: 'ERROR' })
             .then(data => data.message === 'SUCCESS'? data.data : 'error')
             .then(data => {
                 setMembers(data.party_members.map((member: any) => ({
                     ...member,
-                    attendance: member.attendances[0] ?? null,
+                    attendance: member.attendances?.[0] ?? null,
                     attendances: undefined,
                 })))
             })
