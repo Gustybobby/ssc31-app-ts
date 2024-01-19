@@ -111,14 +111,16 @@ function initializeTable({
                         raw_data: member.role?.label ?? '',
                         data: member.role?.label ?? '',
                     },
-                    ...Object.fromEntries(Object.entries(defaultResponses[member.id] ?? {}).map(([field_id, value]) => {
-                        const group = groups.find((group) => group.id === field_id)
-                        const fieldType = group?.type === 'pure'? group.field_type : 'SHORTANS'
+                    ...Object.fromEntries(groups.map((group) => {
+                        const response = defaultResponses[member.id]?.[group.id]
+                        const fieldType = group.type === 'pure'? group.field_type : 'SHORTANS'
+                        const extractedResponse = extractTextFromResponseData(response ?? '', fieldType)
                         return [
-                            field_id, {
+                            [group.id], {
                                 type: 'pure_single',
-                                id: field_id,
-                                data: extractTextFromResponseData(value, fieldType),
+                                id: group.id,
+                                raw_data: extractedResponse,
+                                data: extractedResponse,
                             }
                         ]
                     }))

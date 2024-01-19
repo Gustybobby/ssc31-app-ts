@@ -53,6 +53,11 @@ export default function AppointmentBanner({ appt, hideDetails, regist, dispatchS
             <span className="text-left text-lg mb-1">
                 {getFormattedDateString(new Date(appt.start_at))}, {(new Date(appt.start_at)).toLocaleTimeString()}
             </span>
+            {hideDetails &&
+            <span className="text-left text-lg mb-1 font-bold">
+                {appt.location}
+            </span>
+            }
             {(!hideDetails && regist && appt.attendance_required) &&
             <button
                 className={sectionStyles.button({ color: 'violet', hover: true, border: true, extensions: 'mb-2' })}
