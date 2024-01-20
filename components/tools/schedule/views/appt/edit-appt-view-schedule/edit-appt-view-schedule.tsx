@@ -4,7 +4,7 @@ import { sectionStyles } from "@/components/styles/sections"
 import { type Dispatch, useReducer, useState, type SetStateAction } from "react"
 import apptConfigReducer, { type ApptConfigReducerAction } from "./hooks/appt-config-reducer"
 import type { EditableAppointment } from "@/server/typeconfig/record"
-import { usePathname, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { RxCross1 } from "react-icons/rx"
 import DateTimePicker from "./sections/date-time-picker"
 import type { Schedule } from "../../../hooks/schedule-state-reducer"
@@ -37,14 +37,13 @@ export default function EditApptViewSchedule({ eventId, appt, date, dateAppts, r
     const [apptConfig, dispatchApptConfig] = useReducer(apptConfigReducer, appt ?? newApptConfig(date))
     const [openDelete, setOpenDelete] = useState(false)
     const router = useRouter()
-    const pathname = usePathname()
 
     return(
         <div className="h-fit bg-gray-200 dark:bg-black/70 border border-black dark:border-white">
             <div className="p-1 flex justify-between md:grid md:grid-cols-3 items-center content-center border-b border-black dark:border-white">
                 <button
                     className={sectionStyles.button({ color: 'gray', border: true, hover: true })}
-                    onClick={() => router.push(pathname+`?view=month&year=${date.getFullYear()}&month=${date.getMonth()}`)}
+                    onClick={() => router.back()}
                 >
                     Back
                 </button>

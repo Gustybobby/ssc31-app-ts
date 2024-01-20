@@ -22,9 +22,6 @@ export default function ApptViewSchedule({ eventId, role, appt, regist }: {
         return <></>
     }
 
-    const year = (new Date(appt.start_at)).getFullYear()
-    const month = (new Date(appt.start_at)).getMonth()
-
     return(
         <div className="min-h-screen bg-gray-200 dark:bg-black/40 border border-black dark:border-white">
             <div className="p-1 flex justify-between md:grid md:grid-cols-3 border-b border-black dark:border-white">
