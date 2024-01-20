@@ -5,6 +5,7 @@ import { GustybobbyAppointment } from "@/server/typeconfig/record"
 import { usePathname, useRouter } from "next/navigation"
 import AppointmentBanner from "../../sections/appointment-banner"
 import InterviewMembersTable from "./interview-members-table"
+import { dateToDateKey } from "../../hooks/schedule-state-reducer"
 
 export default function ApptViewSchedule({ eventId, role, appt, regist }: {
     eventId: string
@@ -29,7 +30,7 @@ export default function ApptViewSchedule({ eventId, role, appt, regist }: {
             <div className="p-1 flex justify-between md:grid md:grid-cols-3 border-b border-black dark:border-white">
                 <button
                     className={sectionStyles.button({ color: 'gray', border: true, hover: true })}
-                    onClick={() => router.push(pathname+`?view=month&year=${year}&month=${month}`)}
+                    onClick={() => router.push(pathname+`?view=day&date_key=${dateToDateKey(new Date(appt.start_at))}`)}
                 >
                     Back
                 </button>
