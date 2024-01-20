@@ -12,7 +12,7 @@ export default function DescriptionField({ description, dispatchApptConfig }: De
             <h1 className={inputStyles.label('default', 'lg')}>Description</h1>
             <textarea
                 className={descriptionTextAreaStyle}
-                placeholder="Event Descriptions" 
+                placeholder="Appointment Descriptions" 
                 value={description}
                 onChange={(e) => dispatchApptConfig({
                     type: 'edit_string',
