@@ -21,7 +21,7 @@ export default function InterviewMembersTable({ eventId, role, apptId }: Appoint
         <div className="m-2">
             <MembersTable
                 table={table}
-                headerCellClassName=""
+                headerCellClassName="min-w-36"
             />
         </div>
     )
