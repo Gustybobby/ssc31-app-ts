@@ -4,15 +4,17 @@ import { sectionStyles } from "@/components/styles/sections"
 import Schedule from "@/components/tools/schedule/schedule"
 import useSchedule from "@/components/tools/schedule/hooks/use-schedule"
 import MemberDashboardWrapper from "../member-dashboard-wrapper"
+import type { MemberStatus } from "@prisma/client"
 
-export default function MemberSchedule({ event_id, event_title, can_appoint, can_regist }: {
+export default function MemberSchedule({ event_id, event_title, can_appoint, can_regist, status }: {
     event_id: string
     event_title: string
     can_appoint: boolean
     can_regist: boolean
+    status: MemberStatus
 }){
 
-    const scheduleHook = useSchedule(`/api/user/events/${event_id}/appointments`, can_appoint, can_regist, 'user', event_id)
+    const scheduleHook = useSchedule(`/api/user/events/${event_id}/appointments`, can_appoint, can_regist, 'user', event_id, status)
     
     return (
         <MemberDashboardWrapper eventId={event_id} eventTitle={event_title}>

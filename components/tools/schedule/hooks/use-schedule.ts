@@ -3,6 +3,7 @@
 import { type Dispatch, useEffect, useReducer, useState, type SetStateAction } from "react";
 import scheduleStateReducer, { type ScheduleStateReducerAction, type ScheduleState, type Schedule } from "./schedule-state-reducer";
 import { useSearchParams } from "next/navigation";
+import type { MemberStatus } from "@prisma/client";
 
 export interface UseSchedule {
     schedule: ScheduleState
@@ -18,9 +19,17 @@ export interface UseSchedule {
     regist: boolean
     role: 'gustybobby' | 'user'
     eventId: string
+    status: MemberStatus
 }
 
-export default function useSchedule(fetchUrl: string, editable: boolean, regist: boolean, role: 'gustybobby' | 'user', eventId: string){
+export default function useSchedule(
+    fetchUrl: string,
+    editable: boolean,
+    regist: boolean,
+    role: 'gustybobby' | 'user',
+    eventId: string,
+    status: MemberStatus,
+){
     const [schedule, dispatchSchedule] = useReducer(scheduleStateReducer, 'loading')
     const [shouldRefetch, refetch] = useState({})
     const searchParams = useSearchParams()
@@ -37,7 +46,7 @@ export default function useSchedule(fetchUrl: string, editable: boolean, regist:
             .then(data => data.message === 'SUCCESS'? data.data : 'error')
             .then(data => dispatchSchedule({ type: 'set_from_db', appt_array: data }))
     }, [fetchUrl, shouldRefetch])
-    return { schedule, dispatchSchedule, refetch, view, month, year, date_key, appt_id, edit, editable, regist, role, eventId }
+    return { schedule, dispatchSchedule, refetch, view, month, year, date_key, appt_id, edit, editable, regist, role, eventId, status }
 }
 
 export function safePositive(string: string | null): number | null{

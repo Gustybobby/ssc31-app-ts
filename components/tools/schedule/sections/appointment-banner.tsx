@@ -51,7 +51,10 @@ export default function AppointmentBanner({ appt, hideDetails, regist, dispatchS
                 }
             </div>
             <span className="text-left text-lg mb-1">
-                {getFormattedDateString(new Date(appt.start_at))}, {(new Date(appt.start_at)).toLocaleTimeString()}
+                {getFormattedDateString(new Date(appt.start_at))}<br/>
+                {hideDetails && <>
+                    {(new Date(appt.start_at)).toLocaleTimeString()} - {(new Date(appt.end_at)).toLocaleTimeString()}
+                </>}
             </span>
             {hideDetails &&
             <>

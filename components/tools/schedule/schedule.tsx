@@ -33,6 +33,7 @@ export default function Schedule({
     regist,
     role,
     eventId,
+    status,
 }: UseSchedule){
 
     const router = useRouter()
@@ -84,6 +85,7 @@ export default function Schedule({
                 role={role}
                 appt={appt}
                 regist={regist}
+                status={status}
             />
         )
     }

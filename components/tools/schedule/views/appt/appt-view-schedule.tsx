@@ -6,12 +6,14 @@ import { usePathname, useRouter } from "next/navigation"
 import AppointmentBanner from "../../sections/appointment-banner"
 import InterviewMembersTable from "./interview-members-table"
 import { dateToDateKey } from "../../hooks/schedule-state-reducer"
+import type { UseSchedule } from "../../hooks/use-schedule"
 
-export default function ApptViewSchedule({ eventId, role, appt, regist }: {
+export default function ApptViewSchedule({ eventId, role, appt, regist, status }: {
     eventId: string
     role: 'user' | 'gustybobby'
     appt: GustybobbyAppointment | undefined
-    regist: boolean
+    regist: boolean,
+    status: UseSchedule['status']
 }){
 
     const router = useRouter()
@@ -42,7 +44,7 @@ export default function ApptViewSchedule({ eventId, role, appt, regist }: {
                     regist={regist}
                 />
             </div>
-            {appt.type === 'INTERVIEW' &&
+            {appt.type === 'INTERVIEW' && status === 'ACTIVE' &&
             <InterviewMembersTable
                 eventId={eventId}
                 role={role}

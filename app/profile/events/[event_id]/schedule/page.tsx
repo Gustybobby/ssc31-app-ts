@@ -17,6 +17,7 @@ export default async function MemberSchedulePage({ params }: { params: { event_i
             }
         },
         select: {
+            status: true,
             role: {
                 select: {
                     can_appoint: true
@@ -41,6 +42,7 @@ export default async function MemberSchedulePage({ params }: { params: { event_i
                 event_title={member.event.title}
                 can_appoint={!!member.role?.can_appoint}
                 can_regist={!!member.position?.can_regist}
+                status={member.status}
             />
         </MainWrapper>
     )

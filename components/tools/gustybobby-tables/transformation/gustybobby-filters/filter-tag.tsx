@@ -71,6 +71,7 @@ export default function FilterTag({ columnOptions, filter, setFilters, tagIndex 
                         value: index === tagIndex? e.target.value : filt.value
                     })))
                 }}
+                autoComplete="off"
             />
             <button
                 className={sectionStyles.button({ color: 'red', border: true, hover: true, padding: 'p-1', extensions: 'mt-7' })}
