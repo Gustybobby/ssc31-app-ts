@@ -54,9 +54,10 @@ export default function AppointmentBanner({ appt, hideDetails, regist, dispatchS
                 {getFormattedDateString(new Date(appt.start_at))}, {(new Date(appt.start_at)).toLocaleTimeString()}
             </span>
             {hideDetails &&
-            <span className="text-left text-lg mb-1 font-bold">
-                {appt.location}
-            </span>
+            <>
+                <span className="flex items-center font-bold text-lg"><MdLocationOn/>&nbsp;{appt.location}</span>
+                <span className="flex items-center mb-1 font-bold text-lg"><HiUserGroup/>&nbsp;{appt._count.party_members} Participants</span>
+            </>
             }
             {(!hideDetails && regist && appt.attendance_required) &&
             <button
