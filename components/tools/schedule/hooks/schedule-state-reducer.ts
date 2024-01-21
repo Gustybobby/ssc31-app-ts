@@ -74,6 +74,7 @@ export function getAppointmentArrayAsObject(appt_array: GustybobbyAppointment[])
     }
     for(const [dateKey, { appts }] of Object.entries(apptsObject)){
         const order = Object.keys(appts)
+        order.sort((id1, id2) => appts[id1].location < appts[id2].location? -1 : 1)
         order.sort((id1, id2) => (new Date(appts[id1].start_at)).getTime() - (new Date(appts[id2].start_at)).getTime())
         apptsObject[dateKey].order = order
     }
