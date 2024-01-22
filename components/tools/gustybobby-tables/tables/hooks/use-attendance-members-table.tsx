@@ -5,12 +5,10 @@ import Table from "@/server/classes/table";
 import useDefaultGroupResponses from "../../config-fetchers/hooks/use-default-group-responses";
 import { useEffect, useState } from "react";
 import { extractTextFromResponseData } from "@/server/inputfunction";
-import { sectionStyles } from "@/components/styles/sections";
-import { sendDataToAPI } from "@/components/tools/api";
-import { attendancesApiUrl } from "../../config-fetchers/config-urls";
-import toast from "react-hot-toast";
 import useAppointmentMembers from "../../config-fetchers/hooks/use-appointment-members";
 import { memberColumns } from "../../config-fetchers/columns";
+import CheckInButton from "./rendered-components/check-in-button";
+import CheckOutButton from "./rendered-components/check-out-button";
 
 export default function useAttendanceMembersTable({ eventId, role, apptId, tableView, transformation }: UseAppointmentMembersTable){
     const { defaultGroups, defaultResponses, refetch: refetchGroupResponses } = useDefaultGroupResponses({ eventId, role, tableView })
@@ -106,39 +104,15 @@ function initializeTable({
                         id: 'check_in_button',
                         raw_data: '',
                         data: (
-                            <div className="flex justify-center">
-                                <button
-                                    className={sectionStyles.button({
-                                        color: checkInExisted? 'red' : 'green',
-                                        hover: true,
-                                        border: true
-                                    })}
-                                    onClick={async() => {
-                                        const checkInToast = toast.loading(checkInExisted? 'Canceling...' : 'Checking in...')
-                                        const res = await sendDataToAPI({
-                                            apiUrl: attendancesApiUrl({ eventId, role, apptId, memberId: member.id }),
-                                            method: attendanceExisted? 'PATCH' : 'POST',
-                                            body: JSON.stringify({
-                                                data: {
-                                                    member_id: member.id,
-                                                    appointment_id: apptId,
-                                                    check_in: checkInExisted? null : new Date(),
-                                                }
-                                            })
-                                        })
-                                        switch(res?.message){
-                                            case 'SUCCESS':
-                                                toast.success(checkInExisted? 'Canceled' : 'Checked in', { id: checkInToast })
-                                                break
-                                            default:
-                                                toast.error('Error', { id: checkInToast })
-                                        }
-                                        refetch({})
-                                    }}
-                                >
-                                    {checkInExisted? 'Cancel' : 'C-in'}
-                                </button>
-                            </div>
+                            <CheckInButton
+                                attendanceExisted={attendanceExisted}
+                                checkInExisted={checkInExisted}
+                                eventId={eventId}
+                                memberId={member.id}
+                                apptId={apptId}
+                                role={role}
+                                refetch={refetch}
+                            />
                         )
                     },
                     check_out_button: {
@@ -146,39 +120,15 @@ function initializeTable({
                         id: 'check_out_button',
                         raw_data: '',
                         data: (
-                            <div className="flex justify-center">
-                                <button
-                                    className={sectionStyles.button({
-                                        color: checkOutExisted? 'red' : 'blue',
-                                        hover: true,
-                                        border: true
-                                    })}
-                                    onClick={async() => {
-                                        const checkOutToast = toast.loading(checkOutExisted?  'Canceling...' : 'Checking out...')
-                                        const res = await sendDataToAPI({
-                                            apiUrl: attendancesApiUrl({ eventId, role, apptId, memberId: member.id }),
-                                            method: attendanceExisted? 'PATCH' : 'POST',
-                                            body: JSON.stringify({
-                                                data: {
-                                                    member_id: member.id,
-                                                    appointment_id: apptId,
-                                                    check_out: checkOutExisted? null : new Date(),
-                                                }
-                                            })
-                                        })
-                                        switch(res?.message){
-                                            case 'SUCCESS':
-                                                toast.success(checkOutExisted? 'Canceled' : 'Checked out', { id: checkOutToast })
-                                                break
-                                            default:
-                                                toast.error('Error', { id: checkOutToast })
-                                        }
-                                        refetch({})
-                                    }}
-                                >
-                                    {checkOutExisted? 'Cancel' : 'C-out'}
-                                </button>
-                            </div>
+                            <CheckOutButton
+                                attendanceExisted={attendanceExisted}
+                                checkOutExisted={checkOutExisted}
+                                eventId={eventId}
+                                memberId={member.id}
+                                apptId={apptId}
+                                role={role}
+                                refetch={refetch}
+                            />
                         )
                     },
                     check_in: {
