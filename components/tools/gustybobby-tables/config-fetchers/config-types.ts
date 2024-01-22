@@ -27,7 +27,6 @@ export interface DefaultGroupTableConfig extends EventTableConfig {
 
 export interface TableFormResponse {
     id: string
-    form_id: string
     member_id: string
     response: {
         [key: string]: string

@@ -196,9 +196,8 @@ export default class Table {
         return { id, sub_columns, type: 'group', label: title }
     }
     
-    static formResponseAdapter({ form_id, id, member_id, response,
+    static formResponseAdapter({ id, member_id, response,
     }: {
-        form_id: string,
         id: string,
         member_id: string,
         response: { [key: string]: string }
@@ -208,12 +207,12 @@ export default class Table {
         reference_key?: 'id' | 'member_id'
     }
     ): RowProperty{
-        if(!form_config.field_order || !form_config.form_fields){
-            throw 'field order or form_fields is undefined'
+        if(!form_config.field_order || !form_config.form_fields || !form_config.id){
+            throw 'form id, field order or form_fields is undefined'
         }
         const rowValueProperty: RowValueProperty = {
             type: 'group',
-            id: form_id,
+            id: form_config.id,
             sub_data: Object.fromEntries(form_config.field_order
                 .filter((field_id) => form_config.form_fields?.[field_id].field_type !== 'INFO')
                 .map((field_id) => {
@@ -228,7 +227,7 @@ export default class Table {
             }))
         }
         const rowKey = options?.reference_key === 'member_id'? member_id : id
-        return { key: rowKey, value: { [form_id]: rowValueProperty } }
+        return { key: rowKey, value: { [form_config.id]: rowValueProperty } }
     }
 
     getColumnsTableRows(){

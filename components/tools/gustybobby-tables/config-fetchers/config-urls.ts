@@ -17,7 +17,7 @@ export const appointmentMembersApiUrl = ({ eventId, role, apptId }: AppointmentC
 )
 
 export const formResponseApiUrl = ({ eventId, formId, role }: FormTableConfig) => (
-    `/api/${role}/events/${eventId}/forms/${formId}/responses?id=1&form_id=1&member_id=1&response=1`
+    `/api/${role}/events/${eventId}/forms/${formId}/responses?id=1&member_id=1&response=1`
 )
 
 export const eventColumnFetchesApiUrl = ({ eventId, role, tableView }: DefaultGroupTableConfig) => (
