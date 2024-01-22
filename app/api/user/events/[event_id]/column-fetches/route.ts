@@ -6,6 +6,7 @@ import type { FormResponse, PrismaFieldConfig } from "@/server/typeconfig/form";
 import type { ColumnProperty } from "@/server/classes/table";
 import { getServerAuthSession } from "@/app/api/auth/[...nextauth]/_utils";
 import { filteredColumnFetches, getAllRequiredForms } from "@/server/modules/column-fetches-modules";
+import { compoundAccessEvaluation } from "@/server/utils";
 
 export async function GET(req: NextRequest, { params }: { params: { event_id: string }}){
     try{
@@ -95,16 +96,14 @@ function userHasFieldAccess({ global_position_access, global_role_access, positi
     position_id: string | null
     role_id: string | null
 }) {
-    const globalAccessIsEmpty = global_position_access.length === 0 && global_role_access.length === 0
-    const hasGlobalPositionAccess = global_position_access.length === 0 || global_position_access.find(({ id }) => id === position_id)
-    const hasGlobalRoleAccess = global_role_access.length === 0 || global_role_access.find(({ id }) => id === role_id)
-    const hasGlobalAccess = !globalAccessIsEmpty && hasGlobalPositionAccess && hasGlobalRoleAccess
+    const hasGlobalAccess = compoundAccessEvaluation({
+        role_access: global_role_access.map(({ id }) => id),
+        position_access: global_position_access.map(({ id }) => id),
+        role_id,
+        position_id,
+    })
     if(hasGlobalAccess){
         return true
     }
-    const fieldAccessIsEmpty = position_access.length === 0 && role_access.length === 0
-    const hasFieldPositionAccess = position_access.length === 0 || position_access.includes(position_id ?? '')
-    const hasFieldRoleAccess = role_access.length === 0 || role_access.includes(role_id ?? '')
-    const hasFieldAccess = !fieldAccessIsEmpty && hasFieldPositionAccess && hasFieldRoleAccess
-    return hasFieldAccess
+    return compoundAccessEvaluation({ role_access, position_access, role_id, position_id })
 }

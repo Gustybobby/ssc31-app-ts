@@ -14,3 +14,15 @@ export function searchParamsToSelect(searchParams: URLSearchParams){
     }
     return select
 }
+
+export function compoundAccessEvaluation({ role_access, position_access, role_id, position_id }: {
+    role_access: string[]
+    position_access: string[]
+    role_id: string | null
+    position_id: string | null
+}): boolean{
+    const accessIsEmpty = position_access.length === 0 && role_access.length === 0
+    const hasPositionAccess = position_access.length === 0 || !!(position_id && position_access.includes(position_id))
+    const hasRoleAccess = role_access.length === 0 || !!(role_id && role_access.includes(role_id))
+    return !accessIsEmpty && hasPositionAccess && hasRoleAccess
+}

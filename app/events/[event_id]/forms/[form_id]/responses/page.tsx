@@ -4,6 +4,7 @@ import prisma from "@/prisma-client";
 import type { PrismaFieldConfig } from "@/server/typeconfig/form";
 import MainWrapper from "@/components/globalui/main-wrapper";
 import FormResponses from "@/components/events/event/forms/form/responses/form-responses";
+import { compoundAccessEvaluation } from "@/server/utils";
 
 export default async function FormResponsesPage({ params }: { params: { event_id: string, form_id: string }}){
     const session = await getServerAuthSession()
@@ -88,10 +89,13 @@ export default async function FormResponsesPage({ params }: { params: { event_id
             </MainWrapper>
         )
     }
-    const globalAccessIsEmpty = form.global_position_access.length === 0 && form.global_role_access.length === 0
-    const hasGlobalPositionAccess = form.global_position_access.length === 0 || !!form.global_position_access.find(({ id }) => id === member.position_id)
-    const hasGlobalRoleAccess = form.global_role_access.length === 0 || !!form.global_role_access.find(({ id }) => id === member.role_id)
-    if(!globalAccessIsEmpty && hasGlobalPositionAccess && hasGlobalRoleAccess){
+    const hasGlobalAccess = compoundAccessEvaluation({
+        role_access: form.global_role_access.map(({ id }) => id),
+        position_access: form.global_position_access.map(({ id }) => id),
+        role_id: member.role_id,
+        position_id: member.position_id,
+    })
+    if(hasGlobalAccess){
         return (
             <MainWrapper>
                 <FormResponses
@@ -105,10 +109,12 @@ export default async function FormResponsesPage({ params }: { params: { event_id
     }
     const filteredFormFields = Object.fromEntries(Object.entries(form.form_fields ?? {}).filter(([_, field]) => {
         const fieldConfig = field as PrismaFieldConfig
-        const accessIsEmpty = fieldConfig.position_access.length === 0 && fieldConfig.role_access.length === 0
-        const hasPositionAccess = fieldConfig.position_access.length === 0 || fieldConfig.position_access.includes(member.position_id ?? '')
-        const hasRoleAccess = fieldConfig.role_access.length === 0 || fieldConfig.role_access.includes(member.role_id ?? '')
-        return !accessIsEmpty && hasPositionAccess && hasRoleAccess
+        return compoundAccessEvaluation({
+            role_access: fieldConfig.role_access,
+            position_access: fieldConfig.position_access,
+            role_id: member.role_id,
+            position_id: member.position_id,
+        })
     }))
     const filteredFieldOrder = form.field_order.filter((field_id) => !!filteredFormFields[field_id])
     if(filteredFieldOrder.length === 0){
