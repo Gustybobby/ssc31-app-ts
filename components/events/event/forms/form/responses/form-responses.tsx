@@ -31,16 +31,13 @@ export default function FormResponses({ event_id, role, formConfig, responses }:
     }))
 
     useEffect(() => {
-        setTable('loading')
-        setTimeout(() => {
-            setTable(initializeTable({
-                formConfig,
-                responses,
-                groups: defaultGroups,
-                defaultResponses,
-                transformation
-            }))
-        },200)
+        setTable(initializeTable({
+            formConfig,
+            responses,
+            groups: defaultGroups,
+            defaultResponses,
+            transformation
+        }))
     }, [formConfig, responses, defaultGroups, defaultResponses, transformation])
 
     if(table === 'error'){
@@ -78,7 +75,9 @@ export default function FormResponses({ event_id, role, formConfig, responses }:
                     :
                     <MembersTable
                         table={table}
-                        headerCellClassName="min-w-36"
+                        headerCellClassName="min-w-36 flex justify-between"
+                        transformation={transformation}
+                        setTransformation={setTransformation}
                     />
                     }
                 </div>

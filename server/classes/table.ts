@@ -259,13 +259,7 @@ export default class Table {
     transform(){
         for(const [column_id, filter] of Object.entries(this.transformation?.filters ?? {})){
             this.rows = this.rows.filter(row => {
-                let data = null
-                for(const [id, value] of Object.entries(row.value)){
-                    data = Table.findRowValueRawDataById(value, column_id, id === column_id)
-                    if(data || data === ''){
-                        break
-                    }
-                }
+                const data = Table.findRowRawDataById(row, column_id)
                 if(!data && data !== ''){
                     return false
                 }
@@ -279,6 +273,36 @@ export default class Table {
                 return Table.filterOperation(data.toString(), filter)
             })
         }
+        for(const sort of this.transformation?.sorts ?? []){
+            const sortFactor = sort.direction === 'asc'? 1 : -1
+            this.rows.sort((r1, r2) => {
+                const rowData1 = Table.findRowRawDataById(r1, sort.column_id)
+                const rowData2 = Table.findRowRawDataById(r2, sort.column_id)
+                if(Array.isArray(rowData1) || Array.isArray(rowData2)){
+                    throw 'cannot sort column with grouped rows'
+                }
+                if(rowData1 === null){
+                    return -sortFactor
+                }
+                if(rowData2 === null){
+                    return sortFactor
+                }
+                if(!isNaN(Number(rowData1)) && !isNaN(Number(rowData2))){
+                    return sortFactor*(Number(rowData1) - Number(rowData2))
+                }
+                return rowData1 < rowData2? -sortFactor : sortFactor
+            })
+        }
+    }
+
+    private static findRowRawDataById(row: Row, column_id: string){
+        for(const [id, value] of Object.entries(row.value)){
+            const data = Table.findRowValueRawDataById(value, column_id, id === column_id)
+            if(data || data === ''){
+                return data
+            }
+        }
+        return null
     }
 
     private static findRowValueRawDataById(rowValue: RowValue, column_id: string, found: boolean): (RowData | RowData[] | null){

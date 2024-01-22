@@ -17,7 +17,7 @@ interface PartySelectorTableProps extends dispatchApptConfig {
 
 export default function PartySelectorTable({ eventId, role, partyMembers, dispatchApptConfig }: PartySelectorTableProps){
 
-    const [transformation, setTransformation] = useState<Table['transformation']>()
+    const [transformation, setTransformation] = useState<Table['transformation']>({})
     const { table, memberSelects, defaultGroups } = useSelectableMembersTable({
         eventId,
         role,
@@ -49,7 +49,12 @@ export default function PartySelectorTable({ eventId, role, partyMembers, dispat
                 setTransformation={setTransformation}
             />
             <div className="h-[90vh] overflow-auto">
-                <MembersTable table={table} headerCellClassName=""/>
+                <MembersTable
+                    table={table}
+                    headerCellClassName="min-w-28 flex justify-between"
+                    transformation={transformation}
+                    setTransformation={setTransformation}
+                />
             </div>
        </div>
     )

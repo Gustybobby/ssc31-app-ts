@@ -1,7 +1,7 @@
 import { sectionStyles } from "@/components/styles/sections";
 import { sendDataToAPI } from "@/components/tools/api";
 import type { EditableAppointment } from "@/server/typeconfig/record";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import type { Dispatch, SetStateAction } from "react";
 import toast from "react-hot-toast";
 
@@ -13,7 +13,6 @@ export default function CreateButton({ apptConfig, refetch, eventId, role }: {
 }){
 
     const router = useRouter()
-    const pathname = usePathname()
 
     return(
         <div className="flex justify-end mb-2">
@@ -38,7 +37,7 @@ export default function CreateButton({ apptConfig, refetch, eventId, role }: {
                         case 'SUCCESS':
                             toast.success('Created', { id: createToast })
                             refetch({})
-                            router.replace(pathname)
+                            router.back()
                             break
                         default:
                             toast.error('Error', { id: createToast })

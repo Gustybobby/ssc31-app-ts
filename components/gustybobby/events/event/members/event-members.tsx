@@ -89,7 +89,12 @@ export default function EventMembers({ event_id, event_title, forms }: {
                     <GustybobbyTableLoading/>
                     :
                     <div className="max-h-[80vh] overflow-auto border border-black dark:border-white">
-                        <MembersTable table={table} headerCellClassName="max-h-12 min-w-48"/>
+                        <MembersTable
+                            table={table}
+                            headerCellClassName="max-h-12 min-w-48 flex justify-between"
+                            transformation={transformation}
+                            setTransformation={setTransformation}
+                        />
                     </div>
                     }
                 </div>

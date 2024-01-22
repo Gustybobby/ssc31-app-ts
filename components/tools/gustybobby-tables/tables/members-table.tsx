@@ -1,9 +1,23 @@
 "use client"
 
-import Table from "@/server/classes/table"
+import type Table from "@/server/classes/table"
 import Link from "next/link"
+import type { Dispatch, SetStateAction } from "react"
+import { FaSort, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa"
 
-export default function MembersTable({ table, headerCellClassName }: { table: Table, headerCellClassName: string }){
+type SetTransformation = Dispatch<SetStateAction<Table['transformation']>>
+
+export default function MembersTable({
+    table,
+    headerCellClassName,
+    transformation,
+    setTransformation,
+}: {
+    table: Table,
+    headerCellClassName: string
+    transformation?: Table['transformation']
+    setTransformation?: SetTransformation
+}){
     return (
         <div className="w-full overflow-auto">
             <table className="table-fixed min-w-full">
@@ -18,7 +32,14 @@ export default function MembersTable({ table, headerCellClassName }: { table: Ta
                                 className={styles.headerCell}
                             >
                                 <div className={column.id === 'index'? 'w-16' : headerCellClassName}>
-                                    {column.label}
+                                    <span>{column.label}</span>
+                                    {column.type === 'pure' && transformation && setTransformation &&
+                                    <SortButton
+                                        transformation={transformation}
+                                        setTransformation={setTransformation}
+                                        column_id={column.id}
+                                    />
+                                    }
                                 </div>
                             </th>
                         ))}
@@ -50,6 +71,63 @@ export default function MembersTable({ table, headerCellClassName }: { table: Ta
                 </tbody>
             </table>
         </div>
+    )
+}
+
+function SortButton({ transformation, setTransformation, column_id }: {
+    transformation: Table['transformation']
+    setTransformation: SetTransformation
+    column_id: string
+}){
+    const sort = transformation?.sorts?.find((sort) => sort.column_id === column_id)
+    if(!sort){
+        return (
+            <button
+                onClick={() => {
+                    setTransformation(transformation => ({
+                        ...transformation,
+                        sorts: [
+                            ...(transformation?.sorts ?? []),
+                            { column_id, direction: 'asc' },
+                        ]
+                    }))
+                }}
+            >
+                <FaSort/>
+            </button>
+        )
+    }
+    if(sort.direction === 'asc'){
+        return (
+            <button 
+                onClick={() => {
+                    setTransformation(transformation => ({
+                        ...transformation,
+                        sorts: [
+                            ...(transformation?.sorts ?? []).filter((sort) => sort.column_id !== column_id),
+                            { column_id, direction: 'desc' },
+                        ]
+                    }))
+                }}
+            >
+                <FaSortAmountUp/>
+            </button>
+        )
+    }
+    return (
+        <button 
+            onClick={() => {
+                setTransformation(transformation => ({
+                    ...transformation,
+                    sorts: [
+                        ...(transformation?.sorts ?? []).filter((sort) => sort.column_id !== column_id),
+                        { column_id, direction: 'asc' },
+                    ]
+                }))
+            }}
+        >
+            <FaSortAmountDown/>
+        </button>
     )
 }
 
