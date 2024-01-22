@@ -88,6 +88,7 @@ function initializeTable({ formConfig, eventConfig, responses, members, editRef,
         ],
         rows: responses.map((response, index) => {
             const member = members.find((member) => member.id === response.member_id)
+            console.log(response.member_id)
             return {
                 key: response.member_id,
                 value: {
