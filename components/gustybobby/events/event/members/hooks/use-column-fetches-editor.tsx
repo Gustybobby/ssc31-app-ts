@@ -68,21 +68,19 @@ export function getColumnFetchesGroupOptions(columnFetches: ColumnFetches, group
 
 const tableViewOptions: GustybobbyOption[] = [
     {
+        id: 'resp',
+        label: 'Responses',
+    },
+    {
         id: 'appt',
         label: 'Appointment',
-        index: 0,
-        active: false
     },
     {
         id: 'attd',
         label: 'Attendance',
-        index: 1,
-        active: false
     },
     {
         id: 'intv',
         label: 'Interview',
-        index: 2,
-        active: false
     },
-]
+].map((option, index) => ({ ...option, index, active: false }))

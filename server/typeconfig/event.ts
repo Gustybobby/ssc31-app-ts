@@ -36,7 +36,7 @@ interface CreateEventError {
 
 export type CreateEventResponse = CreateEventSuccess | CreateEventError
 
-export type TableView = 'appt' | 'attd' | 'intv'
+export type TableView = 'resp' | 'appt' | 'attd' | 'intv'
 
 export type ColumnFetches = {
     [group_id: string]: {
