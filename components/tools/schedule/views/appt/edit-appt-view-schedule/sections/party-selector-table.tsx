@@ -43,7 +43,7 @@ export default function PartySelectorTable({ eventId, role, partyMembers, dispat
                     defaultGroups.map((group, index) => ({
                         id: group.id,
                         label: group.label.toString(),
-                        index: index + 3,
+                        index: index + 2,
                         active: false
                 })))}
                 setTransformation={setTransformation}
@@ -59,13 +59,13 @@ const memberColumns = [
     {
         id: 'role',
         label: 'Role',
-        index: 1,
+        index: 0,
         active: false,
     },
     {
         id: 'position',
         label: 'Position',
-        index: 2,
+        index: 1,
         active: false,
     },
 ]
