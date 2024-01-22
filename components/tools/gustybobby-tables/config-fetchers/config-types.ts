@@ -33,9 +33,6 @@ export interface TableFormResponse {
     response: {
         [key: string]: string
     }
-    snapshot: {
-        [key: string]: string
-    }
 }
 
 export interface Member {
@@ -49,6 +46,10 @@ export interface Member {
         id: string
         label: string
     } | null
+}
+
+export interface MembersTableFormResponse extends TableFormResponse{
+    member: Member | null
 }
 
 export interface MemberWithAttendance extends Member {
