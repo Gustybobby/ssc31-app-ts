@@ -81,7 +81,7 @@ function AppointmentBanners({ date, dateAppts }: {
     const appts = dateAppts.appts
     return(
         <div className="flex flex-col space-y-1 overflow-y-auto">
-        {apptKeyOrder.slice(0,2).map((key,index) => (
+        {apptKeyOrder.slice(0,2).map((key) => (
             <button 
                 key={key}
                 className={scheduleStyles.banner(getColorByIdHash(appts[key].id), apptKeyOrder.length === 1, false)}
