@@ -8,6 +8,7 @@ import useResponses from "../../config-fetchers/hooks/use-responses";
 import useMembers from "../../config-fetchers/hooks/use-members";
 import { type MutableRefObject, useState, useEffect, type Dispatch, type SetStateAction } from "react";
 import useEventConfig from "../../config-fetchers/hooks/use-event-config";
+import { memberColumns } from "../../config-fetchers/columns";
 
 export interface UseEditableMembersTableProps extends FormTableConfig{
     editRef: MutableRefObject<{ [key: string]: { [key: string]: string }}>
@@ -82,20 +83,7 @@ function initializeTable({ formConfig, eventConfig, responses, members, editRef,
                 data_type: 'STRING',
                 field_type: 'OPTIONS',
             },
-            {
-                type: 'pure',
-                id: 'role',
-                label: 'Role',
-                data_type: 'ROLE',
-                field_type: 'OPTIONS',
-            },
-            {
-                type: 'pure',
-                id: 'position',
-                label: 'Position',
-                data_type: 'POSITION',
-                field_type: 'OPTIONS',
-            },
+            ...memberColumns,
             Table.formColumnAdapter(formConfig)
         ],
         rows: responses.map((response, index) => {

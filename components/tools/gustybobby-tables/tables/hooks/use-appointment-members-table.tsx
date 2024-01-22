@@ -1,11 +1,12 @@
 "use client"
 
 import type { AppointmentMembersTableInitializeState, UseAppointmentMembersTable } from "../../config-fetchers/config-types";
-import Table, { type ColumnProperty } from "@/server/classes/table";
+import Table from "@/server/classes/table";
 import useDefaultGroupResponses from "../../config-fetchers/hooks/use-default-group-responses";
 import { useEffect, useState } from "react";
 import useAppointmentMembers from "../../config-fetchers/hooks/use-appointment-members";
 import { extractTextFromResponseData } from "@/server/inputfunction";
+import { memberColumns } from "../../config-fetchers/columns";
 
 export default function useAppointmentMembersTable({ eventId, role, tableView, apptId, transformation }: UseAppointmentMembersTable){
     const { members, refetch: refetchMembers } = useAppointmentMembers({ eventId, role, apptId })
@@ -79,20 +80,3 @@ function initializeTable({ groups, defaultResponses, members, transformation }: 
         transformation
     })
 }
-
-const memberColumns: ColumnProperty[] = [
-    {
-        type: 'pure',
-        id: 'role',
-        label: 'Role',
-        data_type: 'ROLE',
-        field_type: 'OPTIONS',
-    },
-    {
-        type: 'pure',
-        id: 'position',
-        label: 'Position',
-        data_type: 'POSITION',
-        field_type: 'OPTIONS',
-    },
-]

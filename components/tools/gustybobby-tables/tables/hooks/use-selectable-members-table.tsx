@@ -6,6 +6,7 @@ import useMembers from "../../config-fetchers/hooks/use-members";
 import useDefaultGroupResponses from "../../config-fetchers/hooks/use-default-group-responses";
 import { useEffect, useState } from "react";
 import { extractTextFromResponseData } from "@/server/inputfunction";
+import { memberColumns } from "../../config-fetchers/columns";
 
 export default function useSelectableMembersTable({ eventId, role, tableView, selection, transformation }: UseSelectableMembersTable){
     const { members, refetch: refetchMembers } = useMembers({ eventId, role })
@@ -60,20 +61,7 @@ function initializeTable({
                 data_type: 'STRING',
                 field_type: 'SHORTANS',
             },
-            {
-                type: 'pure',
-                id: 'role',
-                label: 'Role',
-                data_type: 'ROLE',
-                field_type: 'OPTIONS',
-            },
-            {
-                type: 'pure',
-                id: 'position',
-                label: 'Position',
-                data_type: 'POSITION',
-                field_type: 'OPTIONS',
-            },
+            ...memberColumns,
             ...groups,
         ],
         rows: members.map((member) => {

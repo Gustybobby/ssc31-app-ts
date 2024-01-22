@@ -10,6 +10,7 @@ import { sendDataToAPI } from "@/components/tools/api";
 import { attendancesApiUrl } from "../../config-fetchers/config-urls";
 import toast from "react-hot-toast";
 import useAppointmentMembers from "../../config-fetchers/hooks/use-appointment-members";
+import { memberColumns } from "../../config-fetchers/columns";
 
 export default function useAttendanceMembersTable({ eventId, role, apptId, tableView, transformation }: UseAppointmentMembersTable){
     const { defaultGroups, defaultResponses, refetch: refetchGroupResponses } = useDefaultGroupResponses({ eventId, role, tableView })
@@ -90,20 +91,7 @@ function initializeTable({
                 data_type: 'STRING',
                 field_type: 'SHORTANS'
             },
-            {
-                type: 'pure',
-                id: 'role',
-                label: 'Role',
-                data_type: 'ROLE',
-                field_type: 'OPTIONS',
-            },
-            {
-                type: 'pure',
-                id: 'position',
-                label: 'Position',
-                data_type: 'POSITION',
-                field_type: 'OPTIONS',
-            },
+            ...memberColumns,
             ...groups,
         ],
         rows: members.map((member) => {

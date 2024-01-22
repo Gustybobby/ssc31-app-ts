@@ -29,13 +29,6 @@ function initializeTable({ formConfig, responses, members }: StaticMembersTableI
         columns: [
             {
                 type: 'pure',
-                id: 'status',
-                label: 'Status',
-                data_type: 'STRING',
-                field_type: 'OPTIONS',
-            },
-            {
-                type: 'pure',
                 id: 'role',
                 label: 'Role',
                 data_type: 'ROLE',
@@ -56,12 +49,6 @@ function initializeTable({ formConfig, responses, members }: StaticMembersTableI
                 key: response.member_id,
                 value: {
                     ...Table.formResponseAdapter(response, formConfig, { reference_key: 'member_id' }).value,
-                    status: {
-                        type: 'pure_single',
-                        id: 'status',
-                        raw_data: member?.status ?? '',
-                        data: member?.status ?? '',
-                    },
                     position: {
                         type: 'pure_single',
                         id: 'position',
