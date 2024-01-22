@@ -53,7 +53,6 @@ export default async function FormResponsesPage({ params }: { params: { event_id
                     id: true,
                     form_id: true,
                     member_id: true,
-                    user_id: true,
                     response: true,
                     member: {
                         select: {

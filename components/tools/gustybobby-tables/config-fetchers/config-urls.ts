@@ -9,7 +9,7 @@ export const formApiUrl = ({ eventId, formId, role }: FormTableConfig) => (
 )
 
 export const membersApiUrl = ({ eventId, role }: EventTableConfig) => (
-    `/api/${role}/events/${eventId}/members`
+    `/api/${role}/events/${eventId}/members?id=1&status=1&position=1&role=1`
 )
 
 export const appointmentMembersApiUrl = ({ eventId, role, apptId }: AppointmentConfig) => (
@@ -17,7 +17,7 @@ export const appointmentMembersApiUrl = ({ eventId, role, apptId }: AppointmentC
 )
 
 export const formResponseApiUrl = ({ eventId, formId, role }: FormTableConfig) => (
-    `/api/${role}/events/${eventId}/forms/${formId}/responses`
+    `/api/${role}/events/${eventId}/forms/${formId}/responses?id=1&form_id=1&member_id=1&response=1`
 )
 
 export const eventColumnFetchesApiUrl = ({ eventId, role, tableView }: DefaultGroupTableConfig) => (

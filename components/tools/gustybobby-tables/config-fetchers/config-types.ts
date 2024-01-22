@@ -29,7 +29,6 @@ export interface TableFormResponse {
     id: string
     form_id: string
     member_id: string
-    user_id: string
     response: {
         [key: string]: string
     }

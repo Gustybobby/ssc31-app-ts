@@ -1,16 +1,16 @@
 import { NextResponse, type NextRequest } from "next/server";
 import prisma from "@/prisma-client";
+import { searchParamsToSelect } from "@/server/utils";
 
 export async function GET(req: NextRequest, { params }: { params: { event_id: string }}){
     try{
+        const searchParams = req.nextUrl.searchParams
+        const select = searchParamsToSelect(searchParams)
         const data = await prisma.eventMember.findMany({
             where: {
                 event_id: params.event_id
             },
-            include: {
-                position: true,
-                role: true,
-            }
+            select
         })
         return NextResponse.json({ message: "SUCCESS", data }, { status: 200 })
     } catch(e){
