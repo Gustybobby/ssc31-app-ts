@@ -11,6 +11,7 @@ import type { DefaultResponsesState, GroupsState, MembersTableFormResponse } fro
 import { extractTextFromResponseData } from "@/server/inputfunction"
 import MembersTable from "@/components/tools/gustybobby-tables/tables/members-table"
 import GustybobbyTableLoading from "@/components/tools/gustybobby-tables/tables/gustybobby-table-loading"
+import GustybobbyFilters from "@/components/tools/gustybobby-tables/transformation/gustybobby-filters/gustybobby-filters"
 
 export default function FormResponses({ event_id, role, formConfig, responses }: {
     event_id: string
@@ -20,21 +21,27 @@ export default function FormResponses({ event_id, role, formConfig, responses }:
 }){
 
     const { defaultGroups, defaultResponses } = useDefaultGroupResponses({ eventId: event_id, role, tableView: 'resp' })
+    const [transformation, setTransformation] = useState<Table['transformation']>({})
     const [table, setTable] = useState<Table | 'loading' | 'error'>(initializeTable({
         formConfig,
         responses,
         groups: defaultGroups,
         defaultResponses,
+        transformation,
     }))
 
     useEffect(() => {
-        setTable(initializeTable({
-            formConfig,
-            responses,
-            groups: defaultGroups,
-            defaultResponses,
-        }))
-    }, [formConfig, responses, defaultGroups, defaultResponses])
+        setTable('loading')
+        setTimeout(() => {
+            setTable(initializeTable({
+                formConfig,
+                responses,
+                groups: defaultGroups,
+                defaultResponses,
+                transformation
+            }))
+        },200)
+    }, [formConfig, responses, defaultGroups, defaultResponses, transformation])
 
     if(table === 'error'){
         throw 'table fetching error'
@@ -44,6 +51,28 @@ export default function FormResponses({ event_id, role, formConfig, responses }:
             <div className={sectionStyles.container()}>
                 <div className={sectionStyles.box.gray({ round: true, shadow: true })}>
                     <h1 className={sectionStyles.title({ color: 'pink', extensions: 'mb-2' })}>Responses</h1>
+                    {typeof defaultGroups !== 'string' &&
+                    <div className="mb-2">
+                        <GustybobbyFilters
+                            columnOptions={memberFormColumns.concat(
+                                defaultGroups.map((group, index) => ({
+                                    id: group.id,
+                                    label: group.label.toString(),
+                                    index: index + 2,
+                                    active: false
+                            }))).concat(
+                                formConfig.field_order?.filter((field_id) => formConfig.form_fields?.[field_id].field_type !== 'INFO')
+                                    .map((field_id, index) => ({
+                                        id: field_id,
+                                        label: formConfig.form_fields?.[field_id].label ?? '',
+                                        index: index + 2 + defaultGroups.length,
+                                        active: false
+                                })) ?? []
+                            )}
+                            setTransformation={setTransformation}
+                        />
+                    </div>
+                    }
                     {table === 'loading'?
                     <GustybobbyTableLoading/>
                     :
@@ -58,11 +87,12 @@ export default function FormResponses({ event_id, role, formConfig, responses }:
     )
 }
 
-function initializeTable({ formConfig, responses, groups, defaultResponses }: {
+function initializeTable({ formConfig, responses, groups, defaultResponses, transformation }: {
     formConfig: FormConfigProperty
     responses: MembersTableFormResponse[]
     groups: GroupsState
     defaultResponses: DefaultResponsesState
+    transformation: Table['transformation']
 }){
     if(defaultResponses === 'error' || groups === 'error'){
         return 'error'
@@ -109,6 +139,22 @@ function initializeTable({ formConfig, responses, groups, defaultResponses }: {
                     }))
                 }
             }
-        })
+        }),
+        transformation,
     })
 }
+
+const memberFormColumns = [
+    {
+        id: 'role',
+        label: 'Role',
+        index: 0,
+        active: false,
+    },
+    {
+        id: 'position',
+        label: 'Position',
+        index: 1,
+        active: false,
+    },
+]
