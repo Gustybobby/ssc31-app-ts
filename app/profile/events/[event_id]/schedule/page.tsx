@@ -1,6 +1,6 @@
 import { getServerAuthSession } from "@/app/api/auth/[...nextauth]/_utils";
 import MainWrapper from "@/components/globalui/main-wrapper";
-import MemberSchedule from "@/components/profile/events/event/profile/member-schedule";
+import MemberSchedule from "@/components/profile/events/event/schedule/member-schedule";
 import prisma from "@/prisma-client";
 import { redirect } from "next/navigation";
 

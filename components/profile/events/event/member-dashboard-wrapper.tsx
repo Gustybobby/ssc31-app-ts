@@ -6,7 +6,7 @@ import { Toaster } from "react-hot-toast"
 const tabList = [
     { id: 'profile', label: 'Profile' },
     { id: 'schedule', label: 'Schedule' },
-    //{ id: 'records', label: 'Records', },
+    { id: 'forms', label: 'Forms' },
 ]
 
 export default function MemberDashboardWrapper({ children, eventId, eventTitle }: {
