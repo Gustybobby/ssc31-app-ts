@@ -24,12 +24,18 @@ export async function PATCH(req: NextRequest, { params }: { params: { event_id: 
         const memberRequest = await req.json()
         const data = memberRequest.data
         for(const [id, memberData] of Object.entries(data) as any){
+            const position_id = memberData?.position_id === 'NONE'? null : memberData?.position_id
+            const role_id = memberData?.role_id === 'NONE'? null : memberData?.role_id
             const updateEventMember = await prisma.eventMember.update({
                 where: {
                     id,
                     event_id: params.event_id,
                 },
-                data: { ...memberData }
+                data: {
+                    ...memberData,
+                    position_id,
+                    role_id,
+                }
             })
             console.log('Updated event member', updateEventMember)
         }
