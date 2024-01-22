@@ -6,6 +6,7 @@ export async function GET(req: NextRequest, { params }: { params: { form_id: str
     try{
         const searchParams = req.nextUrl.searchParams
         const select = searchParamsToSelect(searchParams)
+        console.log(select)
         const formResponses = await prisma.eventFormResponse.findMany({
             where: {
                 form_id: params.form_id
