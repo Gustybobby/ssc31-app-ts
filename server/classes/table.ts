@@ -556,6 +556,7 @@ export default class Table {
             let maxSpan = 1
             for(const [key, value] of Object.entries(row.value)){
                 if(key !== value.id){
+                    console.log(key, value, row.value)
                     throw `key ${key} mismatch with id ${value.id}`
                 }
                 maxSpan = Math.max(Table.getRowValueMaxDataLength(value), maxSpan)
