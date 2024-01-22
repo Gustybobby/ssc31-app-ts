@@ -21,7 +21,7 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
                 } : false
             } : undefined,
             orderBy: {
-                updated_at: 'desc'
+                created_at: 'desc'
             }
         })
         return NextResponse.json({ message: "SUCCESS", data }, { status: 200 })
