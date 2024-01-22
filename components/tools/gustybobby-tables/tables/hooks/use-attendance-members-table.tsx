@@ -115,7 +115,7 @@ function initializeTable({
                                     })}
                                     onClick={async() => {
                                         const checkInToast = toast.loading(checkInExisted? 'Canceling...' : 'Checking in...')
-                                        await sendDataToAPI({
+                                        const res = await sendDataToAPI({
                                             apiUrl: attendancesApiUrl({ eventId, role, apptId, memberId: member.id }),
                                             method: attendanceExisted? 'PATCH' : 'POST',
                                             body: JSON.stringify({
@@ -126,7 +126,13 @@ function initializeTable({
                                                 }
                                             })
                                         })
-                                        toast.success(checkInExisted? 'Canceled' : 'Checked in', { id: checkInToast })
+                                        switch(res?.message){
+                                            case 'SUCCESS':
+                                                toast.success(checkInExisted? 'Canceled' : 'Checked in', { id: checkInToast })
+                                                break
+                                            default:
+                                                toast.error('Error', { id: checkInToast })
+                                        }
                                         refetch({})
                                     }}
                                 >
@@ -149,7 +155,7 @@ function initializeTable({
                                     })}
                                     onClick={async() => {
                                         const checkOutToast = toast.loading(checkOutExisted?  'Canceling...' : 'Checking out...')
-                                        await sendDataToAPI({
+                                        const res = await sendDataToAPI({
                                             apiUrl: attendancesApiUrl({ eventId, role, apptId, memberId: member.id }),
                                             method: attendanceExisted? 'PATCH' : 'POST',
                                             body: JSON.stringify({
@@ -160,7 +166,13 @@ function initializeTable({
                                                 }
                                             })
                                         })
-                                        toast.success(checkOutExisted? 'Canceled' : 'Checked out', { id: checkOutToast })
+                                        switch(res?.message){
+                                            case 'SUCCESS':
+                                                toast.success(checkOutExisted? 'Canceled' : 'Checked out', { id: checkOutToast })
+                                                break
+                                            default:
+                                                toast.error('Error', { id: checkOutToast })
+                                        }
                                         refetch({})
                                     }}
                                 >
