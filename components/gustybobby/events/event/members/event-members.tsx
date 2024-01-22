@@ -131,10 +131,12 @@ function filterColumnOptions(formConfig: FormConfigProperty){
             index: 2,
             active: false,
         }
-    ].concat((formConfig.field_order ?? []).map((field_id, index) => ({
-        id: field_id,
-        label: formConfig.form_fields?.[field_id].label ?? '',
-        index: index+3,
-        active: false,
+    ].concat((formConfig.field_order ?? [])
+        .filter((field_id) => formConfig.form_fields?.[field_id].field_type !== 'INFO')
+        .map((field_id, index) => ({
+            id: field_id,
+            label: formConfig.form_fields?.[field_id].label ?? '',
+            index: index+3,
+            active: false,
     })))
 }
