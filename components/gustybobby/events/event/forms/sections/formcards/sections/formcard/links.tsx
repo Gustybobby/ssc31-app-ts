@@ -7,7 +7,7 @@ export default function LinkButtons({ eventId, formId }: { eventId: string, form
     return(
         <div className="mt-6 flex justify-between items-center">
             <Link
-                href={`/gustybobby/events/${eventId}/forms/${formId}/responses`}
+                href={`/events/${eventId}/forms/${formId}/responses?tab=responses`}
                 className={sectionStyles.button({ color: 'blue', large: true, border: true, hover: true })}
             >
                 Responses
