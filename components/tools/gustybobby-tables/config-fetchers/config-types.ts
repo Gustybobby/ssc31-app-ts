@@ -23,6 +23,7 @@ export interface FormTableConfig extends EventTableConfig {
 
 export interface DefaultGroupTableConfig extends EventTableConfig {
     tableView: TableView | null
+    apptId?: string
 }
 
 export interface TableFormResponse {

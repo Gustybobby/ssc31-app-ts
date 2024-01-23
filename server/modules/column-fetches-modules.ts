@@ -7,7 +7,12 @@ export function filteredColumnFetches(column_fetches: ColumnFetches, table_view:
     }))
 }
 
-export async function getAllRequiredForms(prisma: PrismaClient, column_fetches: ColumnFetches, isAdmin: boolean){
+export async function getAllRequiredForms(
+    prisma: PrismaClient,
+    column_fetches: ColumnFetches,
+    isAdmin: boolean,
+    takeBy: { type: 'appt', appt_id: string } | { type: 'all' } = { type: 'all' }
+){
     const formIds = Object.values(column_fetches ?? {}).map((group) => Object.keys(group.forms)).flat()
     const forms = await prisma.eventForm.findMany({
         where: {
@@ -27,6 +32,15 @@ export async function getAllRequiredForms(prisma: PrismaClient, column_fetches: 
             },
             form_fields: true,
             responses_list: {
+                where: takeBy.type === 'all'? undefined : {
+                    member: {
+                        appointments: {
+                            some: {
+                                id: takeBy.appt_id
+                            },
+                        },
+                    },
+                },
                 select: {
                     member_id: true,
                     response: true,

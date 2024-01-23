@@ -20,8 +20,8 @@ export const formResponseApiUrl = ({ eventId, formId, role }: FormTableConfig) =
     `/api/${role}/events/${eventId}/forms/${formId}/responses?id=1&member_id=1&response=1`
 )
 
-export const eventColumnFetchesApiUrl = ({ eventId, role, tableView }: DefaultGroupTableConfig) => (
-    `/api/${role}/events/${eventId}/column-fetches?${tableView? `table_view=${tableView}` : ''}`
+export const eventColumnFetchesApiUrl = ({ eventId, role, tableView, apptId }: DefaultGroupTableConfig) => (
+    `/api/${role}/events/${eventId}/column-fetches?${tableView? `table_view=${tableView}` : ''}${apptId? `&appt_id=${apptId}` : ''}`
 )
 
 export const attendancesApiUrl = ({ eventId, role, apptId, memberId }: {

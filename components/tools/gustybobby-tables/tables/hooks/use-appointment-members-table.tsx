@@ -10,7 +10,7 @@ import { memberColumns } from "../../config-fetchers/columns";
 
 export default function useAppointmentMembersTable({ eventId, role, tableView, apptId, transformation }: UseAppointmentMembersTable){
     const { members, refetch: refetchMembers } = useAppointmentMembers({ eventId, role, apptId })
-    const { defaultGroups, defaultResponses, refetch: refetchGroupResponses } = useDefaultGroupResponses({ eventId, role, tableView })
+    const {defaultGroups, defaultResponses, refetch: refetchGroupResponses } = useDefaultGroupResponses({ eventId, role, tableView, apptId })
     const [table, setTable] = useState<Table | 'loading' | 'error'>(initializeTable({
         groups: defaultGroups,
         defaultResponses,

@@ -28,6 +28,7 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
         })
         const searchParams = req.nextUrl.searchParams
         const table_view = searchParams.get('table_view')
+        const appt_id = searchParams.get('appt_id')
         const event = await prisma.event.findUniqueOrThrow({
             where:{
                 id: params.event_id
@@ -39,7 +40,7 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
         const column_fetches = filteredColumnFetches(event.column_fetches as ColumnFetches, table_view as TableView | null)
         const groups: ColumnProperty[] = []
         const group_responses: MemberReferencedResponses = {}
-        const forms = await getAllRequiredForms(prisma, column_fetches, false)
+        const forms = await getAllRequiredForms(prisma, column_fetches, false, appt_id? { type: 'appt', appt_id }: { type: 'all' })
         for(const [group_id, group] of Object.entries(column_fetches ?? {})){
             let dataType = null
             let fieldType = null

@@ -11,7 +11,7 @@ import CheckInButton from "./rendered-components/check-in-button";
 import CheckOutButton from "./rendered-components/check-out-button";
 
 export default function useAttendanceMembersTable({ eventId, role, apptId, tableView, transformation }: UseAppointmentMembersTable){
-    const { defaultGroups, defaultResponses, refetch: refetchGroupResponses } = useDefaultGroupResponses({ eventId, role, tableView })
+    const { defaultGroups, defaultResponses, refetch: refetchGroupResponses } = useDefaultGroupResponses({ eventId, role, tableView, apptId })
     const { members, refetch: refetchMembers } = useAppointmentMembers({ eventId, role, apptId })
     const [shouldRefetch, refetch] = useState({})
     const [table, setTable] = useState<Table | 'loading' | 'error'>(initializeTable({
