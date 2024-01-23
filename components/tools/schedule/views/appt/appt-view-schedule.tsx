@@ -41,7 +41,7 @@ export default function ApptViewSchedule({ eventId, role, appt, regist, status }
                 <AppointmentBanner
                     appt={appt}
                     hideDetails={false}
-                    regist={regist}
+                    regist={regist && status === 'ACTIVE'}
                 />
             </div>
             {appt.type === 'INTERVIEW' && status === 'ACTIVE' &&

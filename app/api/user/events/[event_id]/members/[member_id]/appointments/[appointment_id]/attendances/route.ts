@@ -20,6 +20,7 @@ export async function POST(req: NextRequest, { params }: { params: AttendanceRou
                     user_id: session.user.id,
                     event_id: params.event_id
                 },
+                status: 'ACTIVE',
                 position: {
                     can_regist: true
                 }
@@ -59,6 +60,7 @@ export async function PATCH(req: NextRequest, { params }: { params: AttendanceRo
                     user_id: session.user.id,
                     event_id: params.event_id
                 },
+                status: 'ACTIVE',
                 position: {
                     can_regist: true
                 }

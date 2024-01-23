@@ -19,7 +19,8 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
                 user_id_event_id: {
                     user_id: session.user.id,
                     event_id: params.event_id,
-                }
+                },
+                status: 'ACTIVE',
             },
             select: {
                 position_id: true,
