@@ -79,7 +79,7 @@ function initializeTable({ eventConfig, formConfig, responses, setResponses, edi
                     position: {
                         type: 'pure_single',
                         id: 'position',
-                        raw_data: response.member?.position?.label ?? '',
+                        raw_data: response.member?.position?.label ?? 'None',
                         data: (
                             <ListBoxSingleSelect
                                 list={eventConfig.positions.map((position, index) => ({

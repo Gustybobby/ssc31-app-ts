@@ -25,7 +25,7 @@ export default function MemberSelections({ event_id, form_id }: { event_id: stri
             <div className="w-full h-full bg-transparent dark:bg-black/70 overflow-auto">
                 <div className={sectionStyles.container()}>
                     <div className={sectionStyles.box.gray({ round: true, shadow: true })}>
-                        <h1 className={sectionStyles.title({ color: 'green', extensions: 'mb-2' })}>Members</h1>
+                        <h1 className={sectionStyles.title({ color: 'green', extensions: 'mb-2' })}>Members Selection</h1>
                         {table === 'loading'?
                         <GustybobbyTableLoading/>
                         :
@@ -35,15 +35,20 @@ export default function MemberSelections({ event_id, form_id }: { event_id: stri
                                 <div className="flex justify-between">
                                     {(typeof formConfig !== 'string') &&
                                     <GustybobbyFilters
-                                        columnOptions={formConfig.field_order?.map((field_id, index) => {
+                                        columnOptions={[{
+                                            id: 'position',
+                                            label: 'Position',
+                                            index: 0,
+                                            active: false,
+                                        }].concat(formConfig.field_order?.map((field_id, index) => {
                                             const field = formConfig.form_fields?.[field_id]
                                             return {
                                                 id: field_id,
                                                 label: field?.label ?? 'MISSING_LABEL',
-                                                index,
+                                                index: index + 1,
                                                 active: false
                                             }
-                                        }) ?? []}
+                                        }) ?? [])}
                                         setTransformation={setTransformation}
                                     />
                                     }
@@ -75,6 +80,7 @@ export default function MemberSelections({ event_id, form_id }: { event_id: stri
                                         headerCellClassName="flex justify-between min-w-28"
                                         transformation={transformation}
                                         setTransformation={setTransformation}
+                                        bottomSpacing="h-40"
                                     />
                                 </div>
                             </>
