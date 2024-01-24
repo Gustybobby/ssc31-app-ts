@@ -12,14 +12,16 @@ export default function MembersTable({
     headerCellClassName,
     transformation,
     setTransformation,
+    bottomSpacing,
 }: {
     table: Table,
     headerCellClassName: string
     transformation?: Table['transformation']
     setTransformation?: SetTransformation
+    bottomSpacing?: string
 }){
     return (
-        <div className="w-full overflow-auto">
+        <div className="w-full overflow-x-auto">
             <table className="table-fixed min-w-full">
                 <thead>
                     {table.getColumnsTableRows().map((columns, index) => (
@@ -70,6 +72,7 @@ export default function MembersTable({
                     ))}
                 </tbody>
             </table>
+            {bottomSpacing && <div className={bottomSpacing}/>}
         </div>
     )
 }

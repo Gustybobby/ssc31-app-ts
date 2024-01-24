@@ -91,6 +91,7 @@ export default function EventMembers({ event_id, forms }: {
                         headerCellClassName="max-h-12 min-w-48 flex justify-between"
                         transformation={transformation}
                         setTransformation={setTransformation}
+                        bottomSpacing="h-40"
                     />
                 </div>
                 }
