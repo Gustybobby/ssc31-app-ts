@@ -133,7 +133,7 @@ function initializeTable({ formConfig, eventConfig, responses, members, editRef,
                     position: {
                         type: 'pure_single',
                         id: 'position',
-                        raw_data: member?.position?.label ?? '',
+                        raw_data: member?.position?.label ?? 'None',
                         data: (
                             <ListBoxSingleSelect
                                 list={eventConfig.positions.map((position, index) => ({
@@ -179,7 +179,7 @@ function initializeTable({ formConfig, eventConfig, responses, members, editRef,
                     role: {
                         type: 'pure_single',
                         id: 'role',
-                        raw_data: member?.role?.label ?? '',
+                        raw_data: member?.role?.label ?? 'None',
                         data: (
                             <ListBoxSingleSelect
                                 list={eventConfig.roles.map((role, index) => ({
