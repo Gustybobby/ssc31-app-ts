@@ -64,6 +64,7 @@ export default function MemberSelections({ event_id, form_id }: { event_id: stri
                                             switch(res?.message){
                                                 case 'SUCCESS':
                                                     toast.success('Saved', { id: saveToast })
+                                                    editRef.current = {}
                                                     break
                                                 default:
                                                     toast.error('Error', { id: saveToast })
