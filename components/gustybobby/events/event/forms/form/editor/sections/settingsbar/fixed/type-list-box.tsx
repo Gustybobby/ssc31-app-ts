@@ -1,8 +1,8 @@
 import { ListBoxSingleSelect } from "@/components/tools/list-box"
-import type { DispatchFormConfig } from "../../../handlers/state-manager"
 import type { FormType } from "@prisma/client"
 import { formTypes } from "@/server/typeconfig/form"
 import { useMemo } from "react"
+import type { DispatchFormConfig } from "../../../editor-types"
 
 interface TypeListBoxProps extends DispatchFormConfig {
     formType: FormType

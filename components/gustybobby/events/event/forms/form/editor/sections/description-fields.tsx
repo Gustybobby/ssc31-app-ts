@@ -1,7 +1,7 @@
 import { BasicSyntaxedContentDisplay, descriptionTextAreaStyle, formatText } from "@/components/tools/paragraph"
 import { memo } from "react"
-import type { DispatchFormConfig } from "../handlers/state-manager"
 import { sectionStyles } from "@/components/styles/sections"
+import type { DispatchFormConfig } from "../editor-types"
 
 interface ParagraphFieldsProps extends DispatchFormConfig {
     field_key: 'description' | 'submitted_area'

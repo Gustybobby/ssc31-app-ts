@@ -1,6 +1,6 @@
 "use client"
 
-import type { DispatchFormConfig } from "@/components/gustybobby/events/event/forms/form/editor/handlers/state-manager"
+import type { DispatchFormConfig } from "@/components/gustybobby/events/event/forms/form/editor/editor-types"
 import { ListBoxSingleSelect } from "@/components/tools/list-box"
 import { SliderSwitch } from "@/components/tools/switch"
 import FieldConfig from "@/server/classes/forms/fieldconfig"

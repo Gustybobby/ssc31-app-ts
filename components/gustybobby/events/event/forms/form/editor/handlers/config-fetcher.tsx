@@ -1,19 +1,19 @@
 "use client"
 
 import type { OptionalEventForm } from "@/server/classes/forms/formconfig"
-import type { DispatchFormConfig } from "./state-manager"
 import { useEffect, useState } from "react"
 import FormTemplate from "@/server/classes/forms/formtemplate"
 import FetchingSVG from "@/components/svg/fetching-svg"
 import EditorComponent from "./editor-component"
 import type { EditorFormConfig } from "../hooks/form-config-reducer"
 import FormConfig from "@/server/classes/forms/formconfig"
+import type { DispatchFormConfig } from "../editor-types"
 
 const eventApiUrl = (eventId: string) => (`/api/gustybobby/events/${eventId}?id=1&positions=1&roles=1`)
 const templateApiUrl = (templateId: string) => (`/api/gustybobby/form-templates/${templateId}`)
 const formApiUrl = (eventId: string, formId: string) => (`/api/gustybobby/events/${eventId}/forms/${formId}`)
 
-interface ConfigFetcherProps extends DispatchFormConfig{
+interface ConfigFetcherProps extends DispatchFormConfig {
     newForm: boolean
     eventId: string
     formId: string

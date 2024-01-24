@@ -1,6 +1,6 @@
 "use client"
 
-import type { DispatchFormConfig } from "@/components/gustybobby/events/event/forms/form/editor/handlers/state-manager"
+import type { DispatchFormConfig } from "@/components/gustybobby/events/event/forms/form/editor/editor-types"
 import { InputField } from "@/components/tools/input"
 import { contentPatterns } from "@/server/classes/forms/contentconfig"
 import type { DataType } from "@/server/typeconfig/form"

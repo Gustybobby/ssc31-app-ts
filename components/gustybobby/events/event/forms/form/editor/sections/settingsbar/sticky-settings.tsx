@@ -1,7 +1,6 @@
 "use client"
 
 import type { FormConfigProperty } from "@/server/classes/forms/formconfig"
-import type { DispatchFormConfig } from "../../handlers/state-manager"
 import OpenSwitch from "./sticky/open-switch"
 import PublicSwitch from "./sticky/public-switch"
 import ResponseTypeSwitch from "./sticky/response-type-switch"
@@ -9,8 +8,9 @@ import ViewFormLink from "./sticky/view-form-link"
 import SaveButton from "./sticky/save-button"
 import CreateButton from "./sticky/create-button"
 import type { Dispatch, SetStateAction } from "react"
+import type { DispatchFormConfig } from "../../editor-types"
 
-interface StickySettingsProps extends DispatchFormConfig{
+interface StickySettingsProps extends DispatchFormConfig {
     eventId: string
     formConfig: FormConfigProperty
     shrinkSetting: boolean

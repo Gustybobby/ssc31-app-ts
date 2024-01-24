@@ -4,9 +4,9 @@ import { sectionStyles } from "@/components/styles/sections"
 import EditorFieldCard from "@/components/tools/field-cards/field-card-variants/editor-field-card"
 import type { EventConfigProperty } from "@/server/classes/eventconfig"
 import { memo, useState } from "react"
-import type { DispatchFormConfig } from "../handlers/state-manager"
 import NewFieldCard from "@/components/tools/field-cards/field-card-variants/new-field-card"
 import type { EditorFieldConfigProperty } from "../hooks/form-config-reducer"
+import type { DispatchFormConfig } from "../editor-types"
 
 interface FormFieldsProps extends DispatchFormConfig {
     formFields: { [key: string]: EditorFieldConfigProperty }

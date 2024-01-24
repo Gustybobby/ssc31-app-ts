@@ -1,9 +1,9 @@
 import { ListBoxMultiSelect } from "@/components/tools/list-box"
 import type { EventConfigProperty } from "@/server/classes/eventconfig"
 import { memo, useMemo } from "react"
-import type { DispatchFormConfig } from "../../../handlers/state-manager"
 import EventConfig from "@/server/classes/eventconfig"
 import type { GustybobbyOption } from "@/server/typeconfig/form"
+import type { DispatchFormConfig } from "../../../editor-types"
 
 interface RestrictListBoxProps extends DispatchFormConfig {
     eventConfig: EventConfigProperty

@@ -1,11 +1,11 @@
 "use client"
 
-import type { DispatchFormConfig } from "@/components/gustybobby/events/event/forms/form/editor/handlers/state-manager"
+import type { DispatchFormConfig } from "@/components/gustybobby/events/event/forms/form/editor/editor-types"
 import { sectionStyles } from "@/components/styles/sections"
 import type { Dispatch, SetStateAction } from "react"
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io"
 
-interface FieldSwapButtonsProps extends DispatchFormConfig{
+interface FieldSwapButtonsProps extends DispatchFormConfig {
     fieldId: string
     index: number
     edge: 'only' | 'first' | 'last' | 'none'

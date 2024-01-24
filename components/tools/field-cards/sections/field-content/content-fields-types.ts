@@ -1,4 +1,4 @@
-import type { DispatchFormConfig } from "@/components/gustybobby/events/event/forms/form/editor/handlers/state-manager"
+import type { DispatchFormConfig } from "@/components/gustybobby/events/event/forms/form/editor/editor-types"
 import type { EventConfigProperty } from "@/server/classes/eventconfig"
 import type ContentConfig from "@/server/classes/forms/contentconfig"
 import type { ContentConfigProperty } from "@/server/classes/forms/contentconfig"

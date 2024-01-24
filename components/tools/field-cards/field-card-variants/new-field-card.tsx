@@ -1,6 +1,6 @@
 "use client"
 
-import type { DispatchFormConfig } from "@/components/gustybobby/events/event/forms/form/editor/handlers/state-manager";
+import type { DispatchFormConfig } from "@/components/gustybobby/events/event/forms/form/editor/editor-types";
 import { Card } from "../../card";
 import { LiaPlusSolid } from "react-icons/lia";
 

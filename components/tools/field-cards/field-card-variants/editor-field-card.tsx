@@ -7,7 +7,6 @@ import { type Dispatch, type SetStateAction, memo } from "react"
 import { ZoomIn } from "../../transition"
 import { typePermission } from "@/server/typeconfig/form"
 import FieldDataAccessListBox from "../sections/editor/field-data-access-list-box"
-import type { DispatchFormConfig } from "@/components/gustybobby/events/event/forms/form/editor/handlers/state-manager"
 import FieldDeleteButton from "../sections/editor/field-delete-button"
 import EditorContentField from "../sections/field-content/editor-content-fields-map"
 import FieldSwapButtons from "../sections/editor/field-swap-buttons"
@@ -17,8 +16,9 @@ import FieldOptionsConfigs from "../sections/editor/field-configs/field-options-
 import FieldLengthConfigs from "../sections/editor/field-configs/field-length-configs"
 import FieldVisibilityConditions from "../sections/editor/field-visibility-conditions"
 import type { EditorFieldConfigProperty } from "@/components/gustybobby/events/event/forms/form/editor/hooks/form-config-reducer"
+import { DispatchFormConfig } from "@/components/gustybobby/events/event/forms/form/editor/editor-types"
 
-interface EditorFieldCardProps extends DispatchFormConfig{
+interface EditorFieldCardProps extends DispatchFormConfig {
     fieldConfig: EditorFieldConfigProperty
     eventConfig: EventConfigProperty
     visible: boolean

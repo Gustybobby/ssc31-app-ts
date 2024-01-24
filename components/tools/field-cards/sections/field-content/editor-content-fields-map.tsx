@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 import ContentConfig from "@/server/classes/forms/contentconfig"
-import { EditorContentFieldProps, EditorContentFieldsType } from "./content-fields-types"
+import type { EditorContentFieldProps, EditorContentFieldsType } from "./content-fields-types"
 import LabelField from "./editor-field-content-components/label-field"
 import InfoField from "./editor-field-content-components/info-field"
 

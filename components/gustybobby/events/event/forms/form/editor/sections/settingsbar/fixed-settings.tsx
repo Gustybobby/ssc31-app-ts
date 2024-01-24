@@ -1,11 +1,11 @@
 "use client"
 
 import DataAccessListBox from "./fixed/data-access-list-box"
-import type { DispatchFormConfig } from "../../handlers/state-manager"
 import RestrictListBox from "./fixed/restrict-list-box"
 import TypeListBox from "./fixed/type-list-box"
 import TemplateThisButton from "./fixed/template-this-button"
 import type { EditorFormConfig } from "../../hooks/form-config-reducer"
+import type { DispatchFormConfig } from "../../editor-types"
 
 interface FixedSettingsProps extends DispatchFormConfig {
     formConfig: EditorFormConfig

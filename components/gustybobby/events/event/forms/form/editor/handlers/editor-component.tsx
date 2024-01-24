@@ -3,13 +3,13 @@
 import { type Dispatch, type SetStateAction, useState } from "react"
 import { Toaster } from "react-hot-toast"
 import FixedSettings from "../sections/settingsbar/fixed-settings"
-import type { DispatchFormConfig } from "./state-manager"
 import TitleField from "../sections/title-field"
 import StickySettings from "../sections/settingsbar/sticky-settings"
 import ParagraphFields from "../sections/description-fields"
 import EmailRestrictsField from "../sections/email-restricts-field"
 import FormFields from "../sections/form-fields"
 import type { EditorFormConfig } from "../hooks/form-config-reducer"
+import type { DispatchFormConfig } from "../editor-types"
 
 interface EditorComponentProps extends DispatchFormConfig {
     formConfig: EditorFormConfig

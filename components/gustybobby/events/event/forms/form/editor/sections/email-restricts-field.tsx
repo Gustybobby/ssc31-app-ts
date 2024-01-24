@@ -1,9 +1,9 @@
 import { sectionStyles } from "@/components/styles/sections"
 import { InputField } from "@/components/tools/input"
 import { memo } from "react"
-import type { DispatchFormConfig } from "../handlers/state-manager"
+import type { DispatchFormConfig } from "../editor-types"
 
-interface EmailRestrictsFieldProps extends DispatchFormConfig{
+interface EmailRestrictsFieldProps extends DispatchFormConfig {
     emailRestricts: string[]
 }
 

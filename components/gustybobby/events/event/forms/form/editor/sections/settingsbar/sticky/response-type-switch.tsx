@@ -1,9 +1,9 @@
 import { memo } from "react"
 import { SliderSwitch } from "@/components/tools/switch"
-import type { DispatchFormConfig } from "../../../handlers/state-manager"
 import type { ResponseType } from "@prisma/client"
+import type { DispatchFormConfig } from "../../../editor-types"
 
-interface ResponseTypeSwitchProps extends DispatchFormConfig{
+interface ResponseTypeSwitchProps extends DispatchFormConfig {
     responseType: ResponseType
 }
 

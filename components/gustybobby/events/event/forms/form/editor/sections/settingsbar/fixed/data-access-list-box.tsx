@@ -1,8 +1,8 @@
 import { ListBoxMultiSelect } from "@/components/tools/list-box"
 import type { EventConfigProperty } from "@/server/classes/eventconfig"
 import { memo, useMemo } from "react"
-import type { DispatchFormConfig } from "../../../handlers/state-manager"
 import EventConfig from "@/server/classes/eventconfig"
+import type { DispatchFormConfig } from "../../../editor-types"
 
 interface DataAccessListBoxProps extends DispatchFormConfig {
     eventConfig: EventConfigProperty

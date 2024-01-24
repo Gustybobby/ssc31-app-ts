@@ -1,6 +1,6 @@
 "use client"
 
-import type { DispatchFormConfig } from "@/components/gustybobby/events/event/forms/form/editor/handlers/state-manager"
+import type { DispatchFormConfig } from "@/components/gustybobby/events/event/forms/form/editor/editor-types"
 import { ListBoxMultiSelect, ListBoxSingleSelect } from "@/components/tools/list-box"
 import FieldVisibility, { visibilityBoolCodes } from "@/server/classes/forms/fieldvisibility"
 import type { GustybobbyOption } from "@/server/typeconfig/form"

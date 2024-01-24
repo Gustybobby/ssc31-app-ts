@@ -1,6 +1,6 @@
 "use client"
 
-import type { DispatchFormConfig } from "@/components/gustybobby/events/event/forms/form/editor/handlers/state-manager"
+import type { DispatchFormConfig } from "@/components/gustybobby/events/event/forms/form/editor/editor-types"
 import { ListBoxMultiSelect } from "@/components/tools/list-box"
 import type { EventConfigProperty } from "@/server/classes/eventconfig"
 import EventConfig from "@/server/classes/eventconfig"

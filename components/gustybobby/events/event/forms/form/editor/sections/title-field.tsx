@@ -1,6 +1,6 @@
 "use client"
 
-import type { DispatchFormConfig } from "../handlers/state-manager"
+import type { DispatchFormConfig } from "../editor-types"
 
 interface TitleFieldProps extends DispatchFormConfig {
     title: string

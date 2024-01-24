@@ -1,9 +1,9 @@
-import type { DispatchFormConfig } from "@/components/gustybobby/events/event/forms/form/editor/handlers/state-manager"
+import type { DispatchFormConfig } from "@/components/gustybobby/events/event/forms/form/editor/editor-types"
 import { sectionStyles } from "@/components/styles/sections"
 import type { Dispatch, SetStateAction } from "react"
 import { RxCross1 } from "react-icons/rx"
 
-interface FieldDeleteButtonProps extends DispatchFormConfig{
+interface FieldDeleteButtonProps extends DispatchFormConfig {
     fieldId: string
     setInvisibles: Dispatch<SetStateAction<Set<string>>>
 }
