@@ -23,6 +23,6 @@ export default function useDefaultGroupResponses({ eventId, role, tableView, app
                 setDefaultResponses(data.group_responses)
                 setDefaultGroups(data.groups)
             })
-    }, [eventId, role, shouldRefetch, tableView])
+    }, [eventId, role, shouldRefetch, tableView, apptId])
     return { defaultResponses, defaultGroups, refetch }
 }
