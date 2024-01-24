@@ -23,6 +23,11 @@ export default async function MemberFormsPage({ params }: { params: { event_id: 
         select: {
             status: true,
             position_id: true,
+            position: {
+                select: {
+                    can_regist: true
+                }
+            },
             role_id: true,
             form_responses: {
                 select: {
@@ -58,6 +63,7 @@ export default async function MemberFormsPage({ params }: { params: { event_id: 
                         forms={[]}
                         responses={publicFormResponses(form_responses)}
                         event_id={event_id}
+                        can_regist={true}
                     />
                 </MemberDashboardWrapper>
             </MainWrapper>
@@ -79,6 +85,7 @@ export default async function MemberFormsPage({ params }: { params: { event_id: 
                 },
                 select: {
                     id: true,
+                    type: true,
                     title: true,
                     global_position_access: {
                         select: {
@@ -125,6 +132,7 @@ export default async function MemberFormsPage({ params }: { params: { event_id: 
                     forms={filteredForms as any}
                     responses={publicFormResponses(form_responses)}
                     event_id={event_id}
+                    can_regist={!!member.position?.can_regist}
                 />
             </MemberDashboardWrapper>
         </MainWrapper>

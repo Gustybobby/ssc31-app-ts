@@ -38,7 +38,7 @@ export default function EventMembers({ event_id, forms }: {
     return(
         <div className={sectionStyles.container()}>
             <div className={sectionStyles.box.gray({ round: true, shadow: true })}>
-                <h1 className={sectionStyles.title({ color: 'amber', extensions: 'mb-2' })}>
+                <h1 className={sectionStyles.title({ color: 'green', extensions: 'mb-2' })}>
                     Members
                 </h1>
                 <div className="mb-2 flex justify-between items-end">

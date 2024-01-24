@@ -28,10 +28,11 @@ interface ResponseRecord {
     }
 }
 
-export default function MemberForms({ forms, responses, event_id }: {
+export default function MemberForms({ forms, responses, event_id, can_regist }: {
     forms: FormConfigProperty[],
     responses: ResponseRecord[],
-    event_id: string
+    event_id: string,
+    can_regist: boolean,
 }){
     
     const selectedResponse = useRef<ResponseRecord | null>(null)
@@ -49,12 +50,22 @@ export default function MemberForms({ forms, responses, event_id }: {
                         <Card variant="white-gray" extraClass="p-4" key={form.id}>
                             <div className="flex flex-col space-y-2">
                                 <span className="font-bold text-xl">{form.title}</span>
-                                <Link
-                                    href={`/events/${event_id}/forms/${form.id}/responses?tab=responses`}
-                                    className={sectionStyles.button({ color: 'blue', hover: true, border: true, large: true })}
-                                >
-                                    Responses
-                                </Link>
+                                <div className="flex justify-between">
+                                    <Link
+                                        href={`/events/${event_id}/forms/${form.id}/responses?tab=responses`}
+                                        className={sectionStyles.button({ color: 'blue', hover: true, border: true, large: true })}
+                                    >
+                                        Responses
+                                    </Link>
+                                    {form.type === 'JOIN' && can_regist &&
+                                    <Link
+                                        href={`/profile/events/${event_id}/forms/${form.id}/selections`}
+                                        className={sectionStyles.button({ color: 'pink', hover: true, border: true, large: true })}
+                                    >
+                                        Select
+                                    </Link>
+                                    }
+                                </div>
                             </div>
                         </Card>
                     ))}

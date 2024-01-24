@@ -32,3 +32,7 @@ export const attendancesApiUrl = ({ eventId, role, apptId, memberId }: {
 }) => (
     `/api/${role}/events/${eventId}/members/${memberId}/appointments/${apptId}/attendances`
 )
+
+export const memberSelectionsApiUrl = ({ eventId, formId, role }: FormTableConfig) => (
+    `/api/${role}/events/${eventId}/forms/${formId}/selections`
+)

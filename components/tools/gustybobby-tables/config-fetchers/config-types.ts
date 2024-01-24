@@ -2,6 +2,7 @@ import type { EventConfigProperty } from "@/server/classes/eventconfig"
 import type { FormConfigProperty } from "@/server/classes/forms/formconfig"
 import type { ColumnProperty } from "@/server/classes/table"
 import type Table from "@/server/classes/table"
+import type { SelectionResponse } from "@/server/modules/get-permitted-form-info"
 import type { TableView } from "@/server/typeconfig/event"
 import type { GustybobbyOption } from "@/server/typeconfig/form"
 import type { EditableAppointment, GustybobbyAttendance } from "@/server/typeconfig/record"
@@ -67,6 +68,7 @@ export type DefaultResponsesState = DefaultResponses | 'loading' | 'error'
 export type MembersState = Member[] | 'loading' | 'error'
 export type AppointmentMembersState = MemberWithAttendance[] | 'loading' | 'error'
 export type GroupsState = ColumnProperty[] | 'loading' | 'error'
+export type SelectionResponsesState = SelectionResponse[] | 'loading' | 'error'
 
 export interface StaticMembersTableInitializeState {
     formConfig: FormConfigState

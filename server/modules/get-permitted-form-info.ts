@@ -1,10 +1,22 @@
-import type { PrismaClient } from "@prisma/client";
+import type { FormType, MemberStatus, PrismaClient } from "@prisma/client";
 import { compoundAccessEvaluation } from "../utils";
-import type { PrismaFieldConfig } from "../typeconfig/form";
+import type { FormResponse, PrismaFieldConfig } from "../typeconfig/form";
 
 export default async function getPermittedFormInfo(prisma: PrismaClient, {
     user_id, event_id, form_id }: { user_id: string, event_id: string, form_id: string },
-    isAdmin: boolean, 
+    isAdmin: boolean,
+    formWhereInput?: {
+        id: string,
+        type?: FormType,
+    },
+    responseWhereInput?: any,
+    extendedMemberAuth?: (member: {
+        status: MemberStatus,
+        position: { can_regist: boolean } | null,
+        role: { can_appoint: boolean } | null,
+        position_id: string | null,
+        role_id: string | null,
+    } | 'ADMIN') => boolean
 ){
     try{
         const member = isAdmin? 'ADMIN' : await prisma.eventMember.findUniqueOrThrow({
@@ -13,15 +25,28 @@ export default async function getPermittedFormInfo(prisma: PrismaClient, {
             },
             select: {
                 status: true,
+                position: {
+                    select: {
+                        can_regist: true,
+                    },
+                },
                 position_id: true,
+                role: {
+                    select: {
+                        can_appoint: true,
+                    }
+                },
                 role_id: true,
             }
         })
         if(member !== 'ADMIN' && member.status !== 'ACTIVE'){
             throw 'UNAUTHORIZED'
         }
+        if(extendedMemberAuth && !extendedMemberAuth(member)){
+            throw 'UNAUTHORIZED'
+        }
         const { responses_list, global_position_access, global_role_access, ...form } = await prisma.eventForm.findUniqueOrThrow({
-            where: {
+            where: formWhereInput ?? {
                 id: form_id
             },
             select: {
@@ -40,6 +65,7 @@ export default async function getPermittedFormInfo(prisma: PrismaClient, {
                 form_fields: true,
                 field_order: true,
                 responses_list: {
+                    where: responseWhereInput,
                     orderBy: {
                         created_at: 'asc'
                     },
@@ -126,3 +152,22 @@ export default async function getPermittedFormInfo(prisma: PrismaClient, {
         }
     }
 }
+
+export interface SelectionResponse {
+    form_id: string
+    id: string
+    member_id: string
+    response: FormResponse
+    member: {
+        role: {
+            label: string
+            id: string
+        } | null
+        status: MemberStatus
+        id: string
+        position: {
+            label: string
+            id: string
+        } | null
+    } | null
+}[]
