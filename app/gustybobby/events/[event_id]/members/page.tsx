@@ -43,11 +43,12 @@ export default async function EventMembersPage({ params }: { params: { event_id:
     }
     return(
         <MainWrapper>
-            <EventMembers
-                event_id={params.event_id}
-                event_title={event.title}
-                forms={event.forms}
-            />
+            <DashboardWrapper eventId={params.event_id} eventTitle={event.title}>
+                <EventMembers
+                    event_id={params.event_id}
+                    forms={event.forms}
+                />
+            </DashboardWrapper>
         </MainWrapper>
     )
 }

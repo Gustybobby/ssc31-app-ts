@@ -1,7 +1,6 @@
 "use client"
 
 import { FormConfigProperty } from "@/server/classes/forms/formconfig"
-import MemberDashboardWrapper from "../member-dashboard-wrapper"
 import { sectionStyles } from "@/components/styles/sections"
 import { Card } from "@/components/tools/card"
 import Link from "next/link"
@@ -29,94 +28,91 @@ interface ResponseRecord {
     }
 }
 
-export default function MemberForms({ forms, responses, event_id, event_title }: {
+export default function MemberForms({ forms, responses, event_id }: {
     forms: FormConfigProperty[],
     responses: ResponseRecord[],
     event_id: string
-    event_title: string
 }){
     
     const selectedResponse = useRef<ResponseRecord | null>(null)
     const [open, setOpen] = useState(false)
 
     return (
-        <MemberDashboardWrapper eventId={event_id} eventTitle={event_title}>
-            <div className={sectionStyles.container()}>
-                {forms.length > 0 &&
-                <div className={sectionStyles.box.gray({ round: true, shadow: true })}>
-                    <h1 className={sectionStyles.title({ color: 'purple', extensions: 'mb-2' })}>
-                        Viewable Forms
-                    </h1>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                        {forms.map((form) => (
-                            <Card variant="white-gray" extraClass="p-4" key={form.id}>
-                                <div className="flex flex-col space-y-2">
-                                    <span className="font-bold text-xl">{form.title}</span>
-                                    <Link
-                                        href={`/events/${event_id}/forms/${form.id}/responses?tab=responses`}
-                                        className={sectionStyles.button({ color: 'blue', hover: true, border: true, large: true })}
-                                    >
-                                        Responses
-                                    </Link>
-                                </div>
-                            </Card>
-                        ))}
-                    </div>
+        <div className={sectionStyles.container()}>
+            {forms.length > 0 &&
+            <div className={sectionStyles.box.gray({ round: true, shadow: true })}>
+                <h1 className={sectionStyles.title({ color: 'purple', extensions: 'mb-2' })}>
+                    Viewable Forms
+                </h1>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                    {forms.map((form) => (
+                        <Card variant="white-gray" extraClass="p-4" key={form.id}>
+                            <div className="flex flex-col space-y-2">
+                                <span className="font-bold text-xl">{form.title}</span>
+                                <Link
+                                    href={`/events/${event_id}/forms/${form.id}/responses?tab=responses`}
+                                    className={sectionStyles.button({ color: 'blue', hover: true, border: true, large: true })}
+                                >
+                                    Responses
+                                </Link>
+                            </div>
+                        </Card>
+                    ))}
+                </div>
+            </div>
+            }
+            <div className={sectionStyles.box.gray({ round: true, shadow: true })}>
+                <h1 className={sectionStyles.title({ color: 'rose', extensions: 'mb-2' })}>
+                    Response Records
+                </h1>
+                {responses.length > 0 &&
+                <div>
+                    {responses.map((response) => (
+                        <Card variant="white-gray" extraClass="p-4 md:w-fit" key={response.id}>
+                            <div className="flex flex-col space-y-2">
+                                <span className="font-bold text-xl">{response.form.title}</span>
+                                <span className="text-green-600 dark:text-green-400 font-bold">
+                                    Submitted at: {response.created_at?.toLocaleString()}
+                                </span>
+                                <button
+                                    onClick={() => {
+                                        selectedResponse.current = response
+                                        setOpen(true)
+                                    }}
+                                    className={sectionStyles.button({ color: 'yellow', hover: true, border: true, large: true })}
+                                >
+                                    Your Responses
+                                </button>
+                            </div>
+                        </Card>
+                    ))}
                 </div>
                 }
-                <div className={sectionStyles.box.gray({ round: true, shadow: true })}>
-                    <h1 className={sectionStyles.title({ color: 'rose', extensions: 'mb-2' })}>
-                        Response Records
-                    </h1>
-                    {responses.length > 0 &&
-                    <div>
-                        {responses.map((response) => (
-                            <Card variant="white-gray" extraClass="p-4 md:w-fit" key={response.id}>
-                                <div className="flex flex-col space-y-2">
-                                    <span className="font-bold text-xl">{response.form.title}</span>
-                                    <span className="text-green-600 dark:text-green-400 font-bold">
-                                        Submitted at: {response.created_at?.toLocaleString()}
-                                    </span>
-                                    <button
-                                        onClick={() => {
-                                            selectedResponse.current = response
-                                            setOpen(true)
-                                        }}
-                                        className={sectionStyles.button({ color: 'yellow', hover: true, border: true, large: true })}
-                                    >
-                                        Your Responses
-                                    </button>
-                                </div>
-                            </Card>
-                        ))}
-                    </div>
-                    }
-                </div>
-                <PopUpDialog open={open} setOpen={setOpen} panelClassName="mt-16">
-                    <div className="flex flex-col p-4 space-y-2 bg-gray-200 dark:bg-gray-800 rounded-lg h-[75vh] overflow-y-auto shadow-lg">
-                        {selectedResponse.current?.form.field_order.map((field_id) => {
-                            const field = selectedResponse.current?.form.form_fields[field_id]
-                            const data = extractTextFromResponseData(
-                                selectedResponse.current?.snapshot[field_id] ?? '', 
-                                field?.field_type ?? 'SHORTANS',
-                            )
-                            if(data === ''){
-                                return <Fragment key={field_id}></Fragment>
-                            }
-                            return (
-                                <div key={field_id} className="flex flex-col items-start">
-                                    <span className="text-left mb-1 font-bold">
-                                        {field?.label}
-                                    </span>
-                                    <span className="py-1 px-2 rounded-lg bg-gray-300 dark:bg-gray-700">
-                                        {data}
-                                    </span>
-                                </div>
-                            )
-                        })}
-                    </div>
-                </PopUpDialog>
             </div>
-        </MemberDashboardWrapper>
+            <PopUpDialog open={open} setOpen={setOpen} panelClassName="mt-16">
+                <div className="flex flex-col p-4 space-y-2 bg-gray-200 dark:bg-gray-800 rounded-lg h-[75vh] overflow-y-auto shadow-lg">
+                    {selectedResponse.current?.form.field_order.map((field_id) => {
+                        const field = selectedResponse.current?.form.form_fields[field_id]
+                        const data = extractTextFromResponseData(
+                            selectedResponse.current?.snapshot[field_id] ?? '', 
+                            field?.field_type ?? 'SHORTANS',
+                        )
+                        if(data === ''){
+                            return <Fragment key={field_id}></Fragment>
+                        }
+                        return (
+                            <div key={field_id} className="flex flex-col items-start">
+                                <span className="text-left mb-1 font-bold">
+                                    {field?.label}
+                                </span>
+                                <span className="py-1 px-2 rounded-lg bg-gray-300 dark:bg-gray-700">
+                                    {data}
+                                </span>
+                            </div>
+                        )
+                    })}
+                </div>
+            </PopUpDialog>
+        </div>
     )
 }

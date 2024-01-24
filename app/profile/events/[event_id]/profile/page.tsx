@@ -1,5 +1,6 @@
 import { getServerAuthSession } from "@/app/api/auth/[...nextauth]/_utils";
 import MainWrapper from "@/components/globalui/main-wrapper";
+import MemberDashboardWrapper from "@/components/profile/events/event/member-dashboard-wrapper";
 import MemberProfile from "@/components/profile/events/event/profile/member-profile";
 import prisma from "@/prisma-client";
 import { extractTextFromResponseData } from "@/server/inputfunction";
@@ -63,17 +64,19 @@ export default async function MemberProfilePage({ params }: { params: { event_id
     })).filter(({ data }) => data !== '')
     return(
         <MainWrapper>
-            <MemberProfile
-                profile={{
-                    status: memberProfile.status,
-                    position_label: memberProfile.position?.label ?? '',
-                    role_label: memberProfile.role?.label ?? '',
-                    join_response: joinResponse
-
-                }}
-                event_id={params.event_id}
-                event_title={memberProfile.event.title}
-            />
+            <MemberDashboardWrapper
+                eventId={params.event_id}
+                eventTitle={memberProfile.event.title}
+            >
+                <MemberProfile
+                    profile={{
+                        status: memberProfile.status,
+                        position_label: memberProfile.position?.label ?? '',
+                        role_label: memberProfile.role?.label ?? '',
+                        join_response: joinResponse
+                    }}
+                />
+            </MemberDashboardWrapper>
         </MainWrapper>
     )
 }

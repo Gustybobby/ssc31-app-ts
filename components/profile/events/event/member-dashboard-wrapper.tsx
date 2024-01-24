@@ -9,10 +9,14 @@ const tabList = [
     { id: 'forms', label: 'Forms' },
 ]
 
-export default function MemberDashboardWrapper({ children, eventId, eventTitle }: {
+export default function MemberDashboardWrapper({ children, eventId, eventTitle, extraTabs }: {
     children: React.ReactNode,
     eventId: string,
     eventTitle: string,
+    extraTabs?: {
+        id: string
+        label: string
+    }[]
 }){
     return(
         <>
@@ -24,7 +28,7 @@ export default function MemberDashboardWrapper({ children, eventId, eventTitle }
                     </div>
                     <TabBar
                         commonPath={`/profile/events/${eventId}`}
-                        tabList={tabList}
+                        tabList={tabList.concat(extraTabs ?? [])}
                     />
                 </div>
                 <div>

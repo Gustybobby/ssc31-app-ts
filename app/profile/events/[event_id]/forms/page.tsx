@@ -6,6 +6,7 @@ import type { FormResponse, PrismaFieldConfig } from "@/server/typeconfig/form";
 import MainWrapper from "@/components/globalui/main-wrapper";
 import MemberForms from "@/components/profile/events/event/forms/member-forms";
 import type { Prisma } from "@prisma/client";
+import MemberDashboardWrapper from "@/components/profile/events/event/member-dashboard-wrapper";
 
 export default async function MemberFormsPage({ params }: { params: { event_id: string }}){
     const session = await getServerAuthSession()
@@ -52,12 +53,13 @@ export default async function MemberFormsPage({ params }: { params: { event_id: 
         })
         return (
             <MainWrapper>
-                <MemberForms
-                    forms={[]}
-                    responses={publicFormResponses(form_responses)}
-                    event_id={event_id}
-                    event_title={event_title}
-                />
+                <MemberDashboardWrapper eventId={event_id} eventTitle={event_title}>
+                    <MemberForms
+                        forms={[]}
+                        responses={publicFormResponses(form_responses)}
+                        event_id={event_id}
+                    />
+                </MemberDashboardWrapper>
             </MainWrapper>
         )
     }
@@ -118,12 +120,13 @@ export default async function MemberFormsPage({ params }: { params: { event_id: 
     })
     return (
         <MainWrapper>
-            <MemberForms
-                forms={filteredForms as any}
-                responses={publicFormResponses(form_responses)}
-                event_id={event_id}
-                event_title={event_title}
-            />
+            <MemberDashboardWrapper eventId={event_id} eventTitle={event_title}>
+                <MemberForms
+                    forms={filteredForms as any}
+                    responses={publicFormResponses(form_responses)}
+                    event_id={event_id}
+                />
+            </MemberDashboardWrapper>
         </MainWrapper>
     )
 }

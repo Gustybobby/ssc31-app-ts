@@ -1,5 +1,6 @@
 import { getServerAuthSession } from "@/app/api/auth/[...nextauth]/_utils";
 import MainWrapper from "@/components/globalui/main-wrapper";
+import MemberDashboardWrapper from "@/components/profile/events/event/member-dashboard-wrapper";
 import MemberSchedule from "@/components/profile/events/event/schedule/member-schedule";
 import prisma from "@/prisma-client";
 import { redirect } from "next/navigation";
@@ -37,13 +38,17 @@ export default async function MemberSchedulePage({ params }: { params: { event_i
     })
     return(
         <MainWrapper>
-            <MemberSchedule
-                event_id={params.event_id}
-                event_title={member.event.title}
-                can_appoint={!!member.role?.can_appoint}
-                can_regist={!!member.position?.can_regist}
-                status={member.status}
-            />
+            <MemberDashboardWrapper
+                eventId={params.event_id}
+                eventTitle={member.event.title}
+            >
+                <MemberSchedule
+                    can_appoint={!!member.role?.can_appoint}
+                    can_regist={!!member.position?.can_regist}
+                    event_id={params.event_id}
+                    status={member.status}
+                />
+            </MemberDashboardWrapper>
         </MainWrapper>
     )
 }

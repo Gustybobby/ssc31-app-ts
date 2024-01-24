@@ -1,4 +1,5 @@
 import MainWrapper from "@/components/globalui/main-wrapper"
+import DashboardWrapper from "@/components/gustybobby/events/event/dashboard-wrapper"
 import EventFiles from "@/components/gustybobby/events/event/files/event-files"
 import prisma from "@/prisma-client"
 
@@ -13,7 +14,9 @@ export default async function EventFilesPage({ params }: { params: { event_id: s
     })
     return(
         <MainWrapper>
-            <EventFiles event_id={params.event_id} event_title={event.title}/>
+            <DashboardWrapper eventId={params.event_id} eventTitle={event.title}>
+                <EventFiles event_id={params.event_id}/>
+            </DashboardWrapper>
         </MainWrapper>
     )
 }
