@@ -28,7 +28,9 @@ export function ShowAppointments({ appointments, setSelectedApptId }: {
                                     View
                                 </button>
                             </div>
-                            <span className="p-2 border border-black dark:border-white col-span-3">{appt.title}</span>
+                            <span className="p-2 border border-black dark:border-white col-span-3">
+                                {appt.title}
+                            </span>
                             <span className="p-2 border border-black dark:border-white col-span-2">
                                 {(new Date(appt.start_at)).toLocaleString()}
                             </span>
