@@ -2,9 +2,11 @@ import type { AppointmentType, IconType } from "@prisma/client"
 import type { EventConfigPosition, EventConfigRole } from "./form"
 
 export interface ActivityRecord {
+    appt_id: string
     label: string
     hrs: number
-    date: Date
+    start_at: Date
+    end_at: Date
 }
 
 export interface TransferRecord {

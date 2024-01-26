@@ -8,6 +8,7 @@ const tabList = [
     { id: 'members', label: 'Members' },
     { id: 'forms', label: 'Forms' },
     { id: 'schedule', label: 'Schedule' },
+    { id: 'hours', label: 'Hours' },
     { id: 'files', label: 'Files' },
     { id: 'settings', label: 'Settings' },
 ]
