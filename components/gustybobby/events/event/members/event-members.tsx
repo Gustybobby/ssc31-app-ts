@@ -4,11 +4,14 @@ import { sectionStyles } from "@/components/styles/sections"
 import { useRef, useState } from "react"
 import type { GustybobbyOption } from "@/server/typeconfig/form"
 import { ListBoxSingleSelect } from "@/components/tools/list-box"
-import EventDefaultColumns from "./event-default-columns"
+import dynamic from "next/dynamic"
 import type { UseEditableMembersTableProps } from "@/components/tools/gustybobby-tables/tables/hooks/use-editable-members-table"
-import MembersTable from "@/components/tools/gustybobby-tables/tables/members-table"
-import useEditableMembersTable from "@/components/tools/gustybobby-tables/tables/hooks/use-editable-members-table"
 import GustybobbyTableLoading from "@/components/tools/gustybobby-tables/tables/gustybobby-table-loading"
+const EventDefaultColumns = dynamic(() => import("./event-default-columns"))
+const MembersTable = dynamic(() => import("@/components/tools/gustybobby-tables/tables/members-table"), {
+    loading: () => <GustybobbyTableLoading/>
+})
+import useEditableMembersTable from "@/components/tools/gustybobby-tables/tables/hooks/use-editable-members-table"
 import { sendDataToAPI } from "@/components/tools/api"
 import toast from "react-hot-toast"
 import type Table from "@/server/classes/table"
