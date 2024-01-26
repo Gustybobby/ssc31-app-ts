@@ -1,10 +1,13 @@
 "use client"
 
 import PopUpDialog from "@/components/tools/pop-up-dialog"
-import useAppointmentMembersTable from "@/components/tools/gustybobby-tables/tables/hooks/use-appointment-members-table"
 import type { Dispatch, SetStateAction } from "react"
 import GustybobbyTableLoading from "@/components/tools/gustybobby-tables/tables/gustybobby-table-loading"
-import MembersTable from "@/components/tools/gustybobby-tables/tables/members-table"
+import dynamic from "next/dynamic"
+import useAttendanceMembersTable from "@/components/tools/gustybobby-tables/tables/hooks/use-attendance-members-table"
+const MembersTable = dynamic(() => import("@/components/tools/gustybobby-tables/tables/members-table"), {
+    loading: () => <GustybobbyTableLoading/>
+})
 
 export default function ParticipantsHoursPopUp({ eventId, selectedApptId, open, setOpen }: {
     eventId: string,
@@ -12,12 +15,13 @@ export default function ParticipantsHoursPopUp({ eventId, selectedApptId, open, 
     open: boolean,
     setOpen: Dispatch<SetStateAction<boolean>>
 }){
-    const { table } = useAppointmentMembersTable({
+    const { table } = useAttendanceMembersTable({
         eventId,
         role: 'gustybobby',
         tableView: 'attd',
         apptId: selectedApptId ?? '',
         transformation: undefined,
+        hideButtons: true,
     })
 
     if(table === 'error'){
