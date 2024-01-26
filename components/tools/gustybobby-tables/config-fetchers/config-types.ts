@@ -147,4 +147,5 @@ export interface AttendanceMembersTableInitializeState extends AppointmentMember
     apptId: string
     eventId: string,
     refetch: Dispatch<SetStateAction<{}>>
+    hideButtons?: boolean
 }

@@ -1,7 +1,7 @@
 "use client"
 
 import type { AttendanceMembersTableInitializeState, UseAppointmentMembersTable } from "../../config-fetchers/config-types";
-import Table from "@/server/classes/table";
+import Table, { type ColumnProperty } from "@/server/classes/table";
 import useDefaultGroupResponses from "../../config-fetchers/hooks/use-default-group-responses";
 import { useEffect, useState } from "react";
 import { extractTextFromResponseData } from "@/server/inputfunction";
@@ -10,7 +10,11 @@ import { memberColumns } from "../../config-fetchers/columns";
 import CheckInButton from "./rendered-components/check-in-button";
 import CheckOutButton from "./rendered-components/check-out-button";
 
-export default function useAttendanceMembersTable({ eventId, role, apptId, tableView, transformation }: UseAppointmentMembersTable){
+interface UseAttendanceMembersTable extends UseAppointmentMembersTable {
+    hideButtons?: boolean
+}
+
+export default function useAttendanceMembersTable({ eventId, role, apptId, tableView, transformation, hideButtons }: UseAttendanceMembersTable){
     const { defaultGroups, defaultResponses, refetch: refetchGroupResponses } = useDefaultGroupResponses({ eventId, role, tableView, apptId })
     const { members, refetch: refetchMembers } = useAppointmentMembers({ eventId, role, apptId })
     const [shouldRefetch, refetch] = useState({})
@@ -23,6 +27,7 @@ export default function useAttendanceMembersTable({ eventId, role, apptId, table
         apptId,
         eventId,
         refetch,
+        hideButtons,
     }))
     useEffect(() => {
         refetchMembers({})
@@ -38,6 +43,7 @@ export default function useAttendanceMembersTable({ eventId, role, apptId, table
             apptId,
             eventId,
             refetch,
+            hideButtons,
         }))
     }, [defaultGroups, defaultResponses, transformation, members, role, apptId, eventId, refetch])
     return { table, setTable, defaultGroups, refetch }
@@ -52,6 +58,7 @@ function initializeTable({
     apptId,
     eventId,
     refetch,
+    hideButtons,
 }: AttendanceMembersTableInitializeState){
     if(groups === 'loading' || defaultResponses === 'loading' || members === 'loading'){
         return 'loading'
@@ -61,20 +68,7 @@ function initializeTable({
     }
     return Table.initialize({
         columns: [
-            {
-                type: 'pure',
-                id: 'check_in_button',
-                label: 'Check-in',
-                data_type: 'STRING',
-                field_type: 'SHORTANS'
-            },
-            {
-                type: 'pure',
-                id: 'check_out_button',
-                label: 'Check-out',
-                data_type: 'STRING',
-                field_type: 'SHORTANS'
-            },
+            ...(hideButtons? [] : buttonColumns as ColumnProperty[]),
             {
                 type: 'pure',
                 id: 'check_in',
@@ -99,38 +93,40 @@ function initializeTable({
             return ({
                 key: member.id,
                 value: {
-                    check_in_button: {
-                        type: 'pure_single',
-                        id: 'check_in_button',
-                        raw_data: '',
-                        data: (
-                            <CheckInButton
-                                attendanceExisted={attendanceExisted}
-                                checkInExisted={checkInExisted}
-                                eventId={eventId}
-                                memberId={member.id}
-                                apptId={apptId}
-                                role={role}
-                                refetch={refetch}
-                            />
-                        )
-                    },
-                    check_out_button: {
-                        type: 'pure_single',
-                        id: 'check_out_button',
-                        raw_data: '',
-                        data: (
-                            <CheckOutButton
-                                attendanceExisted={attendanceExisted}
-                                checkOutExisted={checkOutExisted}
-                                eventId={eventId}
-                                memberId={member.id}
-                                apptId={apptId}
-                                role={role}
-                                refetch={refetch}
-                            />
-                        )
-                    },
+                    ...(hideButtons? null : {
+                        check_in_button: {
+                            type: 'pure_single',
+                            id: 'check_in_button',
+                            raw_data: '',
+                            data: (
+                                <CheckInButton
+                                    attendanceExisted={attendanceExisted}
+                                    checkInExisted={checkInExisted}
+                                    eventId={eventId}
+                                    memberId={member.id}
+                                    apptId={apptId}
+                                    role={role}
+                                    refetch={refetch}
+                                />
+                            )
+                        },
+                        check_out_button: {
+                            type: 'pure_single',
+                            id: 'check_out_button',
+                            raw_data: '',
+                            data: (
+                                <CheckOutButton
+                                    attendanceExisted={attendanceExisted}
+                                    checkOutExisted={checkOutExisted}
+                                    eventId={eventId}
+                                    memberId={member.id}
+                                    apptId={apptId}
+                                    role={role}
+                                    refetch={refetch}
+                                />
+                            )
+                        },
+                    }),
                     check_in: {
                         type: 'pure_single',
                         id: 'check_in',
@@ -178,3 +174,20 @@ function initializeTable({
 function formatDate(isoString: string | null | undefined){
     return isoString? (new Date(isoString)).toLocaleString() : '-'
 }
+
+const buttonColumns = [
+    {
+        type: 'pure',
+        id: 'check_in_button',
+        label: 'Check-in',
+        data_type: 'STRING',
+        field_type: 'SHORTANS'
+    },
+    {
+        type: 'pure',
+        id: 'check_out_button',
+        label: 'Check-out',
+        data_type: 'STRING',
+        field_type: 'SHORTANS'
+    },
+]
