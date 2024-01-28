@@ -1,13 +1,13 @@
 import { sectionStyles } from "@/components/styles/sections";
-import type { HoursAppointment } from "../hooks/use-filtered-appointments";
-import { Dispatch, SetStateAction } from "react";
+import type { HoursAppointment } from "../../hooks/use-filtered-appointments";
+import type { Dispatch, SetStateAction } from "react";
 
-export function ShowAppointments({ appointments, setSelectedApptId }: {
+export default function ShowAppointments({ appointments, setSelectedApptId }: {
     appointments: HoursAppointment[]
     setSelectedApptId: Dispatch<SetStateAction<string | null>>
 }) {
     return(
-        <div className="overflow-auto">
+        <div className="overflow-auto max-h-96">
             <div className="w-[72rem] md:w-full">
                 <div className="grid grid-cols-12 bg-gray-200 dark:bg-gray-800 font-bold">
                     <span className="p-2 border border-black dark:border-white text-center">Manage</span>

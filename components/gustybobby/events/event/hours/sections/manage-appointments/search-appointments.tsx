@@ -15,7 +15,7 @@ interface SearchAppointmentsProps {
 export default function SearchAppointments({ startAt, setStartAt, endAt, setEndAt, refetch }: SearchAppointmentsProps){
     return (
         <div className="flex flex-col space-y-2">
-            <div className="font-bold text-lg">Search appointments to distribute</div>
+            <div className="font-bold text-lg">Search appointments to distribute hours</div>
             <div className="flex space-x-2">
                 <DatePicker
                     id="pick_start_at_search"
@@ -32,7 +32,7 @@ export default function SearchAppointments({ startAt, setStartAt, endAt, setEndA
                     onChange={(date) => setEndAt(date.toISOString())}
                 />
             </div>
-            <button className={sectionStyles.button({ color: 'blue', hover: true , border: true })} onClick={() => refetch({})}>
+            <button className={sectionStyles.button({ color: 'green', hover: true , border: true })} onClick={() => refetch({})}>
                 Search
             </button>
         </div>
