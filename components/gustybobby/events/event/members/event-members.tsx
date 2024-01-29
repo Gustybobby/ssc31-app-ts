@@ -117,8 +117,8 @@ export default function EventMembers({ event_id, forms }: {
 function filterColumnOptions(formConfig: FormConfigProperty){
     return [
         {
-            id: 'position',
-            label: 'Position',
+            id: 'status',
+            label: 'Status',
             index: 0,
             active: false,
         },
@@ -129,11 +129,11 @@ function filterColumnOptions(formConfig: FormConfigProperty){
             active: false,
         },
         {
-            id: 'status',
-            label: 'Status',
+            id: 'position',
+            label: 'Position',
             index: 2,
             active: false,
-        }
+        },
     ].concat((formConfig.field_order ?? [])
         .filter((field_id) => formConfig.form_fields?.[field_id].field_type !== 'INFO')
         .map((field_id, index) => ({
