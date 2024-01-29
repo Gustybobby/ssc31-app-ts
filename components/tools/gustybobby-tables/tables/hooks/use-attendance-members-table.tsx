@@ -45,7 +45,7 @@ export default function useAttendanceMembersTable({ eventId, role, apptId, table
             refetch,
             hideButtons,
         }))
-    }, [defaultGroups, defaultResponses, transformation, members, role, apptId, eventId, refetch])
+    }, [defaultGroups, defaultResponses, transformation, members, role, apptId, eventId, hideButtons, refetch])
     return { table, setTable, defaultGroups, refetch }
 }
 

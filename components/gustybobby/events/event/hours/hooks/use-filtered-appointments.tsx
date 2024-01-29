@@ -1,7 +1,8 @@
 "use client"
 
-import { AppointmentType } from "@prisma/client"
+import type { AppointmentType } from "@prisma/client"
 import { useEffect, useRef, useState } from "react"
+import { hoursAppointmentUrl } from "../urls"
 
 export interface HoursAppointment {
     id: string
@@ -26,9 +27,9 @@ export interface UseFilteredAppointmentsProps {
 }
 
 export default function useFilteredAppointments({ eventId, startAt, endAt, memberId, positionId, roleId }: UseFilteredAppointmentsProps){
-    const [appointments, setAppointments] = useState<HoursAppointmentsState>('loading')
+    const [appointments, setAppointments] = useState<HoursAppointmentsState>([])
     const [shouldRefetch, refetch] = useState({})
-    const refetchRef = useRef<{}|undefined>()
+    const refetchRef = useRef<{}>(shouldRefetch)
 
     useEffect(() => {
         if(refetchRef.current === shouldRefetch || !(startAt && endAt)){
@@ -36,16 +37,10 @@ export default function useFilteredAppointments({ eventId, startAt, endAt, membe
         }
         setAppointments('loading')
         refetchRef.current = shouldRefetch
-        fetch(`/api/gustybobby/events/${eventId}/hours?` + [
-            `start_at=${encodeURIComponent(startAt)}&end_at=${encodeURIComponent(endAt)}`,
-            memberId? `member_id=${memberId}` : '',
-            positionId? `position_id=${positionId}` : '',
-            roleId? `role_id=${roleId}` : '',
-        ].filter((string) => string !== '').join('&'))
+        fetch(hoursAppointmentUrl({ eventId, startAt, endAt, memberId, positionId, roleId }))
             .then(res => res.ok? res.json() : { message: 'ERROR' })
             .then(data => data.message === 'SUCCESS'? data.data : 'error')
             .then(data => setAppointments(data))
-        
     }, [eventId, startAt, endAt, memberId, positionId, roleId, shouldRefetch])
 
     return { appointments, refetch }
