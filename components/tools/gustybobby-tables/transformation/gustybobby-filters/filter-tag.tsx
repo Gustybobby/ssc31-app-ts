@@ -5,7 +5,7 @@ import { inputStyles } from "@/components/styles/tools"
 import { InputField } from "@/components/tools/input"
 import { ListBoxSingleSelect } from "@/components/tools/list-box"
 import { contentPatterns } from "@/server/classes/forms/contentconfig"
-import type { TransformationFilter } from "@/server/classes/table"
+import { transformationOperators, type TransformationFilter } from "@/server/classes/table"
 import type { GustybobbyOption } from "@/server/typeconfig/form"
 import type { Dispatch, SetStateAction } from "react"
 import { RxCross1 } from "react-icons/rx"
@@ -83,7 +83,7 @@ export default function FilterTag({ columnOptions, filter, setFilters, tagIndex 
     )
 }
 
-const operatorOptions: GustybobbyOption[] = ['has','starts','ends','=','<','>'].map((operator, index) => ({
+const operatorOptions: GustybobbyOption[] = transformationOperators.map((operator, index) => ({
     id: operator,
     label: operator,
     index,

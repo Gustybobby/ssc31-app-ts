@@ -104,7 +104,8 @@ interface ExpandedRowArray {
     value: ExpandedRowValue[]
 }
 
-export type TransformationOperator = 'has' | 'starts' | 'ends' | '=' | '>' | '<'
+export type TransformationOperator = 'has' | 'starts' | 'ends' | 'not' | '=' | '>' | '<'
+export const transformationOperators = ['has', 'starts', 'ends', 'not', '=', '<', '>']
 
 export interface TransformationSort {
     column_id: string,
@@ -333,15 +334,14 @@ export default class Table {
                 return data.startsWith(filter.value)
             case 'ends':
                 return data.endsWith(filter.value)
+            case 'not':
+                return data !== filter.value
             case '<':
                 if(!isNaN(Number(data)) && !isNaN(Number(filter.value))){
                     return Number(data) < Number(filter.value)
                 }
                 return data < filter.value
             case '=':
-                if(!isNaN(Number(data)) && !isNaN(Number(filter.value))){
-                    return Number(data) === Number(filter.value)
-                }
                 return data === filter.value
             case '>':
                 if(!isNaN(Number(data)) && !isNaN(Number(filter.value))){
