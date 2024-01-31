@@ -1,6 +1,7 @@
 'use client'
 
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
+import { useEffect, useRef, useState } from "react"
 
 export async function sendDataToAPI({
     apiUrl,
@@ -51,4 +52,42 @@ export async function sendFileToAPI({ apiUrl, method, body }: { apiUrl: string, 
     }catch{
         return "POST FILE FAILED"
     }
+}
+
+export function useFetchData<T>({ apiUrl, defaultState, waitingState, badState, fetchOnInit = true, autoFetch, accessor }: {
+    apiUrl: string
+    defaultState: T
+    waitingState?: T
+    badState: T
+    fetchOnInit?: boolean
+    autoFetch: boolean
+    accessor?: string
+}){
+    const [data, setData] = useState<T>(defaultState)
+    const [shouldRefetch, refetch] = useState({})
+    const refetchRef = useRef(fetchOnInit? {} : shouldRefetch)
+
+    useEffect(() => {
+        if(refetchRef.current === shouldRefetch && !autoFetch){
+            return
+        }
+        refetchRef.current = shouldRefetch
+        if(waitingState){
+            setData(waitingState)
+        }
+        fetch(apiUrl)
+            .then(res => res.ok? res.json() : { message: 'ERROR' })
+            .then(data => {
+                if(data.message !== 'SUCCESS'){
+                    return badState
+                }
+                if(accessor){
+                    return data.data[accessor]
+                }
+                return data.data
+            })
+            .then(data => setData(data))
+    }, [apiUrl, waitingState, badState, accessor, autoFetch, shouldRefetch])
+
+    return { data, setData, refetch }
 }

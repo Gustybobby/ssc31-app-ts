@@ -3,7 +3,7 @@ import type { FormConfigProperty } from "@/server/classes/forms/formconfig"
 import type { ColumnProperty } from "@/server/classes/table"
 import type Table from "@/server/classes/table"
 import type { SelectionResponse } from "@/server/modules/get-permitted-form-info"
-import type { TableView } from "@/server/typeconfig/event"
+import type { ColumnFetches, TableView } from "@/server/typeconfig/event"
 import type { GustybobbyOption } from "@/server/typeconfig/form"
 import type { EditableAppointment, GustybobbyAttendance } from "@/server/typeconfig/record"
 import type { MemberStatus } from "@prisma/client"
@@ -62,6 +62,7 @@ export interface DefaultResponses {
     }
 }
 
+export type ColumnFetchesState = ColumnFetches | 'loading' | 'error'
 export type FormConfigState = FormConfigProperty | 'loading' | 'error'
 export type ResponsesState = TableFormResponse[] | 'loading' | 'error'
 export type DefaultResponsesState = DefaultResponses | 'loading' | 'error'

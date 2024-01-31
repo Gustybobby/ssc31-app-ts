@@ -1,15 +1,15 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useFetchData } from "@/components/tools/api"
 
 export default function useEventStatus(eventId: string){
-    const [status, setStatus] = useState<boolean | 'loading' | 'error'>('loading')
-    const [shouldRefetch, refetch] = useState({})
-    useEffect(() => {
-        fetch(`/api/gustybobby/events/${eventId}?online=1`)
-            .then(res => res.ok? res.json() : { message: 'ERROR' } )
-            .then(data => data.message === 'SUCCESS'? data.data.online : 'error')
-            .then(data => setStatus(data))
-    }, [eventId, shouldRefetch])
+    const { data: status, setData: setStatus, refetch } = useFetchData<boolean | 'loading' | 'error'>({
+        apiUrl: `/api/gustybobby/events/${eventId}?online=1`,
+        autoFetch: false,
+        defaultState: 'loading',
+        waitingState: 'loading',
+        badState: 'error',
+        accessor: 'online',
+    })
     return { status, setStatus, refetch }
 }

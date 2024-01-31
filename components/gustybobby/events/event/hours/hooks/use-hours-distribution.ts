@@ -1,27 +1,19 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react";
 import { hoursActivityUrl, type HoursActivityUrlProps } from "../urls";
 import type { ActivityRecord } from "@/server/typeconfig/record";
+import { useFetchData } from "@/components/tools/api";
 
 export type HoursDistributionState = { [member_id: string]: ActivityRecord[] } | 'stasis' | 'loading' | 'error'
 
 export default function useHoursDistribution({ eventId, startAt, endAt, memberId, positionId, roleId, mode }: HoursActivityUrlProps){
-    const [distribution, setDistribution] = useState<HoursDistributionState>('stasis')
-    const [shouldRefetch, refetch] = useState({})
-    const refetchRef = useRef<{}>(shouldRefetch)
-    
-    useEffect(() => {
-        if(refetchRef.current === shouldRefetch || !(startAt && endAt)){
-            return
-        }
-        setDistribution('loading')
-        refetchRef.current = shouldRefetch
-        fetch(hoursActivityUrl({ eventId, startAt, endAt, memberId, positionId, roleId, mode }))
-            .then(res => res.ok? res.json() : { message: 'ERROR' })
-            .then(data => data.message === 'SUCCESS'? data.data : 'error')
-            .then(data => setDistribution(data))
-    },[eventId, startAt, endAt, memberId, positionId, roleId, mode, shouldRefetch])
-
+    const { data: distribution, setData: setDistribution, refetch } = useFetchData<HoursDistributionState>({
+        apiUrl: hoursActivityUrl({ eventId, startAt, endAt, memberId, positionId, roleId, mode }),
+        autoFetch: false,
+        defaultState: 'stasis',
+        waitingState: 'loading',
+        badState: 'error',
+        fetchOnInit: false,
+    })
     return { distribution, setDistribution, refetch }
 }

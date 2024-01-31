@@ -1,8 +1,8 @@
 "use client"
 
 import type { AppointmentType } from "@prisma/client"
-import { useEffect, useRef, useState } from "react"
 import { hoursAppointmentUrl } from "../urls"
+import { useFetchData } from "@/components/tools/api"
 
 export interface HoursAppointment {
     id: string
@@ -27,21 +27,13 @@ export interface UseFilteredAppointmentsProps {
 }
 
 export default function useFilteredAppointments({ eventId, startAt, endAt, memberId, positionId, roleId }: UseFilteredAppointmentsProps){
-    const [appointments, setAppointments] = useState<HoursAppointmentsState>([])
-    const [shouldRefetch, refetch] = useState({})
-    const refetchRef = useRef<{}>(shouldRefetch)
-
-    useEffect(() => {
-        if(refetchRef.current === shouldRefetch || !(startAt && endAt)){
-            return
-        }
-        setAppointments('loading')
-        refetchRef.current = shouldRefetch
-        fetch(hoursAppointmentUrl({ eventId, startAt, endAt, memberId, positionId, roleId }))
-            .then(res => res.ok? res.json() : { message: 'ERROR' })
-            .then(data => data.message === 'SUCCESS'? data.data : 'error')
-            .then(data => setAppointments(data))
-    }, [eventId, startAt, endAt, memberId, positionId, roleId, shouldRefetch])
-
-    return { appointments, refetch }
+    const { data: appointments, setData: setAppointments, refetch } = useFetchData<HoursAppointmentsState>({
+        apiUrl: hoursAppointmentUrl({ eventId, startAt: startAt ?? '', endAt: endAt ?? '', memberId, positionId, roleId }),
+        autoFetch: false,
+        defaultState: [],
+        waitingState: 'loading',
+        badState: 'error',
+        fetchOnInit: false,
+    })
+    return { appointments, setAppointments, refetch }
 }
