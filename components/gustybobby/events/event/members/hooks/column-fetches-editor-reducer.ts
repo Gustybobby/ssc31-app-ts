@@ -109,10 +109,14 @@ export default function columnFetchesEditorReducer(state: ColumnFetchesEditorSta
     switch(action.type){
         case 'edit_fields':
             const selectedFieldId = action.fields.find((field) => field.active)?.id ?? 'none'
+            let newGroups = { ...state.groups }
+            if(selectedFieldId === 'none'){
+                delete newGroups[state.group_id_view].forms[state.form_id_view]
+            }
             return {
                 ...state,
                 fieldArray: action.fields,
-                groups: selectedFieldId === 'none'? { ...state.groups }: {
+                groups: selectedFieldId === 'none'? newGroups: {
                     ...state.groups,
                     [state.group_id_view]: {
                         name: group?.name ?? '',
