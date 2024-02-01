@@ -49,6 +49,7 @@ export default function MemberSelections({ event_id, form_id }: { event_id: stri
                                                 active: false
                                             }
                                         }) ?? [])}
+                                        transformationFilters={transformation?.filters ?? {}}
                                         setTransformation={setTransformation}
                                     />
                                     }

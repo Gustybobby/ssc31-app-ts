@@ -55,6 +55,7 @@ export default function EventMembers({ event_id, forms }: {
                         {!(formConfig === 'loading' || formConfig === 'error') &&
                         <GustybobbyFilters
                             columnOptions={filterColumnOptions(formConfig)}
+                            transformationFilters={transformation?.filters ?? {}}
                             setTransformation={setTransformation}
                         />
                         }

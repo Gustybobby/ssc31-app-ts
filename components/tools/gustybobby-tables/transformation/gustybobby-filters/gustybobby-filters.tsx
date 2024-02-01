@@ -11,6 +11,9 @@ import type { TransformationFilter } from "@/server/classes/table"
 
 interface GustybobbyFiltersProps {
     columnOptions: GustybobbyOption[]
+    transformationFilters: {
+        [column_id: string]: TransformationFilter
+    }
     setTransformation: Dispatch<SetStateAction<Table['transformation']>>
     classNames?: {
         panelWidth?: string
@@ -19,13 +22,13 @@ interface GustybobbyFiltersProps {
 
 export default function GustybobbyFilters({
     columnOptions,
+    transformationFilters,
     setTransformation,
     classNames = {
         panelWidth: 'w-80 md:w-[36rem]'
     }
 }: GustybobbyFiltersProps){
-
-    const [filters, setFilters] = useState<TransformationFilter[]>([])
+    const [filters, setFilters] = useState<TransformationFilter[]>(Object.values(transformationFilters))
 
     return (
         <Popover className="relative">

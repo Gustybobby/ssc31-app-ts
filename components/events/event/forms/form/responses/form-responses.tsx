@@ -66,6 +66,7 @@ export default function FormResponses({ event_id, role, formConfig, responses }:
                                         active: false
                                 })) ?? []
                             )}
+                            transformationFilters={transformation?.filters ?? {}}
                             setTransformation={setTransformation}
                         />
                     </div>

@@ -46,6 +46,7 @@ export default function PartySelectorTable({ eventId, role, partyMembers, dispat
                         index: index + 2,
                         active: false
                 })))}
+                transformationFilters={transformation?.filters ?? {}}
                 setTransformation={setTransformation}
             />
             <div className="h-[90vh] overflow-auto">
