@@ -8,6 +8,7 @@ import type { GustybobbyOption } from "@/server/typeconfig/form"
 import FilterTag from "./filter-tag"
 import { sectionStyles } from "@/components/styles/sections"
 import type { TransformationFilter } from "@/server/classes/table"
+import { popOverStyles } from "@/components/styles/popovers"
 
 interface GustybobbyFiltersProps {
     columnOptions: GustybobbyOption[]
@@ -32,7 +33,7 @@ export default function GustybobbyFilters({
 
     return (
         <Popover className="relative">
-            <Popover.Button className={styles.popOverButton()}>
+            <Popover.Button className={popOverStyles.popOverButton()}>
                 <div className="p-1 flex items-center space-x-2">
                     <FaFilter className="text-xl"/>
                 </div>
@@ -43,7 +44,7 @@ export default function GustybobbyFilters({
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
             >
-                <Popover.Panel className={styles.popOverPanel(classNames.panelWidth)}>
+                <Popover.Panel className={popOverStyles.popOverPanel(classNames.panelWidth+' p-2 rounded-lg')}>
                     {filters.map((filter, index) => (
                     <FilterTag
                         key={index}
@@ -81,23 +82,4 @@ export default function GustybobbyFilters({
             </Transition>
         </Popover>
     )
-}
-
-const styles = {
-    popOverButton: (buttonClassName?: string) => [
-        'flex flex-row justify-between items-center',
-        'px-2 py-1 rounded-md shadow-md',
-        'border border-gray-400 dark:border-gray-700',
-        'bg-gray-200 dark:bg-gray-800 transition-colors',
-        'hover:border-black dark:hover:border-gray-400',
-        'focus:outline-none',
-        buttonClassName ?? '',
-    ].join(' '),
-    popOverPanel: (panelClassName?: string) => [
-        'absolute space-y-1',
-        'p-2 z-10 mt-1 shadow-lg rounded-lg',
-        'text-base sm:text-sm',
-        'bg-gray-100 dark:bg-gray-700',
-        panelClassName ?? '',
-    ].join(' '),
 }

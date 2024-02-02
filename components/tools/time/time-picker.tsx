@@ -5,6 +5,7 @@ import timePickerReducer, { type TimePickerReducerAction } from "./hooks/time-pi
 import { inputStyles } from "@/components/styles/tools";
 import TimeNavigation from "./sections/time-navigation";
 import Clock from "./sections/clock";
+import { popOverStyles } from "@/components/styles/popovers";
 
 interface TimePickerProps {
     id: string
@@ -49,7 +50,7 @@ export default function TimePicker({ id, label, buttonClassName, panelClassName,
         <div>
             <div className={inputStyles.label('default', 'lg')}>{label}</div>
             <Popover className="relative">
-                <Popover.Button className={styles.popOverButton(buttonClassName)}>
+                <Popover.Button className={popOverStyles.popOverButton(buttonClassName)}>
                     <div className="flex items-center space-x-2">
                         <FaRegClock/>
                         <span>{formatTimeString(timePicker.selected_time, timePicker.time.meridiem)}</span>
@@ -61,7 +62,7 @@ export default function TimePicker({ id, label, buttonClassName, panelClassName,
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                 >
-                    <Popover.Panel className={styles.popOverPanel(panelClassName)}>
+                    <Popover.Panel className={popOverStyles.popOverPanel(panelClassName+' w-64 h-72')}>
                         <TimeNavigation
                             selectedTime={timePicker.selected_time}
                             view={timePicker.view}
@@ -103,23 +104,4 @@ function formatTimeString(time: Date, meridiem: 'AM' | 'PM'): string{
 
 export function literalHour(hr: number): number{
     return (hr % 12) || 12
-}
-
-const styles = {
-    popOverButton: (buttonClassName?: string) => [
-        'flex flex-row justify-between items-center',
-        'px-2 py-1 rounded-md shadow-md',
-        'border border-gray-400 dark:border-gray-700',
-        'bg-gray-200 dark:bg-gray-800 transition-colors',
-        'hover:border-black dark:hover:border-gray-400',
-        'focus:outline-none',
-        buttonClassName ?? '',
-    ].join(' '),
-    popOverPanel: (panelClassName?: string) => [
-        'absolute',
-        'w-64 h-72 z-10 mt-1 shadow-lg',
-        'text-base sm:text-sm',
-        'bg-gray-100 dark:bg-gray-700',
-        panelClassName ?? '',
-    ].join(' '),
 }

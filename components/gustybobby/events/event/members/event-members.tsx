@@ -17,6 +17,7 @@ import toast from "react-hot-toast"
 import type Table from "@/server/classes/table"
 import GustybobbyFilters from "@/components/tools/gustybobby-tables/transformation/gustybobby-filters/gustybobby-filters"
 import type { FormConfigProperty } from "@/server/classes/forms/formconfig"
+import MembersTools from "./members-tools"
 
 export default function EventMembers({ event_id, forms }: {
     event_id: string
@@ -53,11 +54,14 @@ export default function EventMembers({ event_id, forms }: {
                             maxHeight="max-h-36"
                         />
                         {!(formConfig === 'loading' || formConfig === 'error') &&
-                        <GustybobbyFilters
-                            columnOptions={filterColumnOptions(formConfig)}
-                            transformationFilters={transformation?.filters ?? {}}
-                            setTransformation={setTransformation}
-                        />
+                        <div className="flex flex-row space-x-1">
+                            <GustybobbyFilters
+                                columnOptions={filterColumnOptions(formConfig)}
+                                transformationFilters={transformation?.filters ?? {}}
+                                setTransformation={setTransformation}
+                            />
+                            <MembersTools/>
+                        </div>
                         }
                     </div>
                     <button
