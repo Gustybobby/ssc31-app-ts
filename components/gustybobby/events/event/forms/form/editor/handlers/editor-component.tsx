@@ -7,9 +7,15 @@ import { Toaster } from "react-hot-toast"
 import TitleField from "../sections/title-field"
 import FixedSettings from "../sections/settingsbar/fixed-settings"
 import StickySettings from "../sections/settingsbar/sticky-settings"
+import EmailRestrictsFieldLoading from "../sections/loading/email-restricts-field-loading"
+import ParagraphFieldsLoading from "../sections/loading/paragraph-fields-loading"
 import dynamic from "next/dynamic"
-const EmailRestrictsField = dynamic(() => import("../sections/email-restricts-field"))
-const ParagraphFields = dynamic(() => import("../sections/description-fields"))
+const EmailRestrictsField = dynamic(() => import("../sections/email-restricts-field"), {
+    loading: () => <EmailRestrictsFieldLoading/>
+})
+const ParagraphFields = dynamic(() => import("../sections/paragraph-fields"), {
+    loading: () => <ParagraphFieldsLoading/>
+})
 const FormFields = dynamic(() => import("../sections/form-fields"))
 
 interface EditorComponentProps extends DispatchFormConfig {
