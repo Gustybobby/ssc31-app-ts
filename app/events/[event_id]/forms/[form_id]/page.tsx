@@ -20,6 +20,12 @@ export default async function EventFormPage({ params }: { params: { event_id: st
     switch(form.message){
         case "INVALID":
             redirect(`/events`)
+        case "CLOSED":
+            return (
+                <FormMessage>
+                    The form has been closed.
+                </FormMessage>
+            )
         case "UNAUTHORIZED":
             return (
                 <FormMessage>

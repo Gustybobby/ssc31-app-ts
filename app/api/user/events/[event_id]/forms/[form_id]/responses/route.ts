@@ -19,6 +19,7 @@ export async function POST(req: NextRequest, { params }: { params: { event_id: s
         })
         switch(form.message){
             case "INVALID":
+            case "CLOSED":
             case "UNAUTHORIZED":
                 throw { message: form.message, status: 403 }
             case "MEMBER_EXISTED":

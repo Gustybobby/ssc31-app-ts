@@ -6,7 +6,7 @@ import { getPrismaFields } from "../typeconfig/form"
 import getUserFormResponses from "./get-user-form-responses"
 
 interface BadFormAuthResponse {
-    message: "INVALID" | "UNAUTHORIZED"
+    message: "INVALID" | "UNAUTHORIZED" | "CLOSED"
 }
 
 interface GoodFormAuthResponse {
@@ -81,14 +81,14 @@ export default async function formAuth(
     }
     const eventConfig = new EventConfig(eventInfo)
     const formConfig = FormConfig.fromDatabase({ ...formInfo, form_fields: getPrismaFields(formInfo.form_fields) })
+    if(!formConfig.open && !isAdmin){
+        return { message: "CLOSED" }
+    }
     if(!formConfig.userCanAccess({
         email: user_email,
         position_id: userMemberInfo?.position_id ?? null,
         role_id: userMemberInfo?.role_id ?? null,
     })){
-        return { message: "UNAUTHORIZED" }
-    }
-    if(!formConfig.open && !isAdmin){
         return { message: "UNAUTHORIZED" }
     }
     if(!formConfig.public && !userMemberInfo && !isAdmin){
