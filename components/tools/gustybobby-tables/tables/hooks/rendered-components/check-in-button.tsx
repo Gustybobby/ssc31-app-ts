@@ -7,7 +7,6 @@ import { attendancesApiUrl } from "../../../config-fetchers/config-urls"
 import type { Dispatch, SetStateAction } from "react"
 
 export default function CheckInButton({
-    attendanceExisted,
     checkInExisted,
     eventId,
     role,
@@ -15,7 +14,6 @@ export default function CheckInButton({
     apptId,
     refetch
 }: {
-    attendanceExisted: boolean
     checkInExisted: boolean
     eventId: string
     memberId: string
@@ -35,7 +33,7 @@ export default function CheckInButton({
                     const checkInToast = toast.loading(checkInExisted? 'Canceling...' : 'Checking in...')
                     const res = await sendDataToAPI({
                         apiUrl: attendancesApiUrl({ eventId, role, apptId, memberId }),
-                        method: attendanceExisted? 'PATCH' : 'POST',
+                        method: 'PUT',
                         body: JSON.stringify({
                             data: {
                                 member_id: memberId,

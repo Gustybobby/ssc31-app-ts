@@ -7,7 +7,6 @@ import toast from "react-hot-toast"
 import { attendancesApiUrl } from "../../../config-fetchers/config-urls"
 
 export default function CheckOutButton({
-    attendanceExisted,
     checkOutExisted,
     eventId,
     role,
@@ -15,7 +14,6 @@ export default function CheckOutButton({
     apptId,
     refetch
 }: {
-    attendanceExisted: boolean
     checkOutExisted: boolean
     eventId: string
     memberId: string
@@ -35,7 +33,7 @@ export default function CheckOutButton({
                     const checkOutToast = toast.loading(checkOutExisted?  'Canceling...' : 'Checking out...')
                     const res = await sendDataToAPI({
                         apiUrl: attendancesApiUrl({ eventId, role, apptId, memberId }),
-                        method: attendanceExisted? 'PATCH' : 'POST',
+                        method: 'PUT',
                         body: JSON.stringify({
                             data: {
                                 member_id: memberId,

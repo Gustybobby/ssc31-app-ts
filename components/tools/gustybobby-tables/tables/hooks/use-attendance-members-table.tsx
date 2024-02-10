@@ -87,7 +87,6 @@ function initializeTable({
             ...groups,
         ],
         rows: members.map((member) => {
-            const attendanceExisted = !!member.attendance
             const checkInExisted = !!member.attendance?.check_in
             const checkOutExisted = !!member.attendance?.check_out
             return ({
@@ -100,7 +99,6 @@ function initializeTable({
                             raw_data: '',
                             data: (
                                 <CheckInButton
-                                    attendanceExisted={attendanceExisted}
                                     checkInExisted={checkInExisted}
                                     eventId={eventId}
                                     memberId={member.id}
@@ -116,7 +114,6 @@ function initializeTable({
                             raw_data: '',
                             data: (
                                 <CheckOutButton
-                                    attendanceExisted={attendanceExisted}
                                     checkOutExisted={checkOutExisted}
                                     eventId={eventId}
                                     memberId={member.id}
