@@ -7,44 +7,38 @@ interface AttendanceRouteParams {
     appointment_id: string
 }
 
-export async function POST(req: NextRequest, { params }: { params: AttendanceRouteParams }){
-    try{
-        const attendanceRequest = await req.json()
-        console.log('Recieved request', attendanceRequest)
-        const { id, ...attendanceData } = attendanceRequest.data
-        const newAttendance = await prisma.attendance.create({
-            data: {
-                ...attendanceData,
-                member_id: params.member_id,
-                appointment_id: params.appointment_id,
-            }
-        })
-        console.log("Created new attendance",newAttendance)
-        return NextResponse.json({ message: "SUCCESS", data: newAttendance }, { status: 200 })
-    } catch(e){
-        console.log(e)
-        return NextResponse.json({ message: "ERROR" }, { status: 500 })
-    }
-}
-
-export async function PATCH(req: NextRequest, { params }: { params: AttendanceRouteParams }){
+export async function PUT(req: NextRequest, { params }: { params: AttendanceRouteParams }){
     try{
         const attendanceRequest = await req.json()
         console.log('Recieved request', attendanceRequest)
         const { id, member_id, appointment_id, ...attendanceData } = attendanceRequest.data
-        const updatedAttendance = await prisma.attendance.update({
+        const upsertedAttendance = await prisma.attendance.upsert({
             where: {
                 member_id_appointment_id: {
                     member_id: params.member_id,
                     appointment_id: params.appointment_id,
                 }
             },
-            data: {
+            create: {
+                ...attendanceData,
+                member_id: params.member_id,
+                appointment_id: params.appointment_id,
+            },
+            update: {
                 ...attendanceData,
             }
         })
-        console.log("Updated attendance",updatedAttendance)
-        return NextResponse.json({ message: "SUCCESS", data: updatedAttendance }, { status: 200 })
+        if(!upsertedAttendance.check_in && !upsertedAttendance.check_out){
+            await prisma.attendance.delete({
+                where: {
+                    id: upsertedAttendance.id
+                }
+            })
+            console.log("Deleted upserted attendance due to empty check-in and check-out entries")
+            return NextResponse.json({ message: "SUCCESS" }, { status: 200 })
+        }
+        console.log("Upserted attendance", upsertedAttendance)
+        return NextResponse.json({ message: "SUCCESS", data: upsertedAttendance }, { status: 200 })
     } catch(e){
         console.log(e)
         return NextResponse.json({ message: "ERROR" }, { status: 500 })
