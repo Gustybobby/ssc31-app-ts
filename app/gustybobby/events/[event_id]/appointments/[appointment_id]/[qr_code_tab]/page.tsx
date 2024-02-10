@@ -2,7 +2,7 @@ import MainWrapper from "@/components/globalui/main-wrapper";
 import Appointment from "@/components/gustybobby/events/event/appointments/appointment/appointment";
 import prisma from "@/prisma-client";
 
-export default async function AppointmentPage({ params }: { params: { event_id: string, appointment_id: string  }}){
+export default async function AppointmentPage({ params }: { params: { event_id: string, appointment_id: string, qr_code_tab: string }}){
     const appointment = await prisma.eventAppointment.findUniqueOrThrow({
         where: {
             id: params.appointment_id,
@@ -19,6 +19,7 @@ export default async function AppointmentPage({ params }: { params: { event_id: 
                     id: params.appointment_id,
                     title: appointment.title,
                 }}
+                qrCodeTab={params.qr_code_tab}
                 eventId={params.event_id}
             />
         </MainWrapper>
