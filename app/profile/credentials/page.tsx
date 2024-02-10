@@ -13,7 +13,6 @@ export default async function CredentialsPage(){
             <div className={styles.mainBox}>
                 <div className={styles.sectionBox}>
                     <div className="w-full md:w-80 bg-gray-100 dark:bg-black/70 p-4 rounded-lg shadow-lg flex flex-col items-center space-y-2">
-                        <span>Generated at: {date.toLocaleString()}</span>
                         <div className="border-8 border-red-600 w-fit">
                             <QRCode value={session?.user.id+'</>'+date.toISOString()}/>
                         </div>

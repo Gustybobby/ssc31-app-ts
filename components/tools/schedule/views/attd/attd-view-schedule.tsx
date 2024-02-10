@@ -6,6 +6,7 @@ import useAttendanceMembersTable from "@/components/tools/gustybobby-tables/tabl
 import MembersTable from "@/components/tools/gustybobby-tables/tables/members-table"
 import type Table from "@/server/classes/table"
 import type { GustybobbyAppointment } from "@/server/typeconfig/record"
+import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useState } from "react"
 
@@ -42,6 +43,14 @@ export default function AttdViewSchedule({ eventId, role, appt, regist }: {
                 </span>
             </div>
             <div className="m-2">
+                <div className="mb-2">
+                    <Link
+                        href={appointmentUrl(role, eventId, appt.id)}
+                        className={sectionStyles.button({ color: 'purple', border: true, hover: true })}
+                    >
+                        QR Code Check-in
+                    </Link>
+                </div>
                 {table === 'loading'?
                 <GustybobbyTableLoading/>
                 :
@@ -54,3 +63,7 @@ export default function AttdViewSchedule({ eventId, role, appt, regist }: {
         </div>
     )
 }
+
+const appointmentUrl = (role: 'gustybobby' | 'user', eventId: string, apptId: string) => (
+    `/${role === 'user'? 'profile' : role}/events/${eventId}/appointments/${apptId}`
+)
