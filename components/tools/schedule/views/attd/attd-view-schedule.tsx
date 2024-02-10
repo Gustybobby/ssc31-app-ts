@@ -65,5 +65,5 @@ export default function AttdViewSchedule({ eventId, role, appt, regist }: {
 }
 
 const appointmentUrl = (role: 'gustybobby' | 'user', eventId: string, apptId: string) => (
-    `/${role === 'user'? 'profile' : role}/events/${eventId}/appointments/${apptId}`
+    `/${role === 'user'? 'profile' : role}/events/${eventId}/appointments/${apptId}?tab=qr-code-scan-in`
 )

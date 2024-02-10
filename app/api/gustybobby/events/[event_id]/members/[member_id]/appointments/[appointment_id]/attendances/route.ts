@@ -12,6 +12,19 @@ export async function PUT(req: NextRequest, { params }: { params: AttendanceRout
         const attendanceRequest = await req.json()
         console.log('Recieved request', attendanceRequest)
         const { id, member_id, appointment_id, ...attendanceData } = attendanceRequest.data
+        await prisma.eventAppointment.findUniqueOrThrow({
+            where: {
+                id: params.appointment_id,
+                party_members: {
+                    some: {
+                        id: params.member_id
+                    }
+                }
+            },
+            select: {
+                id: true,
+            }
+        })
         const upsertedAttendance = await prisma.attendance.upsert({
             where: {
                 member_id_appointment_id: {
