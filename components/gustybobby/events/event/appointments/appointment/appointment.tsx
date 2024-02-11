@@ -16,7 +16,9 @@ export default function Appointment({ appt, eventId, qrCodeTab }: {
         <AppointmentWrapper eventId={eventId} apptId={appt.id} apptTitle={appt.title}>
             <div className={sectionStyles.container()}>
                 <div className={sectionStyles.box.gray({ round: true, shadow: true })}>
-                    <h1 className={sectionStyles.title({ color: 'purple', extensions: 'mb-2' })}>QR Code Scan</h1>
+                    <h1 className={sectionStyles.title({ color: 'purple', extensions: 'mb-2' })}>
+                        {isCheckOut? 'QR Check-out' : 'QR Check-in'}
+                    </h1>
                     <div className="flex flex-col items-center">
                         <QrCodeScanner
                             qrcodeId="reader"
