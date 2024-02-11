@@ -3,6 +3,8 @@
 import { Session } from "next-auth";
 import Image from "next/image";
 import FetchingSVG from "../svg/fetching-svg";
+import Link from "next/link";
+import { sectionStyles } from "../styles/sections";
 
 export default function ProfileSection({ session }: { session: Session | null }){
     if(session){
@@ -27,6 +29,12 @@ export default function ProfileSection({ session }: { session: Session | null })
                     <span className="text-black dark:text-yellow-400">Email:</span><br/>
                     {session?.user?.email}
                 </div>
+                <Link
+                    href="/profile/credentials"
+                    className={sectionStyles.button({ color: 'blue', hover: true, border: true, extensions: 'ml-4' })}
+                >
+                    Credentials
+                </Link>
             </>
         )
     }
