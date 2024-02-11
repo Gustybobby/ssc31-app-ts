@@ -1,25 +1,24 @@
 import { getServerAuthSession } from "@/app/api/auth/[...nextauth]/_utils";
 import MainWrapper from "@/components/globalui/main-wrapper";
+import ProfileCredentials from "@/components/profile/credentials/profile-credentials";
+import { redirect } from "next/navigation";
 import QRCode from "react-qr-code";
 
 export default async function CredentialsPage(){
     const session = await getServerAuthSession()
     if(!session?.user.id){
-        throw 'invalid session'
+        redirect('/profile')
     }
     const date = new Date()
     return (
         <MainWrapper>
             <div className={styles.mainBox}>
                 <div className={styles.sectionBox}>
-                    <div className="w-full md:w-80 bg-black/70 p-4 rounded-lg shadow-lg flex flex-col items-center space-y-2">
+                    <ProfileCredentials session={session} date={date}/>
+                    <div className="w-full md:w-fit bg-black/70 p-4 rounded-lg shadow-lg flex flex-col items-center space-y-2">
                         <div className="border-8 border-red-600 w-fit">
                             <QRCode value={session?.user.id+'</>'+date.toISOString()}/>
                         </div>
-                    </div>
-                    <div className="w-full md:w-80 text-white bg-black/70 p-4 rounded-lg shadow-lg flex flex-col items-center space-y-2">
-                        <span>Email: {session.user.email}</span>
-                        <span>Name: {session.user.name}</span>
                     </div>
                 </div>
             </div>
@@ -39,3 +38,4 @@ const styles = {
         'bg-white/20',
     ].join(' ')
 }
+
