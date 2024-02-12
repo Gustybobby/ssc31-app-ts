@@ -25,53 +25,51 @@ export default function Appointment({ appt, eventId, qrCodeTab }: {
                             onSuccess={async(decodedText, html5QrCode) => {
                                 const checkToast = toast.loading(isCheckOut? 'Checking out...' : 'Checking in...')
                                 html5QrCode.pause(true)
-                                const [userId, isoString] = decodedText.split('</>')
-                                if(!userId || !isoString){
-                                    toast.error('Invalid QR Code', { id: checkToast })
-                                    html5QrCode.resume()
-                                    return
-                                }
-                                const qrDate = new Date(isoString)
-                                const timeDiff = Math.abs(qrDate.getTime() - (new Date()).getTime())
-                                if(timeDiff > 1000 * 60 * 5){
-                                    toast.error('QR Code Expired', { id: checkToast })
-                                    html5QrCode.resume()
-                                    return
-                                }
-                                const memberRes = await (await fetch(`/api/gustybobby/events/${eventId}/users/${userId}?id=1`)).json()
-                                if(memberRes.message !== 'SUCCESS'){
-                                    toast.error('Invalid User Id', { id: checkToast })
-                                    html5QrCode.resume()
-                                    return
-                                }
-                                const memberId: string = memberRes.data.id
-                                const checkRes = await sendDataToAPI({
-                                    apiUrl: `/api/gustybobby/events/${eventId}/members/${memberId}/appointments/${appt.id}/attendances`,
-                                    method: 'PUT',
-                                    body: JSON.stringify({ data: isCheckOut? 
-                                        { check_out: new Date() } : { check_in: new Date() }
+                                try {
+                                    const [userId, isoString] = decodedText.split('</>')
+                                    if(!userId || !isoString){
+                                        throw 'Invalid QR Code'
+                                    }
+                                    const qrDate = new Date(isoString)
+                                    const timeDiff = Math.abs(qrDate.getTime() - (new Date()).getTime())
+                                    if(timeDiff > 1000 * 60 * 5){
+                                        throw 'QR Code Expired'
+                                    }
+                                    const memberRes = await (await fetch(`/api/gustybobby/events/${eventId}/users/${userId}?id=1`)).json()
+                                    if(memberRes.message !== 'SUCCESS'){
+                                        throw 'Invalid User Id'
+                                    }
+                                    const memberId: string = memberRes.data.id
+                                    const checkRes = await sendDataToAPI({
+                                        apiUrl: `/api/gustybobby/events/${eventId}/members/${memberId}/appointments/${appt.id}/attendances`,
+                                        method: 'PUT',
+                                        body: JSON.stringify({ data: isCheckOut? 
+                                            { check_out: new Date() } : { check_in: new Date() }
+                                        })
                                     })
-                                })
-                                switch(checkRes.message){
-                                    case 'SUCCESS':
-                                        if(isCheckOut){
-                                            toast.success(
-                                                `Checked out '${memberId}' at ${(new Date(checkRes.data.check_out)).toLocaleString()}`,
-                                                { id: checkToast }
-                                            )
-                                        } else {
-                                            toast.success(
-                                                `Checked in '${memberId}' at ${(new Date(checkRes.data.check_in)).toLocaleString()}`,
-                                                { id: checkToast }
-                                            )
-                                        }
-                                        break
-                                    default:
-                                        toast.error('Error', { id: checkToast })
+                                    switch(checkRes.message){
+                                        case 'SUCCESS':
+                                            if(isCheckOut){
+                                                toast.success(
+                                                    `Checked out '${memberId}' at ${(new Date(checkRes.data.check_out)).toLocaleString()}`,
+                                                    { id: checkToast }
+                                                )
+                                            } else {
+                                                toast.success(
+                                                    `Checked in '${memberId}' at ${(new Date(checkRes.data.check_in)).toLocaleString()}`,
+                                                    { id: checkToast }
+                                                )
+                                            }
+                                            break
+                                        default:
+                                            throw 'Error'
+                                    }
+                                } catch(e) {
+                                    toast.error(String(e), { id: checkToast })
                                 }
                                 setTimeout(() => {
                                     html5QrCode.resume()
-                                }, 1000)
+                                }, 2000)
                             }}
                         />
                     </div>
