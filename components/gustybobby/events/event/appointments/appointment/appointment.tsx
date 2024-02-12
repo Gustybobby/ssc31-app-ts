@@ -27,7 +27,7 @@ export default function Appointment({ appt, eventId, qrCodeTab }: {
                                 html5QrCode.pause(true)
                                 try {
                                     const { message, data } = await sendDataToAPI({
-                                        apiUrl: '/gustybobby/validation/qr-code',
+                                        apiUrl: '/api/gustybobby/validation/qr-code',
                                         method: 'POST',
                                         body: JSON.stringify({ data: decodedText })
                                     })
