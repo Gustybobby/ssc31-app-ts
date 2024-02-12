@@ -26,18 +26,17 @@ export default function Appointment({ appt, eventId, qrCodeTab }: {
                                 const checkToast = toast.loading(isCheckOut? 'Checking out...' : 'Checking in...')
                                 html5QrCode.pause(true)
                                 try {
-                                    const [userId, isoString] = decodedText.split('</>')
-                                    if(!userId || !isoString){
-                                        throw 'Invalid QR Code'
+                                    const { message, data } = await sendDataToAPI({
+                                        apiUrl: '/gustybobby/validation/qr-code',
+                                        method: 'POST',
+                                        body: JSON.stringify({ data: decodedText })
+                                    })
+                                    if(message !== 'SUCCESS'){
+                                        throw message
                                     }
-                                    const qrDate = new Date(isoString)
-                                    const timeDiff = Math.abs(qrDate.getTime() - (new Date()).getTime())
-                                    if(timeDiff > 1000 * 60 * 5){
-                                        throw 'QR Code Expired'
-                                    }
-                                    const memberRes = await (await fetch(`/api/gustybobby/events/${eventId}/users/${userId}?id=1`)).json()
+                                    const memberRes = await (await fetch(`/api/gustybobby/events/${eventId}/users/${data.userId}?id=1`)).json()
                                     if(memberRes.message !== 'SUCCESS'){
-                                        throw 'Invalid User Id'
+                                        throw 'Invalid User'
                                     }
                                     const memberId: string = memberRes.data.id
                                     const checkRes = await sendDataToAPI({
