@@ -1,6 +1,7 @@
 import { getServerAuthSession } from "@/app/api/auth/[...nextauth]/_utils";
 import MainWrapper from "@/components/globalui/main-wrapper";
 import ProfileCredentials from "@/components/profile/credentials/profile-credentials";
+import { encryptQR } from "@/server/modules/qr-encryption";
 import { redirect } from "next/navigation";
 import QRCode from "react-qr-code";
 
@@ -10,6 +11,7 @@ export default async function CredentialsPage(){
         redirect('/profile')
     }
     const date = new Date()
+    const qrCode = encryptQR(session.user.id+'</>'+date.toISOString())
     return (
         <MainWrapper>
             <div className={styles.mainBox}>
@@ -17,7 +19,7 @@ export default async function CredentialsPage(){
                     <ProfileCredentials session={session} isoString={date.toISOString()}/>
                     <div className="w-full md:w-fit bg-black/70 p-4 rounded-lg shadow-lg flex flex-col items-center space-y-2">
                         <div className="border-8 border-red-600 w-fit">
-                            <QRCode value={session?.user.id+'</>'+date.toISOString()}/>
+                            <QRCode value={qrCode}/>
                         </div>
                     </div>
                 </div>
