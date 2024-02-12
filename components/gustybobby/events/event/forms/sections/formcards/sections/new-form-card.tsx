@@ -16,7 +16,7 @@ export default function NewFormCard({ eventId }: { eventId: string }){
 const styles = {
     newButtonCard: [
         'flex justify-center items-center',
-        'w-full min-h-72 pb-2 rounded-lg',
+        'h-full w-full pb-2 rounded-lg',
         'text-5xl transition-colors',
         'hover:bg-green-500',
     ].join(' '),
