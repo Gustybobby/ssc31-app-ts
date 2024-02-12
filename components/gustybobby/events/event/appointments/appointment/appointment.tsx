@@ -55,15 +55,23 @@ export default function Appointment({ appt, eventId, qrCodeTab }: {
                                 switch(checkRes.message){
                                     case 'SUCCESS':
                                         if(isCheckOut){
-                                            toast.success(`Checked out '${memberId}' at ${checkRes.data.check_out}`, { id: checkToast })
+                                            toast.success(
+                                                `Checked out '${memberId}' at ${(new Date(checkRes.data.check_out)).toLocaleString()}`,
+                                                { id: checkToast }
+                                            )
                                         } else {
-                                            toast.success(`Checked in '${memberId}' at ${checkRes.data.check_in}`, { id: checkToast })
+                                            toast.success(
+                                                `Checked in '${memberId}' at ${(new Date(checkRes.data.check_in)).toLocaleString()}`,
+                                                { id: checkToast }
+                                            )
                                         }
                                         break
                                     default:
                                         toast.error('Error', { id: checkToast })
                                 }
-                                html5QrCode.resume()
+                                setTimeout(() => {
+                                    html5QrCode.resume()
+                                }, 1000)
                             }}
                         />
                     </div>
