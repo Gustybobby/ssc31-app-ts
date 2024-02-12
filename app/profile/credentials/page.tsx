@@ -14,7 +14,7 @@ export default async function CredentialsPage(){
         <MainWrapper>
             <div className={styles.mainBox}>
                 <div className={styles.sectionBox}>
-                    <ProfileCredentials session={session} date={date}/>
+                    <ProfileCredentials session={session} isoString={date.toISOString()}/>
                     <div className="w-full md:w-fit bg-black/70 p-4 rounded-lg shadow-lg flex flex-col items-center space-y-2">
                         <div className="border-8 border-red-600 w-fit">
                             <QRCode value={session?.user.id+'</>'+date.toISOString()}/>
