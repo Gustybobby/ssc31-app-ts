@@ -34,7 +34,7 @@ export default function Appointment({ appt, eventId, qrCodeTab }: {
                                     if(message !== 'SUCCESS'){
                                         throw message
                                     }
-                                    const memberRes = await (await fetch(`/api/gustybobby/events/${eventId}/users/${data.userId}?id=1`)).json()
+                                    const memberRes = await (await fetch(`/api/gustybobby/events/${eventId}/users/${data.user_id}?id=1`)).json()
                                     if(memberRes.message !== 'SUCCESS'){
                                         throw 'Invalid User'
                                     }
