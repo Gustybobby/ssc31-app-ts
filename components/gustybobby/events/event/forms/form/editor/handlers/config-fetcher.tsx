@@ -46,12 +46,16 @@ export default function ConfigFetcher({ newForm, eventId, formId, templateId, fo
                         .then(data => data.message === 'SUCCESS'? data.data : 'error')
                         .then(data => {
                             if(data === 'error'){
-                                setStatus('error')
+                                dispatchFormConfig({
+                                    type: 'set_template',
+                                    template: { field_order: [], form_fields: {} },
+                                    eventConfig
+                                })
                             } else {
                                 const template = (new FormTemplate(data)).getFormFieldsAndOrder()
                                 dispatchFormConfig({ type: 'set_template', template, eventConfig })
-                                setStatus('success')
                             }
+                            setStatus('success')
                         })
                     return
                 }
