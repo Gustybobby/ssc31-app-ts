@@ -68,7 +68,7 @@ export default function Appointment({ appt, eventId, qrCodeTab }: {
                                 }
                                 setTimeout(() => {
                                     html5QrCode.resume()
-                                }, 2000)
+                                }, 1500)
                             }}
                         />
                     </div>
