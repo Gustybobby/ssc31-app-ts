@@ -17,11 +17,12 @@ export function encryptQR(string: string){
 export function decryptQR(string: string){
     const crypt = initCrypt()
     try {
-        const decodedString = crypt.decryptQRCodeAlphanumeric(string)
-        if(!decodedString){
+        const decodedUTF8 = crypt.decryptQRCodeAlphanumeric(string)
+        if(!decodedUTF8){
             throw 'INVALID'
         }
-        return String(decodedString)
+        const utf8Decoder = new TextDecoder('utf-8', { fatal: true })
+        return utf8Decoder.decode(decodedUTF8)
     } catch(e){
         return 'INVALID QR CODE FORMAT'
     }
