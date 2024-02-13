@@ -1,23 +1,23 @@
-import Cryptr from "cryptr";
+import { ShortCrypt } from "short-crypt"
 
-function initCryptr(){
+function initCrypt(){
     if(!process.env.QR_SECRET_KEY){
         throw 'undefined env variables'
     }
-    const cryptr = new Cryptr(process.env.QR_SECRET_KEY, { encoding: 'base64' })
-    return cryptr
+    const crypt = new ShortCrypt(process.env.QR_SECRET_KEY)
+    return crypt
 }
 
 export function encryptQR(string: string){
-    const cryptr = initCryptr()
-    const encodedString = cryptr.encrypt(string)
+    const crypt = initCrypt()
+    const encodedString = crypt.encryptToQRCodeAlphanumeric(string)
     return encodedString
 }
 
 export function decryptQR(string: string){
-    const cryptr = initCryptr()
+    const crypt = initCrypt()
     try {
-        const decodedString = cryptr.decrypt(string)
+        const decodedString = crypt.decryptQRCodeAlphanumeric(string)
         return decodedString
     } catch(e){
         return 'INVALID QR CODE FORMAT'
