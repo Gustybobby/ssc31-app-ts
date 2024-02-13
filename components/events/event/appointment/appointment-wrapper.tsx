@@ -25,7 +25,7 @@ export default function AppointmentWrapper({ children, eventId, apptId, apptTitl
                         <span>{apptTitle}</span>
                     </div>
                     <TabBar
-                        commonPath={`/gustybobby/events/${eventId}/appointments/${apptId}`}
+                        commonPath={`/events/${eventId}/appointments/${apptId}`}
                         tabList={tabList}
                     />
                 </div>

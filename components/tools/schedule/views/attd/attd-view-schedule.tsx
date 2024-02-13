@@ -45,7 +45,7 @@ export default function AttdViewSchedule({ eventId, role, appt, regist }: {
             <div className="m-2">
                 <div className="mb-2">
                     <Link
-                        href={appointmentUrl(role, eventId, appt.id)}
+                        href={appointmentUrl(eventId, appt.id)}
                         className={sectionStyles.button({ color: 'purple', border: true, hover: true })}
                     >
                         QR Code Check-in
@@ -64,6 +64,6 @@ export default function AttdViewSchedule({ eventId, role, appt, regist }: {
     )
 }
 
-const appointmentUrl = (role: 'gustybobby' | 'user', eventId: string, apptId: string) => (
-    `/${role === 'user'? 'profile' : role}/events/${eventId}/appointments/${apptId}/qr-check-in`
+const appointmentUrl = (eventId: string, apptId: string) => (
+    `/events/${eventId}/appointments/${apptId}/qr-check-in`
 )
