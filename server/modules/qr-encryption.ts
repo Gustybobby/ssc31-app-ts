@@ -18,7 +18,10 @@ export function decryptQR(string: string){
     const crypt = initCrypt()
     try {
         const decodedString = crypt.decryptQRCodeAlphanumeric(string)
-        return decodedString
+        if(!decodedString){
+            throw 'INVALID'
+        }
+        return String(decodedString)
     } catch(e){
         return 'INVALID QR CODE FORMAT'
     }
