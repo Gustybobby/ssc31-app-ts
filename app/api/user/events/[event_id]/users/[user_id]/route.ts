@@ -17,9 +17,15 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
                         event_id: params.event_id
                     },
                     status: 'ACTIVE',
-                    position: {
-                        can_regist: true
-                    }
+                    OR: [{
+                            position: {
+                                can_regist: true
+                            }
+                        }, {
+                            role: {
+                                can_appoint: true
+                            }
+                    }]
                 }, select: {
                     id: true,
                 }

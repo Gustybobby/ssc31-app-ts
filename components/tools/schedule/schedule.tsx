@@ -52,7 +52,7 @@ export default function Schedule({
                 dispatchSchedule={dispatchSchedule}
                 month={safePositive(month) ?? schedule.current_date.getMonth()}
                 year={safePositive(year) ?? schedule.current_date.getFullYear()}
-                editable={editable}
+                editable={editable && role === 'gustybobby'}//only admin can create/edit appt
             />
         )
     }
@@ -84,7 +84,7 @@ export default function Schedule({
                 eventId={eventId}
                 role={role}
                 appt={appt}
-                regist={regist}
+                regist={regist || editable}
                 status={status}
             />
         )
@@ -95,7 +95,7 @@ export default function Schedule({
                 eventId={eventId}
                 role={role}
                 appt={appt}
-                regist={regist}
+                regist={regist || editable}
             />
         )
     }

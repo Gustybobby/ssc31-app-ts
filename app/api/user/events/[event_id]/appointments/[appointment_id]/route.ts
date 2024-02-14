@@ -9,7 +9,7 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
         if(!session?.user.id){
             throw 'invalid session'
         }
-        const { position, status } = await prisma.eventMember.findUniqueOrThrow({
+        const { position, role, status } = await prisma.eventMember.findUniqueOrThrow({
             where: {
                 user_id_event_id: {
                     user_id: session.user.id,
@@ -22,10 +22,15 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
                         can_regist: true
                     }
                 },
+                role: {
+                    select: {
+                        can_appoint: true
+                    }
+                },
                 status: true,
             }
         })
-        const can_regist = !!position?.can_regist
+        const can_regist = !!position?.can_regist || !!role?.can_appoint
         const searchParams = req.nextUrl.searchParams
         const select = searchParamsToSelect(searchParams)
         const data = await prisma.eventAppointment.findUniqueOrThrow({

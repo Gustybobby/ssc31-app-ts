@@ -18,9 +18,15 @@ export async function POST(req: NextRequest, { params }: { params: { event_id: s
                         event_id: params.event_id
                     },
                     status: 'ACTIVE',
-                    position: {
-                        can_regist: true
-                    }
+                    OR: [{
+                            position: {
+                                can_regist: true
+                            }
+                        }, {
+                            role: {
+                                can_appoint: true
+                            }
+                    }]
                 }, select: {
                     id: true,
                 }

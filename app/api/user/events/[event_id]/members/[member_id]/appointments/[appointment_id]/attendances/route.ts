@@ -21,9 +21,15 @@ export async function PUT(req: NextRequest, { params }: { params: AttendanceRout
                     event_id: params.event_id
                 },
                 status: 'ACTIVE',
-                position: {
-                    can_regist: true
-                }
+                OR: [{
+                        position: {
+                            can_regist: true
+                        }
+                    }, {
+                        role: {
+                            can_appoint: true
+                        }
+                }]
             }, select: {
                 id: true,
                 position_id: true,
