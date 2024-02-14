@@ -48,7 +48,7 @@ export default function AttdViewSchedule({ eventId, role, appt, regist }: {
                         href={appointmentUrl(eventId, appt.id)}
                         className={sectionStyles.button({ color: 'purple', border: true, hover: true })}
                     >
-                        QR Code Check-in
+                        QR Registration
                     </Link>
                 </div>
                 {table === 'loading'?
