@@ -31,6 +31,12 @@ export default function Appointment({ role, appt, eventId, qrCodeTab }: {
                                 apptId: appt.id,
                             })}
                         />
+                        <div className="flex flex-col items-start space-y-4 p-2">
+                            <span className="text-xl font-bold underline">Registration Procedure</span>
+                            <ol>1. Members must show credentials found on their profile page by pressing Credentials.</ol>
+                            <ol>2. Registrar staff scan the QR Code (make sure the scanner is on the correct mode).</ol>
+                            <ol>3. QR Code generated on the credentials page expires in 5 minutes, ask the members to refresh once expired.</ol>
+                        </div>
                     </div>
                 </div>
             </div>
