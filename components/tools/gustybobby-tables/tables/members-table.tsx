@@ -54,7 +54,7 @@ export default function MembersTable({
                         {row.value.map((row) => {
                             return(
                                 <td key={row.id} rowSpan={row.row_span ?? 1} className={styles.rowCell}>
-                                    {(row.data.toString().includes(':') && row.data.toString().includes('.'))?
+                                    {row.data.toString().startsWith('https://')?
                                     <Link
                                         href={row.data.toString()}
                                         target="_blank"

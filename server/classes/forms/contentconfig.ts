@@ -17,10 +17,10 @@ export type ContentConfigProperty = {
 }
 
 export const contentPatterns = {
-    label: /^[\u0E00-\u0E7F\w\s\?\(\)\,\.]{1,128}$/,
-    placeholder: /^[\u0E00-\u0E7F\w\s\.\,\'\(\)\-]{0,64}$/,
-    success: /^[\u0E00-\u0E7F\w\s\.\,\'\(\)\-]{0,64}$/,
-    error: /^[\u0E00-\u0E7F\w\s\.\,\'\(\)\-]{0,64}$/,
+    label: /^[\u0E00-\u0E7F\w\s\?\(\)\,\.\@\#\_]{1,128}$/,
+    placeholder: /^[\u0E00-\u0E7F\w\s\.\,\'\(\)\-\@\#\_]{0,128}$/,
+    success: /^[\u0E00-\u0E7F\w\s\.\,\'\(\)\-\@\#\_]{0,128}$/,
+    error: /^[\u0E00-\u0E7F\w\s\.\,\'\(\)\-\@\#\_]{0,128}$/,
     min_length: /^[0-9]{1,3}$/,
     max_length: /^[0-9]{1,3}$/,
     min_value: /^[0-9]{1,16}$/,

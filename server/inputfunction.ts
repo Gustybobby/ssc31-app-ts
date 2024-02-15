@@ -1,4 +1,4 @@
-import { DataType, FieldType, GustybobbyOption, typePermission } from "./typeconfig/form";
+import { type FieldType, type GustybobbyOption, typePermission } from "./typeconfig/form";
 
 export function stringifyGustybobbySelection(options: GustybobbyOption[], optionState: { [key: string]: boolean }){
     const optionStrings = []

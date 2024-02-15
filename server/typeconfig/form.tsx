@@ -48,8 +48,8 @@ export const dataTypes = {
         id: 'STRING',
         label: 'Text',
         options: null,
-        pattern: '[\u0E00-\u0E7F\\w\\s\.\,\'\(\)\-]',
-        error: 'ก-ฮ,A-Z\',a-z,0-9,().',
+        pattern: '[\u0E00-\u0E7F\\w\\s\.\,\'\(\)\-\@\#\_]',
+        error: 'ก-ฮ,A-Z\',a-z,0-9,().@_#',
         force: null,
         specialValid: null,
     },
@@ -58,10 +58,10 @@ export const dataTypes = {
         label: 'Link',
         options: null,
         pattern: '',
-        error: 'Not a valid link',
+        error: 'invalid link, link must begins with https://',
         force: null,
         specialValid: (string: string) => {
-            if(string.length > 256 || string.includes(' ') || string.includes('<') || string.includes('>')){
+            if(string.length > 256 || !string.startsWith('https://')){
                 return false
             }
             return true
