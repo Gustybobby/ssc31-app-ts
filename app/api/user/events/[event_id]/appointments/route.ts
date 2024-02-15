@@ -7,13 +7,16 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
     try{
         const session = await getServerAuthSession()
         if(!session?.user.id || !session?.user.role){
-            throw 'invalid session'
+            throw "invalid session"
         }
         const member = await prisma.eventMember.findUniqueOrThrow({
             where: {
                 user_id_event_id: {
                     event_id: params.event_id,
                     user_id: session.user.id,
+                },
+                status: {
+                    not: "REJECTED"
                 }
             },
             select: {
@@ -66,7 +69,7 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
                         members: {
                             where: {
                                 status: {
-                                    not: 'REJECTED'
+                                    not: "REJECTED"
                                 }
                             }
                         }
@@ -79,7 +82,7 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
             const attendance = member.attendances.find((atd) => atd.appointment_id === appt.id)
             apptObject[appt.id] = {
                 ...appt,
-                permission: 'read_only',
+                permission: "read_only",
                 start_at: appt.start_at.toISOString(),
                 end_at: appt.end_at.toISOString(),
                 attendance: attendance? {
@@ -97,7 +100,7 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
             const attendance = member.attendances.find((atd) => atd.appointment_id === appt.id)
             apptObject[appt.id] = {
                 ...appt,
-                permission: 'read_only',
+                permission: "read_only",
                 start_at: appt.start_at.toISOString(),
                 end_at: appt.end_at.toISOString(),
                 attendance: attendance? {
@@ -111,7 +114,7 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
         for(const appt of member.position?.created_appointments ?? []){
             apptObject[appt.id] = {
                 ...appt,
-                permission: 'editable',
+                permission: "editable",
                 start_at: appt.start_at.toISOString(),
                 end_at: appt.end_at.toISOString(),
             }
