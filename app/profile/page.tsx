@@ -6,11 +6,14 @@ import Profile from "@/components/profile/profile";
 export default async function ProfilePage(){
     const session = await getServerAuthSession()
     if(!session?.user.id || !session?.user.role){
-        throw 'invalid session'
+        throw "invalid session"
     }
     const eventMembers = await prisma.eventMember.findMany({
         where:{
-            user_id: session.user.id
+            user_id: session.user.id,
+            status: {
+                not: "REJECTED"
+            }
         },
         select:{
             status: true,

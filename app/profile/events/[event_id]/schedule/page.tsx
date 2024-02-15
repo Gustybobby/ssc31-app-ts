@@ -15,6 +15,9 @@ export default async function MemberSchedulePage({ params }: { params: { event_i
             user_id_event_id: {
                 user_id: session.user.id,
                 event_id: params.event_id,
+            },
+            status: {
+                not: "REJECTED"
             }
         },
         select: {
