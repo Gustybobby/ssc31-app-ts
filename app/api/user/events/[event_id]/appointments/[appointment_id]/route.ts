@@ -45,6 +45,7 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
             },
             select: select? {
                 ...select,
+                public: select.party_members || select.public,
                 party_members: select.party_members? membersSelect(params.appointment_id, can_regist && status === 'ACTIVE'): false,
             }: undefined,
         })
