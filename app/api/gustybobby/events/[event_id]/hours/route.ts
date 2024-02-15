@@ -18,13 +18,26 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
                 end_at: {
                     lte: end_at
                 },
-                party_members: {
-                    some: {
-                        id: member_id ?? undefined,
-                        position_id: position_id ?? undefined,
-                        role_id: role_id ?? undefined,
-                    }
-                }
+                OR: [{
+                        party_members: {
+                            some: {
+                                id: member_id ?? undefined,
+                                position_id: position_id ?? undefined,
+                                role_id: role_id ?? undefined,
+                            }
+                        }
+                    }, {
+                        public: true,
+                        event: {
+                            members: {
+                                some: {
+                                    id: member_id ?? undefined,
+                                    position_id: position_id ?? undefined,
+                                    role_id: role_id ?? undefined,
+                                }
+                            }
+                        }
+                }]
             },
             orderBy: {
                 start_at: 'asc'

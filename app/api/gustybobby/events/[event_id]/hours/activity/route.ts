@@ -20,17 +20,31 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
                 end_at: {
                     lte: end_at
                 },
-                party_members: {
-                    some: {
-                        id: member_id ?? undefined,
-                        position_id: position_id ?? undefined,
-                        role_id: role_id ?? undefined,
-                    }
-                }
+                OR: [{
+                        party_members: {
+                            some: {
+                                id: member_id ?? undefined,
+                                position_id: position_id ?? undefined,
+                                role_id: role_id ?? undefined,
+                            }
+                        }
+                    }, {
+                        public: true,
+                        event: {
+                            members: {
+                                some: {
+                                    id: member_id ?? undefined,
+                                    position_id: position_id ?? undefined,
+                                    role_id: role_id ?? undefined,
+                                }
+                            }
+                        }
+                }]
             },
             select: {
                 id: true,
                 title: true,
+                public: true,
                 start_at: true,
                 end_at: true,
                 attendances: {
@@ -52,7 +66,21 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
                 },
             }
         })
-        const distribution = calculateHoursDistribution(appointments, mode)
+        const eventMembers = appointments.find((appt) => appt.public)? await prisma.eventMember.findMany({
+            where: {
+                event_id: params.event_id,
+                status: {
+                    not: "REJECTED",
+                },
+            },
+            select: {
+                id: true
+            }
+        }) : null
+        const distribution = calculateHoursDistribution(
+            appointments.map((appt) => appt.public? { ...appt, party_members: eventMembers ?? [] } : appt),
+            mode
+        )
         return NextResponse.json({ message: "SUCCESS", data: distribution }, { status: 200 })
     } catch(e){
         console.log(e)
