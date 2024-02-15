@@ -54,17 +54,28 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
             where: {
                 event_id: params.event_id,
                 public: true,
+            }
+        })
+        const { _count: { members: membersCount }} = await prisma.event.findUniqueOrThrow({
+            where: {
+                id: params.event_id
             },
-            include: {
+            select: {
                 _count: {
                     select: {
-                        party_members: true
+                        members: {
+                            where: {
+                                status: {
+                                    not: 'REJECTED'
+                                }
+                            }
+                        }
                     }
                 }
             }
         })
         const apptObject: { [appt_id: string]: GustybobbyAppointment } = {}
-        for(const appt of [...publicAppts, ...member.appointments]){
+        for(const appt of publicAppts){
             const attendance = member.attendances.find((atd) => atd.appointment_id === appt.id)
             apptObject[appt.id] = {
                 ...appt,
@@ -76,7 +87,25 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
                     check_in: attendance.check_in?.toISOString() ?? null,
                     check_out: attendance.check_out?.toISOString() ?? null,
                     member_id: attendance.member_id,
-                } : null
+                } : null,
+                _count: {
+                    party_members: membersCount
+                }
+            }
+        }
+        for(const appt of member.appointments){
+            const attendance = member.attendances.find((atd) => atd.appointment_id === appt.id)
+            apptObject[appt.id] = {
+                ...appt,
+                permission: 'read_only',
+                start_at: appt.start_at.toISOString(),
+                end_at: appt.end_at.toISOString(),
+                attendance: attendance? {
+                    id: attendance.id,
+                    check_in: attendance.check_in?.toISOString() ?? null,
+                    check_out: attendance.check_out?.toISOString() ?? null,
+                    member_id: attendance.member_id,
+                } : null,
             }
         }
         for(const appt of member.position?.created_appointments ?? []){

@@ -8,6 +8,7 @@ export interface HoursAppointment {
     id: string
     title: string
     type: AppointmentType
+    public: boolean
     start_at: string
     end_at: string
     _count: {

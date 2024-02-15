@@ -42,11 +42,25 @@ export async function PUT(req: NextRequest, { params }: { params: AttendanceRout
         await prisma.eventAppointment.findUniqueOrThrow({
             where: {
                 id: params.appointment_id,
-                party_members: {
-                    some: {
-                        id: params.member_id
-                    }
-                }
+                OR: [{
+                        party_members: {
+                            some: {
+                                id: params.member_id
+                            }
+                        }
+                    }, {
+                        public: true,
+                        event: {
+                            members: {
+                                some: {
+                                    id: params.member_id,
+                                    status: {
+                                        not: 'REJECTED',
+                                    },
+                                }
+                            }
+                        }
+                }]
             },
             select: {
                 id: true,

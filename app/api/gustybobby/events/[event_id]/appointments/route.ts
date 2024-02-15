@@ -23,8 +23,29 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
                 }
             }
         })
+        const { _count: { members: membersCount }} = await prisma.event.findUniqueOrThrow({
+            where: {
+                id: params.event_id
+            },
+            select: {
+                _count: {
+                    select: {
+                        members: {
+                            where: {
+                                status: {
+                                    not: 'REJECTED'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        })
         const data = appointments.map((appt) => ({
             ...appt,
+            _count: {
+                party_members: appt.public? membersCount : appt._count.party_members
+            },
             permission: 'editable',
         }))
         return NextResponse.json({ message: "SUCCESS", data }, { status: 200 })

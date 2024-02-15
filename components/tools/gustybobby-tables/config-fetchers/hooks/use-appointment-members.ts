@@ -8,6 +8,10 @@ export default function useAppointmentMembers({ eventId, role, apptId }: Appoint
     const [members, setMembers] = useState<AppointmentMembersState>('loading')
     const [shouldRefetch, refetch] = useState({})
     useEffect(() => {
+        if(apptId === ''){
+            setMembers('error')
+            return
+        }
         setMembers('loading')
         fetch(appointmentMembersApiUrl({ eventId, role, apptId }))
             .then(res => res.ok? res.json() : { message: 'ERROR' })

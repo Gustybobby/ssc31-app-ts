@@ -45,34 +45,48 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
             },
             select: select? {
                 ...select,
-                party_members: select.party_members? {
-                    select: {
-                        id: true,
-                        status: true,
-                        position: {
-                            select: {
-                                id: true,
-                                label: true,
-                            }
-                        },
-                        role: {
-                            select: {
-                                id: true,
-                                label: true,
-                            }
-                        },
-                        attendances: (can_regist && status === 'ACTIVE')? {
-                            where: {
-                                appointment_id: params.appointment_id
-                            }
-                        } : false
-                    }
-                }: false,
+                party_members: select.party_members? membersSelect(params.appointment_id, can_regist && status === 'ACTIVE'): false,
             }: undefined,
         })
+        if(select?.party_members && data.public){
+            const members = await prisma.eventMember.findMany({
+                where: {
+                    event_id: params.event_id,
+                    status: {
+                        not: 'REJECTED',
+                    },
+                },
+                ...membersSelect(params.appointment_id, can_regist && status === 'ACTIVE'),
+            })
+            return NextResponse.json({ message: "SUCCESS", data: { ...data, party_members: members } }, { status: 200 })
+        }
         return NextResponse.json({ message: "SUCCESS", data }, { status: 200 })
     } catch(e){
         console.log(e)
         return NextResponse.json({ message: "ERROR" }, { status: 500 })
     }
 }
+
+const membersSelect = (appt_id: string, registable: boolean) => ({
+    select: {
+        id: true,
+        status: true,
+        position: {
+            select: {
+                id: true,
+                label: true,
+            }
+        },
+        role: {
+            select: {
+                id: true,
+                label: true,
+            }
+        },
+        attendances: registable? {
+            where: {
+                appointment_id: appt_id
+            }
+        }: false
+    }
+})

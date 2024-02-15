@@ -12,10 +12,17 @@ import CheckOutButton from "./rendered-components/check-out-button";
 
 interface UseAttendanceMembersTable extends UseAppointmentMembersTable {
     hideButtons?: boolean
+    apptPublic: boolean
 }
 
-export default function useAttendanceMembersTable({ eventId, role, apptId, tableView, transformation, hideButtons }: UseAttendanceMembersTable){
-    const { defaultGroups, defaultResponses, refetch: refetchGroupResponses } = useDefaultGroupResponses({ eventId, role, tableView, apptId })
+export default function useAttendanceMembersTable({ eventId, role, apptId, tableView, transformation, hideButtons, apptPublic
+}: UseAttendanceMembersTable){
+    const { defaultGroups, defaultResponses, refetch: refetchGroupResponses } = useDefaultGroupResponses({
+        eventId,
+        role,
+        tableView,
+        apptId: apptPublic? undefined : apptId
+    })
     const { members, refetch: refetchMembers } = useAppointmentMembers({ eventId, role, apptId })
     const [shouldRefetch, refetch] = useState({})
     const [table, setTable] = useState<Table | 'loading' | 'error'>(initializeTable({

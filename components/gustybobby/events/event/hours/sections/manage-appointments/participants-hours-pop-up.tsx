@@ -9,9 +9,10 @@ const MembersTable = dynamic(() => import("@/components/tools/gustybobby-tables/
     loading: () => <GustybobbyTableLoading/>
 })
 
-export default function ParticipantsHoursPopUp({ eventId, selectedApptId, open, setOpen }: {
+export default function ParticipantsHoursPopUp({ eventId, selectedApptId, apptPublic, open, setOpen }: {
     eventId: string,
     selectedApptId: string | null
+    apptPublic: boolean,
     open: boolean,
     setOpen: Dispatch<SetStateAction<boolean>>
 }){
@@ -22,6 +23,7 @@ export default function ParticipantsHoursPopUp({ eventId, selectedApptId, open, 
         apptId: selectedApptId ?? '',
         transformation: undefined,
         hideButtons: true,
+        apptPublic,
     })
 
     if(table === 'error'){

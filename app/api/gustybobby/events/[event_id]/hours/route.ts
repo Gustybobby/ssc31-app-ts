@@ -33,6 +33,7 @@ export async function GET(req: NextRequest, { params }: { params: { event_id: st
                 id: true,
                 title: true,
                 type: true,
+                public: true,
                 start_at: true,
                 end_at: true,
                 _count: {

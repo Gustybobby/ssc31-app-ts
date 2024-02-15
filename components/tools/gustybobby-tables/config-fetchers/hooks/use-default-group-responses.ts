@@ -9,6 +9,11 @@ export default function useDefaultGroupResponses({ eventId, role, tableView, app
     const [defaultGroups, setDefaultGroups] = useState<GroupsState>('loading')
     const [shouldRefetch, refetch] = useState({})
     useEffect(() => {
+        if(apptId === ''){
+            setDefaultGroups('error')
+            setDefaultResponses('error')
+            return
+        }
         setDefaultGroups('loading')
         setDefaultResponses('loading')
         fetch(eventColumnFetchesApiUrl({ eventId, role, tableView, apptId }))

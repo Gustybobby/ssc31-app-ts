@@ -35,12 +35,13 @@ export default function ManageAppointments({ eventId, startAt, setStartAt, endAt
                 setSelectedApptId={setSelectedApptId}
             />
             }
-            {selectedApptId &&
+            {selectedApptId && appointments !== 'loading' &&
             <ParticipantsHoursPopUp
                 eventId={eventId}
                 selectedApptId={selectedApptId}
                 open={open}
                 setOpen={setOpen}
+                apptPublic={!!appointments.find((appt) => appt.id === selectedApptId)?.public}
             />
             }
         </div>

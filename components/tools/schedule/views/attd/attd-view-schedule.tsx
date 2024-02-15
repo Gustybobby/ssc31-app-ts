@@ -20,7 +20,14 @@ export default function AttdViewSchedule({ eventId, role, appt, regist }: {
     const router = useRouter()
     const pathname = usePathname()
     const [transformation, setTransformation] = useState<Table['transformation']>({})
-    const { table, refetch } = useAttendanceMembersTable({ eventId, role, apptId: appt?.id ?? '', tableView: 'attd', transformation })
+    const { table, refetch } = useAttendanceMembersTable({
+        eventId,
+        role,
+        apptId: appt?.id ?? '',
+        tableView: 'attd',
+        transformation,
+        apptPublic: !!appt?.public
+    })
 
     if(!appt || !regist){
         router.replace(pathname)
