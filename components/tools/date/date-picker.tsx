@@ -12,6 +12,7 @@ interface DatePickerProps {
     id: string
     label: string | JSX.Element
     width?: string
+    panelClassName?: string
     defaultValue?: string
     onChange?: (date: Date) => void
 }
@@ -20,7 +21,7 @@ export interface DispatchDatePicker {
     dispatchDatePicker: Dispatch<DatePickerReducerAction>
 }
 
-export default function DatePicker({ id, label, width, defaultValue, onChange }: DatePickerProps){
+export default function DatePicker({ id, label, width, panelClassName, defaultValue, onChange }: DatePickerProps){
 
     const [datePicker, dispatchDatePicker] = useReducer(datePickerReducer, {
         view: {
@@ -59,7 +60,7 @@ export default function DatePicker({ id, label, width, defaultValue, onChange }:
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                 >
-                    <Popover.Panel className={styles.popOverPanel}>
+                    <Popover.Panel className={styles.popOverPanel(panelClassName)}>
                         <MonthYearNavigation
                             pickerView={datePicker.view}
                             dispatchDatePicker={dispatchDatePicker}
@@ -93,10 +94,11 @@ const styles = {
         'hover:border-black dark:hover:border-gray-400',
         'focus:outline-none'
     ].join(' '),
-    popOverPanel: [
+    popOverPanel: (panelClassName?: string) => [
         'absolute grid grid-cols-7 gap-0',
         'w-72 h-64 z-10 mt-1 shadow-lg',
         'text-base sm:text-sm',
         'bg-gray-200 dark:bg-gray-700',
+        panelClassName,
     ].join(' '),
 }

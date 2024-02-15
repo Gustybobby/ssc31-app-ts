@@ -105,3 +105,14 @@ function formatTimeString(time: Date, meridiem: 'AM' | 'PM'): string{
 export function literalHour(hr: number): number{
     return (hr % 12) || 12
 }
+
+export function getCombinedDateTime(time: Date, date: Date){
+    return new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        time.getHours(),
+        time.getMinutes(),
+        time.getSeconds(),
+    )
+}

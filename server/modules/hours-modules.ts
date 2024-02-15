@@ -15,24 +15,28 @@ export interface AppointmentWithHoursContext {
     }[]
 }
 
-export type DistributionMode = "APPT_INTERVAL" | "CHECK" | "CHECK_IN" | "CHECK_OUT"
+export type DistributionMode = "APPT_INTERVAL" | "MARKED" | "CHECK" | "CHECK_IN" | "CHECK_OUT"
 
 export const distributionModes = [
     {
         id: "APPT_INTERVAL",
-        label: 'Appointment'
+        label: "Appointment"
+    },
+    {
+        id: "MARKED",
+        label: "Marked"
     },
     {
         id: "CHECK",
-        label: 'Attendance',
+        label: "Attendance",
     }, 
     {
         id: "CHECK_IN",
-        label: 'Check-in only',
+        label: "Check-in only",
     },
     {
         id: "CHECK_OUT",
-        label: 'Check-out only',
+        label: "Check-out only",
     }
 ]
 
@@ -82,6 +86,10 @@ function getHoursDataByMode(appt: AppointmentWithHoursContext, mode: Distributio
     const hourCheckIn = getDateTimeAsHours(attd?.check_in)
     const hourCheckOut = getDateTimeAsHours(attd?.check_out)
     switch(mode){
+        case "MARKED":
+            if(!attd?.check_in && !attd?.check_out){
+                return null
+            }
         case "APPT_INTERVAL":
             return {
                 hrs: hourEndAt - hourStartAt,
@@ -116,7 +124,7 @@ function getHoursDataByMode(appt: AppointmentWithHoursContext, mode: Distributio
                 end_at: attd.check_out,
             }
         default:
-            throw 'no mode specified'
+            throw "no mode specified"
     }
 }
 
