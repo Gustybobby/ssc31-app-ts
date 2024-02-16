@@ -4,7 +4,7 @@ import type { FormConfigProperty } from "@/server/classes/forms/formconfig"
 import OpenSwitch from "./sticky/open-switch"
 import PublicSwitch from "./sticky/public-switch"
 import ResponseTypeSwitch from "./sticky/response-type-switch"
-import ViewFormLink from "./sticky/view-form-link"
+import ViewFormPopUp from "./sticky/view-form-pop-up"
 import SaveButton from "./sticky/save-button"
 import CreateButton from "./sticky/create-button"
 import type { Dispatch, SetStateAction } from "react"
@@ -45,7 +45,7 @@ export default function StickySettings({ eventId, formConfig, shrinkSetting, dis
                 dispatchFormConfig={dispatchFormConfig}
             />
             {formConfig.id &&
-            <ViewFormLink
+            <ViewFormPopUp
                 eventId={eventId}
                 formId={formConfig.id}
             />

@@ -112,6 +112,7 @@ model EventForm {
   form_fields            Json?
   event                  Event               @relation(fields: [event_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
   event_id               String
+  form_short             EventFormShortId?
 }
 
 model EventFormResponse {
@@ -208,6 +209,12 @@ model ArchivedMember {
   user_id          String
 
   @@unique([user_id, archived_id])
+}
+
+model EventFormShortId {
+  id      String    @id
+  form    EventForm @relation(fields: [form_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  form_id String    @unique
 }
 
 enum Role {
