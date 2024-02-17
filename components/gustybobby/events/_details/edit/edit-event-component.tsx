@@ -8,8 +8,9 @@ import TitleInputField from "../sections/title-input-field"
 import { ImageURLSelector } from "@/components/tools/file"
 import DescriptionPreview from "../sections/description-preview"
 import DescriptionEditor from "../sections/description-editor"
-import PositionFields from "../sections/position-role-fields/position-fields"
-import RoleFields from "../sections/position-role-fields/role-fields"
+import dynamic from "next/dynamic"
+const PositionFields = dynamic(() => import("../sections/position-role-fields/position-fields"))
+const RoleFields = dynamic(() => import("../sections/position-role-fields/role-fields"))
 
 interface EditEventComponentProps extends EventDetailsHookProps {
     refetch: Dispatch<SetStateAction<{}>>
