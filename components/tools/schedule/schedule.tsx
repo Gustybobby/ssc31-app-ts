@@ -90,7 +90,7 @@ export default function Schedule({
         )
     }
     if(view === 'attd' && appt?.attendance_required){
-        return(
+        return (
             <AttdViewSchedule
                 eventId={eventId}
                 role={role}

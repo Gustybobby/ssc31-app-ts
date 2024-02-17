@@ -22,7 +22,7 @@ export const IconMap = {
 
 export const scheduleStyles = {
     dayTile: (selected: boolean, diffMonth: boolean, index: number) => [
-        'h-36 p-1 flex flex-col',
+        'h-36 xl:h-[9vw] p-1 flex flex-col',
         'transition-colors',
         'border-b border-black dark:border-white',
         selected? 'bg-green-400 bg-opacity-20 dark:bg-opacity-40' : '',
