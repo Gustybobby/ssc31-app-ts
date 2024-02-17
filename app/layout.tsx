@@ -32,7 +32,7 @@ export default async function RootLayout({ children } : { children: React.ReactN
 const styles = {
     navBar: [
         'px-2 sticky top-0 z-[999]',
-        'w-full h-[8vh] flex justify-between items-center dark:shadow-lg',
+        'w-full h-[54px] flex justify-between items-center dark:shadow-lg',
         'bg-green-500'
     ].join(' ')
 }
