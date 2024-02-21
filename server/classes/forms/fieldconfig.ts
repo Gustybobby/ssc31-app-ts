@@ -64,8 +64,8 @@ export default class FieldConfig extends ContentConfig{
         if(this.field_type === 'INFO'){
             return dataString === ''
         }
-        if(dataString === '' && this.required){
-            return this.visible_conds !== ''
+        if(dataString === ''){
+            return this.required? (this.visible_conds !== '') : true
         }
         if(dataTypes[this.data_type].specialValid){
             return !!dataTypes[this.data_type].specialValid?.(dataString, this)
