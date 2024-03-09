@@ -9,6 +9,8 @@ import type { GustybobbyAppointment } from "@/server/typeconfig/record"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useState } from "react"
+import AttdStatsTable from "./attd-stats-table"
+import PopUpDialog from "@/components/tools/pop-up-dialog"
 
 export default function AttdViewSchedule({ eventId, role, appt, regist }: {
     eventId: string,
@@ -20,7 +22,7 @@ export default function AttdViewSchedule({ eventId, role, appt, regist }: {
     const router = useRouter()
     const pathname = usePathname()
     const [transformation, setTransformation] = useState<Table['transformation']>({})
-    const { table, refetch } = useAttendanceMembersTable({
+    const { table, members, refetch } = useAttendanceMembersTable({
         eventId,
         role,
         apptId: appt?.id ?? '',
@@ -28,6 +30,7 @@ export default function AttdViewSchedule({ eventId, role, appt, regist }: {
         transformation,
         apptPublic: !!appt?.public
     })
+    const [openStats, setOpenStats] = useState(false)
 
     if(!appt || !regist){
         router.replace(pathname)
@@ -36,6 +39,7 @@ export default function AttdViewSchedule({ eventId, role, appt, regist }: {
     if(table === 'error'){
         throw 'table fetching error'
     }
+
     return(
         <div className="min-h-screen bg-gray-200 dark:bg-black/70 border border-black dark:border-white">
             <div className="p-1 flex justify-between md:grid md:grid-cols-3 border-b border-black dark:border-white">
@@ -50,13 +54,19 @@ export default function AttdViewSchedule({ eventId, role, appt, regist }: {
                 </span>
             </div>
             <div className="m-2">
-                <div className="mb-2">
+                <div className="mb-2 flex justify-between">
                     <Link
                         href={appointmentUrl(eventId, appt.id)}
                         className={sectionStyles.button({ color: 'purple', border: true, hover: true })}
                     >
                         QR Registration
                     </Link>
+                    <button
+                        className={sectionStyles.button({ color: 'blue', border: true, hover: true })}
+                        onClick={() => setOpenStats(true)}
+                    >
+                        Check Stats
+                    </button>
                 </div>
                 {table === 'loading'?
                 <GustybobbyTableLoading/>
@@ -65,6 +75,15 @@ export default function AttdViewSchedule({ eventId, role, appt, regist }: {
                     table={table}
                     headerCellClassName=""
                 />
+                }
+                {typeof members !== 'string' && openStats &&
+                <PopUpDialog
+                    open={openStats}
+                    setOpen={setOpenStats}
+                    panelClassName="w-full md:w-1/2 bg-gray-200 dark:bg-gray-800 rounded-lg shadow-lg"
+                >
+                    <AttdStatsTable members={members}/>
+                </PopUpDialog>
                 }
             </div>
         </div>

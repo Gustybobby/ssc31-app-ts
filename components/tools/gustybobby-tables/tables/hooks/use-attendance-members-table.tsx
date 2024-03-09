@@ -53,7 +53,7 @@ export default function useAttendanceMembersTable({ eventId, role, apptId, table
             hideButtons,
         }))
     }, [defaultGroups, defaultResponses, transformation, members, role, apptId, eventId, hideButtons, refetch])
-    return { table, setTable, defaultGroups, refetch }
+    return { table, setTable, defaultGroups, members, refetch }
 }
 
 function initializeTable({
