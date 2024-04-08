@@ -21,7 +21,7 @@ export default function ActivityHours({ activityRecords, activityHours }: {
 }
 
 function initializedTable(activityRecords: { [appt_id: string]: ActivityRecord }, activityHours: number){
-    const rows = Object.entries(activityRecords).map(([appt_id, record]) => ({
+    const records = Object.entries(activityRecords).map(([appt_id, record]) => ({
         key: appt_id,
         value: {
             label: {
@@ -45,17 +45,19 @@ function initializedTable(activityRecords: { [appt_id: string]: ActivityRecord }
             hrs: {
                 id: "hrs",
                 type: "pure_single",
-                data: record.hrs.toString(),
-                raw_data: record.hrs.toString(),
+                data: record.hrs.toFixed(2),
+                raw_data: record.hrs.toFixed(2),
             },
         }
-    })).concat({
+    })) as RowProperty[]
+    records.sort((a,b) => new Date(activityRecords[a.key].start_at) > new Date(activityRecords[b.key].start_at)? 1 : -1)
+    const total = {
         key: "total_hrs",
         value: {
             label: {
                 id: "label",
                 type: "pure_single",
-                data: "Total",
+                data: <div className="text-xl font-bold">Total</div>,
                 raw_data: "Total",
             },
             start_at: {
@@ -73,11 +75,11 @@ function initializedTable(activityRecords: { [appt_id: string]: ActivityRecord }
             hrs: {
                 id: "hrs",
                 type: "pure_single",
-                data: activityHours.toString(),
-                raw_data: activityHours.toString(),
+                data: <div className="text-xl font-bold">{activityHours.toFixed(2)}</div>,
+                raw_data: activityHours.toFixed(2),
             },
         }
-    }) as RowProperty[]
+    } as RowProperty
     return Table.initialize({
         columns: [
             { id: "label", label: "Title", data_type: "STRING", field_type: "SHORTANS", type: "pure" },
@@ -85,6 +87,6 @@ function initializedTable(activityRecords: { [appt_id: string]: ActivityRecord }
             { id: "start_at", label: "Start At", data_type: "STRING", field_type: "SHORTANS", type: "pure" },
             { id: "end_at", label: "End At", data_type: "STRING", field_type: "SHORTANS", type: "pure" },
         ],
-        rows
+        rows: records.concat(total)
     })
 }
