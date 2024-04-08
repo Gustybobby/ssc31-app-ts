@@ -99,7 +99,7 @@ export default function ManageDistribution({ eventId, startAt, endAt }: {
                                         </td>
                                         ))}
                                         <td rowSpan={dist.length+1} className={styles.rowCell}>
-                                            {dist.reduce((sum, curr) => sum + curr.hrs, 0)}
+                                            {dist.reduce((sum, curr) => sum + curr.hrs, 0).toFixed(2)}
                                         </td>
                                     </tr>
                                     {dist.map((record) => (
@@ -108,7 +108,7 @@ export default function ManageDistribution({ eventId, startAt, endAt }: {
                                             {record.label}
                                         </td>
                                         <td className={styles.rowCell}>
-                                            {record.hrs}
+                                            {record.hrs.toFixed(2)}
                                         </td>
                                     </tr>
                                     ))}

@@ -41,7 +41,7 @@ export default function ShowAppointments({ appointments, setSelectedApptId }: {
                                 {appt._count.party_members}
                             </span>
                             <span className="p-2 border border-black dark:border-white col-span-2">
-                                {getTimeDifferenceInHours(new Date(appt.start_at), new Date(appt.end_at))}
+                                {getTimeDifferenceInHours(new Date(appt.start_at), new Date(appt.end_at)).toFixed(2)}
                             </span>
                         </div>
                     </div>
@@ -57,5 +57,5 @@ export default function ShowAppointments({ appointments, setSelectedApptId }: {
 }
 
 function getTimeDifferenceInHours(date1: Date, date2: Date){
-    return Math.round(Math.floor((date2.getTime() - date1.getTime())/360000))/10
+    return (date2.getTime() - date1.getTime())/3600000
 }
