@@ -6,6 +6,8 @@ import ModeSelector from "./mode-selector"
 import useDefaultGroupResponses from "@/components/tools/gustybobby-tables/config-fetchers/hooks/use-default-group-responses"
 import { Fragment } from "react"
 import GustybobbyTableLoading from "@/components/tools/gustybobby-tables/tables/gustybobby-table-loading"
+import { sendDataToAPI } from "@/components/tools/api"
+import toast from "react-hot-toast"
 
 export default function ManageDistribution({ eventId, startAt, endAt }: {
     eventId: string,
@@ -45,6 +47,9 @@ export default function ManageDistribution({ eventId, startAt, endAt }: {
                         <table className="w-full">
                             <thead>
                                 <tr>
+                                    <th className={styles.headerCell('w-16')}>
+                                        Add
+                                    </th>
                                     {defaultGroups.map((group) => (
                                     <th key={group.id} className={styles.headerCell()}>
                                         {group.label}
@@ -65,6 +70,29 @@ export default function ManageDistribution({ eventId, startAt, endAt }: {
                                 {Object.entries(distribution).map(([member_id, dist]) => (
                                 <Fragment key={member_id+'_ROW'}>
                                     <tr>
+                                        <td rowSpan={dist.length+1} className={styles.rowCell}>
+                                            <div className="flex justify-center">
+                                                <button
+                                                    className={sectionStyles.button({
+                                                        color: "green",
+                                                        hover: true,
+                                                        border: true,
+                                                        padding: "px-4 py-2"
+                                                    })}
+                                                    onClick={async() => {
+                                                        const addingToast = toast.loading("Adding Records...")
+                                                        await sendDataToAPI({
+                                                            apiUrl: `/api/gustybobby/events/${eventId}/members/${member_id}/hours/activity`,
+                                                            method: 'POST',
+                                                            body: JSON.stringify({ data: dist })
+                                                        })
+                                                        toast.success("Added Records", { id: addingToast })
+                                                    }}
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
+                                        </td>
                                         {defaultGroups.map((group) => (
                                         <td key={group.id} className={styles.rowCell} rowSpan={dist.length+1}>
                                             {defaultResponses[member_id][group.id]}

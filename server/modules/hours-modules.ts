@@ -92,7 +92,7 @@ function getHoursDataByMode(appt: AppointmentWithHoursContext, mode: Distributio
             }
         case "APPT_INTERVAL":
             return {
-                hrs: hourEndAt - hourStartAt,
+                hrs: Math.round(Math.floor((hourEndAt - hourStartAt)*10))/10,
                 start_at: appt.start_at,
                 end_at: appt.end_at,
             }

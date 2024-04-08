@@ -7,6 +7,7 @@ const tabList = [
     { id: 'profile', label: 'Profile' },
     { id: 'schedule', label: 'Schedule' },
     { id: 'forms', label: 'Forms' },
+    { id: 'hours', label: 'Hours' },
 ]
 
 export default function MemberDashboardWrapper({ children, eventId, eventTitle }: {
