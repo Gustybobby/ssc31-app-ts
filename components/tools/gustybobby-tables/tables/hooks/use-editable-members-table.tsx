@@ -9,6 +9,7 @@ import useMembers from "../../config-fetchers/hooks/use-members";
 import { type MutableRefObject, useState, useEffect, type Dispatch, type SetStateAction } from "react";
 import useEventConfig from "../../config-fetchers/hooks/use-event-config";
 import { memberColumns } from "../../config-fetchers/columns";
+import Link from "next/link";
 
 export interface UseEditableMembersTableProps extends FormTableConfig{
     editRef: MutableRefObject<{ [key: string]: { [key: string]: string }}>
@@ -96,7 +97,11 @@ function initializeTable({ formConfig, eventConfig, responses, members, editRef,
                         type: 'pure_single',
                         id: 'index',
                         raw_data: String(index+1),
-                        data: String(index+1),
+                        data: (
+                            <Link href={`/gustybobby/events/${eventConfig.id}/hours/${member?.id}`} target="_blank">
+                                {String(index+1)}
+                            </Link>
+                        ),
                     },
                     status: {
                         type: 'pure_single',
