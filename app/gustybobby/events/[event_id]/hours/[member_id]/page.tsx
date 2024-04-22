@@ -22,12 +22,17 @@ export default async function HoursPage({ params }: { params: { member_id: strin
             },
             act_hrs: true,
             act_records: true,
+            transfer_records: true,
         }
     })
     return(
         <MainWrapper>
             <div className="w-full">
-                <MemberHours activityRecords={member.act_records as any} activityHours={member.act_hrs}/>
+                <MemberHours
+                    activityRecords={member.act_records as any}
+                    transferRecords={member.transfer_records as any ?? {}}
+                    activityHours={member.act_hrs}
+                />
             </div>
         </MainWrapper>
     )

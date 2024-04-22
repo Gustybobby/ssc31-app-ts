@@ -5,6 +5,8 @@ import MemberDashboardWrapper from "@/components/profile/events/event/member-das
 import prisma from "@/prisma-client";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic"
+
 export default async function MemberHoursPage({ params }: { params: { event_id: string }}){
     const session = await getServerAuthSession()
     if(!session?.user.id || !session?.user.role){
@@ -29,6 +31,7 @@ export default async function MemberHoursPage({ params }: { params: { event_id: 
             },
             act_hrs: true,
             act_records: true,
+            transfer_records: true,
         }
     })
     return(
@@ -37,7 +40,11 @@ export default async function MemberHoursPage({ params }: { params: { event_id: 
                 eventId={params.event_id}
                 eventTitle={member.event.title}
             >
-                <MemberHours activityRecords={member.act_records as any} activityHours={member.act_hrs}/>
+                <MemberHours
+                    activityRecords={member.act_records as any}
+                    transferRecords={member.transfer_records as any ?? {}}
+                    activityHours={member.act_hrs}
+                />
             </MemberDashboardWrapper>
         </MainWrapper>
     )
