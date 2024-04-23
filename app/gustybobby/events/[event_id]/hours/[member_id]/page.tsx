@@ -29,7 +29,7 @@ export default async function HoursPage({ params }: { params: { member_id: strin
         <MainWrapper>
             <div className="w-full">
                 <MemberHours
-                    activityRecords={member.act_records as any}
+                    activityRecords={member.act_records as any ?? {}}
                     transferRecords={member.transfer_records as any ?? {}}
                     activityHours={member.act_hrs}
                 />

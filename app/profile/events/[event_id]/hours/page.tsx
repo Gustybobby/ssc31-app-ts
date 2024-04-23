@@ -41,7 +41,7 @@ export default async function MemberHoursPage({ params }: { params: { event_id: 
                 eventTitle={member.event.title}
             >
                 <MemberHours
-                    activityRecords={member.act_records as any}
+                    activityRecords={member.act_records as any ?? {}}
                     transferRecords={member.transfer_records as any ?? {}}
                     activityHours={member.act_hrs}
                 />
