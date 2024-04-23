@@ -15,6 +15,19 @@ export interface TransferRecord {
     year: number
 }
 
+export interface StudentMember { 
+    id: string
+    student_id: string
+    position: {
+        id: string
+        label: string
+    } | null
+    role: {
+        id: string
+        label: string
+    } | null
+}
+
 export interface GustybobbyAttendance {
     id: string
     check_in: string | null

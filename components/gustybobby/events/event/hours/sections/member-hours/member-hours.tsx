@@ -3,15 +3,22 @@
 import { sectionStyles } from "@/components/styles/sections"
 import useHours from "../../hooks/use-hours"
 import MembersTable from "@/components/tools/gustybobby-tables/tables/members-table"
-import type { TransferRecord } from "@/server/typeconfig/record"
+import type { StudentMember, TransferRecord } from "@/server/typeconfig/record"
 
-export default function MemberHours({ eventId, eventCreatedAt, activityHours, transferRecords }: {
+export default function MemberHours({ eventId, eventCreatedAt, members, activityHours, transferRecords }: {
     eventId: string
     eventCreatedAt: Date
+    members: StudentMember[]
     activityHours: { [member_id: string]: number }
     transferRecords: { [member_id: string]: { [key: string]: TransferRecord }}
 }){
-    const { actTable, scholTable, transformation, setTransformation } = useHours({ eventId, activityHours, eventCreatedAt, transferRecords })
+    const { actTable, scholTable, transformation, setTransformation } = useHours({
+        eventId,
+        members,
+        activityHours,
+        eventCreatedAt,
+        transferRecords
+    })
     return (
         <>
             <div className={sectionStyles.box.gray({ round: true, shadow: true })}>
