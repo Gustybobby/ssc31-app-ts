@@ -30,19 +30,29 @@ export default function TransferHours({ transferRecords }: {
                     </tr>
                 </thead>
                 <tbody>
-                    {records.map((record,index) => (
-                    <tr key={`SCHOL_${index}`}>
-                        <td className={styles.rowCell}>
-                            {record.year}
-                        </td>
-                        <td className={styles.rowCell}>
-                            {record.semester}
-                        </td>
-                        <td className={styles.rowCell}>
-                            {record.hrs}
+                    {records.length > 0?
+                    <>
+                        {records.map((record,index) => (
+                        <tr key={`SCHOL_${index}`}>
+                            <td className={styles.rowCell}>
+                                {record.year}
+                            </td>
+                            <td className={styles.rowCell}>
+                                {record.semester}
+                            </td>
+                            <td className={styles.rowCell}>
+                                {record.hrs}
+                            </td>
+                        </tr>
+                        ))}
+                    </>
+                    :
+                    <tr>
+                        <td className={styles.rowCell+" text-center"} colSpan={3}>
+                            No transfer record
                         </td>
                     </tr>
-                    ))}
+                    }
                 </tbody>
             </table>
         </div>

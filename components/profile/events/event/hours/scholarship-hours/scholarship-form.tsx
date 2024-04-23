@@ -65,7 +65,7 @@ export default function ScholarshipForm({ eventId, eventTitle, activityHours }: 
                                 return
                             }
                             const field = document.getElementById(`${sem}_${year}_INPUTFIELD`) as HTMLInputElement | null
-                            if (field?.value){
+                            if (field?.value && +field.value > 0){
                                 records.push({
                                     hrs: +field.value,
                                     semester: sem,
@@ -76,12 +76,6 @@ export default function ScholarshipForm({ eventId, eventTitle, activityHours }: 
                         }
                         if (total > maxHours(activityHours)){
                             setError("Transferred hours exceed maximum hours")
-                            setLoading(false)
-                            button.disabled = false
-                            return
-                        }
-                        else if (total === 0){
-                            setError("You cannot transfer 0 hours")
                             setLoading(false)
                             button.disabled = false
                             return
