@@ -4,9 +4,16 @@ import { sectionStyles } from "@/components/styles/sections"
 import ManageAppointments from "./sections/manage-appointments/manage-appointments"
 import { useState } from "react"
 import dynamic from "next/dynamic"
+import MemberHours from "./sections/member-hours/member-hours"
+import type { TransferRecord } from "@/server/typeconfig/record"
 const ManageDistribution = dynamic(() => import("./sections/manage-distribution/manage-distribution"))
 
-export default function EventHours({ event_id }: { event_id: string }){
+export default function EventHours({ event_id, eventCreatedAt, activityHours, transferRecords }: {
+    event_id: string
+    eventCreatedAt: Date,
+    activityHours: { [member_id: string]: number }
+    transferRecords: { [member_id: string]: { [key: string]: TransferRecord }}
+}){
 
     const [startAt, setStartAt] = useState((new Date()).toISOString())
     const [endAt, setEndAt] = useState((new Date()).toISOString())
@@ -31,6 +38,12 @@ export default function EventHours({ event_id }: { event_id: string }){
                     endAt={endAt}
                 />
             </div>
+            <MemberHours
+                eventId={event_id}
+                eventCreatedAt={eventCreatedAt}
+                activityHours={activityHours}
+                transferRecords={transferRecords}
+            />
         </div>
     )
 }
